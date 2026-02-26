@@ -9,13 +9,13 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --black: #0a0a0a;
     --white: #fafaf8;
     --cream: #f4f2ed;
     --ink: #1a1a1a;
     --muted: #888;
     --accent: #c8b89a;
     --border: #e8e4dc;
+    --green: #4caf82;
   }
 
   html { scroll-behavior: smooth; }
@@ -28,7 +28,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NOISE OVERLAY ── */
   body::before {
     content: '';
     position: fixed;
@@ -39,7 +38,6 @@
     opacity: 0.4;
   }
 
-  /* ── HEADER ── */
   header {
     padding: 2.5rem 4rem;
     display: flex;
@@ -49,382 +47,154 @@
     animation: fadeDown 0.8s ease both;
   }
 
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-
-  .logo span {
-    font-style: italic;
-    color: var(--muted);
-  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .logo span { font-style: italic; color: var(--muted); }
 
   .badge {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    padding: 0.35rem 0.75rem;
-    border-radius: 100px;
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--border); padding: 0.35rem 0.75rem; border-radius: 100px;
   }
 
-  /* ── HERO ── */
-  .hero {
-    padding: 6rem 4rem 4rem;
-    max-width: 900px;
-    animation: fadeUp 0.9s 0.1s ease both;
-  }
+  .hero { padding: 6rem 4rem 4rem; max-width: 900px; animation: fadeUp 0.9s 0.1s ease both; }
 
   .hero h1 {
     font-family: 'DM Serif Display', serif;
     font-size: clamp(3rem, 8vw, 6rem);
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-    color: var(--ink);
-    margin-bottom: 1.5rem;
+    line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 1.5rem;
   }
+  .hero h1 em { font-style: italic; color: var(--muted); }
+  .hero p { font-size: 1.1rem; font-weight: 300; color: var(--muted); max-width: 480px; line-height: 1.7; }
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--muted);
-  }
+  .main { padding: 2rem 4rem 6rem; animation: fadeUp 1s 0.2s ease both; }
 
-  .hero p {
-    font-size: 1.1rem;
-    font-weight: 300;
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.7;
-  }
+  .card { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
 
-  /* ── MAIN CARD ── */
-  .main {
-    padding: 2rem 4rem 6rem;
-    animation: fadeUp 1s 0.2s ease both;
-  }
-
-  .card {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-
-  /* ── UPLOAD ZONE ── */
   .upload-zone {
-    padding: 4rem;
-    text-align: center;
+    padding: 4rem; text-align: center;
     border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.3s;
-    position: relative;
-    overflow: hidden;
+    cursor: pointer; transition: background 0.3s;
   }
-
-  .upload-zone:hover { background: var(--border); }
-
-  .upload-zone.dragover {
-    background: #ede8e0;
-  }
+  .upload-zone:hover, .upload-zone.dragover { background: #ede8e0; }
 
   .upload-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 1.5rem;
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 64px; height: 64px; margin: 0 auto 1.5rem;
+    border: 1.5px solid var(--border); border-radius: 16px;
+    background: var(--white); display: flex; align-items: center; justify-content: center;
     transition: transform 0.3s;
   }
-
   .upload-zone:hover .upload-icon { transform: translateY(-4px); }
-
   .upload-icon svg { width: 28px; height: 28px; stroke: var(--muted); }
 
-  .upload-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: var(--ink);
-  }
-
-  .upload-sub {
-    font-size: 0.875rem;
-    color: var(--muted);
-    font-weight: 300;
-  }
-
+  .upload-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+  .upload-sub { font-size: 0.875rem; color: var(--muted); font-weight: 300; }
   #fileInput { display: none; }
 
-  /* ── PREVIEW STRIP ── */
-  .preview-strip {
-    padding: 1.5rem 2rem;
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    min-height: 0;
-    transition: all 0.4s;
-  }
-
+  .preview-strip { padding: 1.5rem 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
   .preview-strip:empty { display: none; }
 
-  .thumb {
-    width: 80px;
-    height: 60px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 1.5px solid var(--border);
-    animation: popIn 0.3s ease both;
-  }
-
+  .thumb { width: 80px; height: 60px; border-radius: 8px; object-fit: cover; border: 1.5px solid var(--border); animation: popIn 0.3s ease both; }
   .thumb-count {
-    width: 80px;
-    height: 60px;
-    border-radius: 8px;
-    background: var(--white);
-    border: 1.5px dashed var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-weight: 500;
+    width: 80px; height: 60px; border-radius: 8px;
+    background: var(--white); border: 1.5px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: var(--muted); font-weight: 500;
   }
 
-  /* ── CONTROLS ── */
-  .controls {
-    padding: 2rem 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .file-info {
-    font-size: 0.875rem;
-    color: var(--muted);
-    font-weight: 300;
-  }
-
-  .file-info strong {
-    color: var(--ink);
-    font-weight: 500;
-  }
+  .controls { padding: 2rem 4rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .file-info { font-size: 0.875rem; color: var(--muted); font-weight: 300; }
+  .file-info strong { color: var(--ink); font-weight: 500; }
 
   .btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 0.85rem 2.5rem;
-    border-radius: 100px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.25s;
-    letter-spacing: 0.02em;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    padding: 0.85rem 2.5rem; border-radius: 100px; border: none;
+    cursor: pointer; transition: all 0.25s; letter-spacing: 0.02em;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-primary { background: var(--ink); color: var(--white); }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  .btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); font-size: 0.8rem; padding: 0.6rem 1.25rem; }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+  .progress-section { padding: 2rem 4rem; border-top: 1px solid var(--border); display: none; }
+  .progress-section.visible { display: block; animation: fadeUp 0.4s ease both; }
+
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+  .progress-status { font-size: 0.875rem; font-weight: 500; }
+  .progress-pct { font-family: 'DM Serif Display', serif; font-size: 1.5rem; }
+
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 1.2rem; }
+  .progress-fill { height: 100%; background: var(--ink); border-radius: 2px; width: 0%; transition: width 0.5s ease; position: relative; }
+  .progress-fill.active::after {
+    content: ''; position: absolute; right: 0; top: 0;
+    height: 100%; width: 60px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6));
+    animation: shimmer 1.2s infinite;
   }
 
-  .btn-primary {
-    background: var(--ink);
-    color: var(--white);
-  }
+  .batch-track { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 0.75rem; }
+  .batch-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: all 0.3s; }
+  .batch-dot.uploading { background: var(--accent); transform: scale(1.3); }
+  .batch-dot.done { background: var(--green); }
+  .batch-dot.error { background: #e74c3c; }
 
-  .btn-primary:hover {
-    background: #333;
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  }
+  .stage-list { display: flex; gap: 2rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .stage { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); transition: color 0.3s; }
+  .stage.active { color: var(--ink); font-weight: 500; }
+  .stage.done { color: var(--green); }
+  .stage-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+  .stage.active .stage-dot { background: var(--ink); }
+  .stage.done .stage-dot { background: var(--green); }
 
-  .btn-primary:disabled {
-    background: var(--border);
-    color: var(--muted);
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    font-size: 0.8rem;
-    padding: 0.6rem 1.25rem;
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--ink);
-    color: var(--ink);
-  }
-
-  /* ── PROGRESS ── */
-  .progress-wrap {
-    padding: 0 4rem 2rem;
-    display: none;
-  }
-
-  .progress-wrap.visible { display: block; }
-
-  .progress-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .progress-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--ink);
-    border-radius: 2px;
-    width: 0%;
-    transition: width 0.4s ease;
-    position: relative;
-  }
-
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 40px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
-    animation: shimmer 1s infinite;
-  }
-
-  /* ── RESULT ── */
-  .result-section {
-    padding: 2rem 4rem 4rem;
-    display: none;
-  }
-
+  .result-section { padding: 2rem 4rem 4rem; display: none; border-top: 1px solid var(--border); }
   .result-section.visible { display: block; animation: fadeUp 0.6s ease both; }
 
   .result-label {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
   }
-
-  .result-label::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: #4caf82;
-    border-radius: 50%;
-  }
+  .result-label::before { content: ''; display: inline-block; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
 
   .result-image-wrap {
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    background: var(--white);
-    margin-bottom: 1.5rem;
-    max-height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--border);
+    background: var(--white); margin-bottom: 1.5rem;
+    max-height: 500px; display: flex; align-items: center; justify-content: center;
   }
+  .result-image-wrap img { width: 100%; object-fit: contain; display: block; max-height: 500px; }
+  .result-actions { display: flex; gap: 1rem; align-items: center; }
 
-  .result-image-wrap img {
-    width: 100%;
-    object-fit: contain;
-    display: block;
-    max-height: 500px;
-  }
-
-  .result-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  /* ── ERROR ── */
   .error-msg {
-    padding: 1rem 1.5rem;
-    background: #fff5f5;
-    border: 1px solid #ffd5d5;
-    border-radius: 10px;
-    color: #c0392b;
-    font-size: 0.875rem;
-    margin: 0 4rem 2rem;
-    display: none;
+    padding: 1rem 1.5rem; background: #fff5f5; border: 1px solid #ffd5d5;
+    border-radius: 10px; color: #c0392b; font-size: 0.875rem;
+    margin: 0 4rem 2rem; display: none;
   }
-
   .error-msg.visible { display: block; animation: fadeUp 0.4s ease both; }
 
-  /* ── FOOTER ── */
   footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-weight: 300;
+    border-top: 1px solid var(--border); padding: 2rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.8rem; color: var(--muted); font-weight: 300;
   }
 
-  /* ── SPINNER ── */
   .spinner {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
   }
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.85); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes shimmer {
-    from { opacity: 0; }
-    50%  { opacity: 1; }
-    to   { opacity: 0; }
-  }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(16px);  } to { opacity:1; transform:translateY(0); } }
+  @keyframes popIn    { from { opacity:0; transform:scale(0.85); }       to { opacity:1; transform:scale(1); } }
+  @keyframes spin     { to { transform: rotate(360deg); } }
+  @keyframes shimmer  { from { opacity:0; } 50% { opacity:1; } to { opacity:0; } }
 
   @media (max-width: 640px) {
     header, .hero, .main { padding-left: 1.5rem; padding-right: 1.5rem; }
-    .controls, .result-section, .progress-wrap, .error-msg { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .controls, .result-section, .progress-section, .error-msg { padding-left: 1.5rem; padding-right: 1.5rem; }
     .upload-zone { padding: 2.5rem 1.5rem; }
-    footer { padding: 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
     .hero h1 { font-size: 2.5rem; }
   }
 </style>
@@ -438,13 +208,12 @@
 
 <section class="hero">
   <h1>Stitch any<br>scene into<br><em>one frame.</em></h1>
-  <p>Upload overlapping photos and we'll automatically combine them into a wide panorama — powered by OpenCV.</p>
+  <p>Upload hundreds of overlapping photos and we'll automatically combine them into one wide panorama — processed in smart batches.</p>
 </section>
 
 <section class="main">
   <div class="card">
 
-    <!-- Upload Zone -->
     <div class="upload-zone" id="uploadZone">
       <input type="file" id="fileInput" accept="image/*" multiple>
       <div class="upload-icon">
@@ -455,13 +224,11 @@
         </svg>
       </div>
       <div class="upload-title">Drop your photos here</div>
-      <div class="upload-sub">or click to browse — select 2 or more overlapping images</div>
+      <div class="upload-sub">or click to browse — supports hundreds of overlapping images</div>
     </div>
 
-    <!-- Thumbnail Strip -->
     <div class="preview-strip" id="previewStrip"></div>
 
-    <!-- Controls -->
     <div class="controls">
       <div class="file-info" id="fileInfo">No images selected</div>
       <div style="display:flex;gap:0.75rem;align-items:center">
@@ -470,19 +237,25 @@
       </div>
     </div>
 
-    <!-- Progress -->
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-label">
-        <span id="progressLabel">Uploading images…</span>
-        <span id="progressPct">0%</span>
+    <div class="progress-section" id="progressSection">
+      <div class="progress-header">
+        <div class="progress-status" id="progressStatus">Starting…</div>
+        <div class="progress-pct" id="progressPct">0%</div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-bar">
+        <div class="progress-fill active" id="progressFill"></div>
+      </div>
+      <div class="batch-track" id="batchTrack"></div>
+      <div class="stage-list">
+        <div class="stage" id="stage-upload"><span class="stage-dot"></span>Uploading batches</div>
+        <div class="stage" id="stage-stitch"><span class="stage-dot"></span>Stitching</div>
+        <div class="stage" id="stage-merge"><span class="stage-dot"></span>Merging</div>
+        <div class="stage" id="stage-done"><span class="stage-dot"></span>Done</div>
+      </div>
     </div>
 
-    <!-- Error -->
     <div class="error-msg" id="errorMsg"></div>
 
-    <!-- Result -->
     <div class="result-section" id="resultSection">
       <div class="result-label">Panorama ready</div>
       <div class="result-image-wrap">
@@ -498,16 +271,16 @@
 </section>
 
 <footer>
-  <span>BigPicture — all processing happens on our server, images are never stored.</span>
+  <span>BigPicture — images processed on server, never stored permanently.</span>
   <span>Free &amp; open source</span>
 </footer>
 
 <script>
-  const API = 'https://singh56-bigpicture.hf.space/stitch';
+  const API = 'https://singh56-bigpicture.hf.space';
+  const BATCH_SIZE = 10;
 
   let selectedFiles = [];
 
-  // ── Upload zone interactions ──
   const zone = document.getElementById('uploadZone');
   const input = document.getElementById('fileInput');
 
@@ -519,7 +292,6 @@
     zone.classList.remove('dragover');
     handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
   });
-
   input.addEventListener('change', () => handleFiles([...input.files]));
 
   function handleFiles(files) {
@@ -531,7 +303,7 @@
   function renderPreviews() {
     const strip = document.getElementById('previewStrip');
     strip.innerHTML = '';
-    const max = 8;
+    const max = 10;
     selectedFiles.slice(0, max).forEach(f => {
       const img = document.createElement('img');
       img.className = 'thumb';
@@ -541,23 +313,19 @@
     if (selectedFiles.length > max) {
       const extra = document.createElement('div');
       extra.className = 'thumb-count';
-      extra.textContent = `+${selectedFiles.length - max}`;
+      extra.textContent = `+${selectedFiles.length - max} more`;
       strip.appendChild(extra);
     }
   }
 
   function updateUI() {
     const n = selectedFiles.length;
-    const info = document.getElementById('fileInfo');
-    const btn = document.getElementById('stitchBtn');
-    const clear = document.getElementById('clearBtn');
-
-    info.innerHTML = n === 0
+    const batches = Math.ceil(n / BATCH_SIZE);
+    document.getElementById('fileInfo').innerHTML = n === 0
       ? 'No images selected'
-      : `<strong>${n} image${n > 1 ? 's' : ''}</strong> selected`;
-
-    btn.disabled = n < 2;
-    clear.style.display = n > 0 ? 'inline-flex' : 'none';
+      : `<strong>${n} image${n > 1 ? 's' : ''}</strong> — will process in ${batches} batch${batches > 1 ? 'es' : ''} of ${BATCH_SIZE}`;
+    document.getElementById('stitchBtn').disabled = n < 2;
+    document.getElementById('clearBtn').style.display = n > 0 ? 'inline-flex' : 'none';
   }
 
   function clearAll() {
@@ -565,76 +333,125 @@
     document.getElementById('previewStrip').innerHTML = '';
     document.getElementById('resultSection').classList.remove('visible');
     document.getElementById('errorMsg').classList.remove('visible');
-    document.getElementById('progressWrap').classList.remove('visible');
-    document.getElementById('input').value = '';
+    document.getElementById('progressSection').classList.remove('visible');
+    document.getElementById('fileInput').value = '';
+    resetStages();
     updateUI();
   }
 
-  // ── Stitch ──
-  async function startStitch() {
-    hideError();
-    showProgress('Uploading images…', 20);
+  const stageOrder = ['upload','stitch','merge','done'];
 
-    const formData = new FormData();
-    selectedFiles.forEach(f => formData.append('files', f));
+  function setStage(id) {
+    stageOrder.forEach(s => {
+      const el = document.getElementById('stage-' + s);
+      el.classList.remove('active', 'done');
+      if (s === id) el.classList.add('active');
+      else if (stageOrder.indexOf(s) < stageOrder.indexOf(id)) el.classList.add('done');
+    });
+  }
 
-    try {
-      showProgress('Uploading images…', 35);
+  function resetStages() {
+    stageOrder.forEach(s => document.getElementById('stage-' + s).classList.remove('active','done'));
+  }
 
-      const res = await fetch(API, { method: 'POST', body: formData });
+  function setProgress(pct, status) {
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+    if (status) document.getElementById('progressStatus').textContent = status;
+  }
 
-      showProgress('Stitching panorama…', 70);
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `Server error ${res.status}`);
-      }
-
-      const contentType = res.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        const json = await res.json();
-        throw new Error(json.error || 'Stitching failed');
-      }
-
-      showProgress('Finalising…', 95);
-
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-
-      showProgress('Done!', 100);
-
-      setTimeout(() => {
-        document.getElementById('progressWrap').classList.remove('visible');
-        showResult(url);
-      }, 600);
-
-    } catch (err) {
-      document.getElementById('progressWrap').classList.remove('visible');
-      showError(err.message);
+  function buildBatchDots(total) {
+    const track = document.getElementById('batchTrack');
+    track.innerHTML = '';
+    // cap visual dots at 100 to avoid overflow
+    const shown = Math.min(total, 100);
+    for (let i = 0; i < shown; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'batch-dot';
+      dot.id = 'dot-' + i;
+      track.appendChild(dot);
     }
   }
 
-  function showProgress(label, pct) {
-    const wrap = document.getElementById('progressWrap');
-    wrap.classList.add('visible');
-    document.getElementById('progressLabel').textContent = label;
-    document.getElementById('progressPct').textContent = pct + '%';
-    document.getElementById('progressFill').style.width = pct + '%';
+  function dotState(i, state) {
+    const dot = document.getElementById('dot-' + i);
+    if (dot) dot.className = 'batch-dot ' + state;
+  }
 
-    const btn = document.getElementById('stitchBtn');
-    btn.disabled = true;
-    btn.innerHTML = `<span class="spinner"></span> Processing…`;
+  async function startStitch() {
+    hideError();
+    document.getElementById('resultSection').classList.remove('visible');
+    document.getElementById('progressSection').classList.add('visible');
+    document.getElementById('stitchBtn').disabled = true;
+    document.getElementById('stitchBtn').innerHTML = '<span class="spinner"></span> Processing…';
+
+    const totalBatches = Math.ceil(selectedFiles.length / BATCH_SIZE);
+    buildBatchDots(totalBatches);
+    setStage('upload');
+    setProgress(2, 'Starting session…');
+
+    try {
+      // 1. Start session
+      const sessionRes = await fetch(`${API}/start-session`, { method: 'POST' });
+      const { session_id } = await sessionRes.json();
+
+      // 2. Upload batches one by one
+      for (let i = 0; i < totalBatches; i++) {
+        dotState(i, 'uploading');
+        const batch = selectedFiles.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE);
+        const pct = 5 + ((i / totalBatches) * 65);
+        setProgress(pct, `Uploading batch ${i + 1} of ${totalBatches}…`);
+        setStage('upload');
+
+        const form = new FormData();
+        form.append('session_id', session_id);
+        batch.forEach(f => form.append('files', f));
+
+        const res = await fetch(`${API}/upload-batch`, { method: 'POST', body: form });
+        const json = await res.json();
+        if (json.error) throw new Error(json.error);
+        dotState(i, 'done');
+      }
+
+      // 3. Finalize
+      setStage('merge');
+      setProgress(78, 'Merging all batches into final panorama…');
+
+      const finalForm = new FormData();
+      finalForm.append('session_id', session_id);
+      const finalRes = await fetch(`${API}/finalize`, { method: 'POST', body: finalForm });
+
+      const contentType = finalRes.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const err = await finalRes.json();
+        throw new Error(err.error || 'Merge failed');
+      }
+
+      setStage('done');
+      setProgress(100, 'Complete!');
+
+      const blob = await finalRes.blob();
+      const url = URL.createObjectURL(blob);
+
+      setTimeout(() => {
+        document.getElementById('progressSection').classList.remove('visible');
+        showResult(url);
+      }, 800);
+
+    } catch (err) {
+      document.getElementById('progressSection').classList.remove('visible');
+      showError(err.message);
+      document.getElementById('stitchBtn').disabled = false;
+      document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
+    }
   }
 
   function showResult(url) {
     document.getElementById('resultImg').src = url;
     document.getElementById('downloadBtn').href = url;
     document.getElementById('resultSection').classList.add('visible');
-
-    const btn = document.getElementById('stitchBtn');
-    btn.disabled = false;
-    btn.innerHTML = 'Stitch Panorama';
-
+    document.getElementById('stitchBtn').disabled = false;
+    document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
     document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
@@ -642,16 +459,11 @@
     const el = document.getElementById('errorMsg');
     el.textContent = '⚠️ ' + msg;
     el.classList.add('visible');
-
-    const btn = document.getElementById('stitchBtn');
-    btn.disabled = false;
-    btn.innerHTML = 'Stitch Panorama';
   }
 
   function hideError() {
     document.getElementById('errorMsg').classList.remove('visible');
   }
 </script>
-
 </body>
 </html>
