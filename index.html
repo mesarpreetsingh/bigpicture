@@ -335,7 +335,8 @@ function updateUI() {
   const batches = Math.ceil(n / BATCH_SIZE);
   document.getElementById('stitchBtn').disabled = n < 2;
   document.getElementById('clearBtn').style.display = n > 0 ? '' : 'none';
-  document.getElementById('debugBtn').style.display = n >= 2 ? '' : 'none';
+document.getElementById('debugBtn').style.display = n >= 2 ? '' : 'none';
+document.getElementById('debugBtn').disabled = false;
   document.getElementById('fileInfo').innerHTML = n === 0
     ? 'No photos selected'
     : `<strong>${n} photo${n>1?'s':''}</strong> · ${batches} batch${batches>1?'es':''}`;
