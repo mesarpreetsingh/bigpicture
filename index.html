@@ -182,14 +182,14 @@ footer a { color: var(--ink2); text-decoration: none; font-weight: 500; }
       </div>
 
       <div class="error-box" id="errorBox">
-        <span>⚠️</span><span id="errorText"></span>
+        <span>&#9888;&#65039;</span><span id="errorText"></span>
       </div>
 
       <div class="card-footer">
         <div class="file-info" id="fileInfo">No photos selected</div>
         <div class="btn-row">
           <button class="btn btn-ghost" id="clearBtn" onclick="clearAll()" style="display:none">Clear</button>
-          <button class="btn btn-debug" id="debugBtn" onclick="runDebug()" style="display:none">🔍 Diagnose</button>
+          <button class="btn btn-debug" id="debugBtn" onclick="runDebug()" style="display:none">&#128269; Diagnose</button>
           <button class="btn btn-primary" id="stitchBtn" onclick="startStitch()" disabled>Stitch Panorama</button>
         </div>
       </div>
@@ -231,7 +231,7 @@ footer a { color: var(--ink2); text-decoration: none; font-weight: 500; }
     </div>
 
     <div class="debug-panel" id="debugPanel">
-      <div class="debug-title">🔍 Diagnostic Report</div>
+      <div class="debug-title">&#128269; Diagnostic Report</div>
       <div id="debugContent"></div>
     </div>
 
@@ -262,18 +262,21 @@ footer a { color: var(--ink2); text-decoration: none; font-weight: 500; }
 </div>
 
 <footer>
-  BigPicture — <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> · Images processed on server and immediately discarded
+  BigPicture &mdash; <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> &middot; Images processed on server and immediately discarded
 </footer>
 
 <script>
-const API = 'https://singh56-bigpicture.hf.space';
-const BATCH_SIZE = 10;
-let selectedFiles = [];
-let serverAwake = false;
+var API = 'https://singh56-bigpicture.hf.space';
+var BATCH_SIZE = 10;
+var selectedFiles = [];
+var serverAwake = false;
+var CHECK_SVG = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+var SPIN_HTML = '<span class="spinner spinner-dark" style="width:10px;height:10px;border-width:2px"></span>';
+var STEPS = ['wake','session','upload','stitch','done'];
 
 // ── Drop zone ──
-const zone = document.getElementById('dropZone');
-const input = document.getElementById('fileInput');
+var zone = document.getElementById('dropZone');
+var input = document.getElementById('fileInput');
 zone.addEventListener('click', function() { input.click(); });
 zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
 zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
@@ -314,20 +317,11 @@ function renderThumbs() {
 function updateUI() {
   var n = selectedFiles.length;
   var batches = Math.ceil(n / BATCH_SIZE);
-
-  // Stitch button
   document.getElementById('stitchBtn').disabled = n < 2;
-
-  // Clear button
   document.getElementById('clearBtn').style.display = n > 0 ? '' : 'none';
-
-  // Debug button — show when 2+ images, NEVER disabled
   var db = document.getElementById('debugBtn');
   db.style.display = n >= 2 ? '' : 'none';
-  db.disabled = false;
   db.removeAttribute('disabled');
-
-  // File info
   if (n === 0) {
     document.getElementById('fileInfo').innerHTML = 'No photos selected';
   } else {
@@ -352,16 +346,11 @@ function clearAll() {
   updateUI();
 }
 
-// ── Steps ──
-var STEPS = ['wake', 'session', 'upload', 'stitch', 'done'];
-var CHECK_SVG = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-var SPIN_HTML = '<span class="spinner spinner-dark" style="width:10px;height:10px;border-width:2px"></span>';
-
 function setStep(id) {
   STEPS.forEach(function(s) {
     var el = document.getElementById('step-' + s);
     if (!el) return;
-    el.classList.remove('active', 'done');
+    el.classList.remove('active','done');
     var dot = el.querySelector('.step-dot');
     if (s === id) {
       el.classList.add('active');
@@ -389,7 +378,7 @@ function resetSteps() {
   STEPS.forEach(function(s) {
     var el = document.getElementById('step-' + s);
     if (!el) return;
-    el.classList.remove('active', 'done');
+    el.classList.remove('active','done');
     el.querySelector('.step-dot').innerHTML = '';
   });
 }
@@ -400,10 +389,22 @@ function setProgress(pct, status) {
   if (status) document.getElementById('progressStatus').textContent = status;
 }
 
+// ── Safe JSON parse helper ──
+async function safeJSON(response) {
+  var text = await response.text();
+  try {
+    return { ok: true, data: JSON.parse(text) };
+  } catch(e) {
+    if (text.indexOf('Internal') !== -1 || text.indexOf('Starting') !== -1 || text.indexOf('<!') !== -1) {
+      return { ok: false, error: 'Server is still starting up. Please wait 30 seconds and try again.' };
+    }
+    return { ok: false, error: 'Unexpected server response: ' + text.slice(0, 80) };
+  }
+}
+
 // ── Wake server ──
 async function wakeServer() {
   if (serverAwake) return true;
-
   document.getElementById('wakeBanner').classList.add('visible');
   document.getElementById('progressCard').classList.add('visible');
   setStep('wake');
@@ -414,14 +415,14 @@ async function wakeServer() {
       var res = await fetch(API + '/', { signal: AbortSignal.timeout(8000) });
       if (res.ok) {
         var text = await res.text();
-        if (text.includes('running')) {
+        if (text.indexOf('running') !== -1) {
           serverAwake = true;
           document.getElementById('wakeBanner').classList.remove('visible');
           return true;
         }
       }
     } catch(e) {
-      console.log('Wake attempt ' + (i+1) + ' failed');
+      console.log('Wake attempt ' + (i+1) + ' failed: ' + e.message);
     }
     document.getElementById('wakeMsg').textContent = 'Waking up server… attempt ' + (i+1) + ' of 15';
     setProgress(5 + (i / 15) * 10, 'Waking server… attempt ' + (i+1));
@@ -435,14 +436,14 @@ async function wakeServer() {
 // ── Upload images ──
 async function uploadImages() {
   await wakeServer();
-
   setStep('session');
   setProgress(18, 'Starting session…');
 
   var res = await fetch(API + '/start-session', { method: 'POST' });
-  if (!res.ok) throw new Error('Failed to start session');
-  var data = await res.json();
-  var session_id = data.session_id;
+  var parsed = await safeJSON(res);
+  if (!parsed.ok) throw new Error(parsed.error);
+  if (parsed.data.error) throw new Error(parsed.data.error);
+  var session_id = parsed.data.session_id;
 
   var total = Math.ceil(selectedFiles.length / BATCH_SIZE);
   setStep('upload');
@@ -458,9 +459,9 @@ async function uploadImages() {
     batch.forEach(function(f) { form.append('files', f); });
 
     var bres = await fetch(API + '/upload-batch', { method: 'POST', body: form });
-    if (!bres.ok) throw new Error('Upload failed on batch ' + (i+1));
-    var json = await bres.json();
-    if (json.error) throw new Error(json.error);
+    var bparsed = await safeJSON(bres);
+    if (!bparsed.ok) throw new Error(bparsed.error);
+    if (bparsed.data.error) throw new Error(bparsed.data.error);
   }
 
   return session_id;
@@ -481,10 +482,12 @@ async function runDebug() {
     var form = new FormData();
     form.append('session_id', session_id);
     var res = await fetch(API + '/debug', { method: 'POST', body: form });
-    var data = await res.json();
+    var parsed = await safeJSON(res);
 
     document.getElementById('progressCard').classList.remove('visible');
-    showDebug(data);
+
+    if (!parsed.ok) throw new Error(parsed.error);
+    showDebug(parsed.data);
   } catch(err) {
     document.getElementById('progressCard').classList.remove('visible');
     showError(err.message);
@@ -503,8 +506,10 @@ function showDebug(data) {
 
   var html =
     '<div class="debug-row"><span class="debug-key">Total images</span><span class="debug-val">' + n + '</span></div>' +
-    '<div class="debug-row"><span class="debug-key">Avg keypoints / image</span><span class="debug-val ' + (avgKp < 20 ? 'bad' : avgKp < 100 ? 'warn' : '') + '">' + avgKp + '</span></div>' +
-    '<div class="debug-row"><span class="debug-key">Matched pairs</span><span class="debug-val ' + (pairs === 0 ? 'bad' : pairs < 3 ? 'warn' : '') + '">' + pairs + ' / ' + maxPairs + '</span></div>';
+    '<div class="debug-row"><span class="debug-key">Avg keypoints / image</span><span class="debug-val ' +
+      (avgKp < 20 ? 'bad' : avgKp < 100 ? 'warn' : '') + '">' + avgKp + '</span></div>' +
+    '<div class="debug-row"><span class="debug-key">Matched pairs</span><span class="debug-val ' +
+      (pairs === 0 ? 'bad' : pairs < 3 ? 'warn' : '') + '">' + pairs + ' / ' + maxPairs + '</span></div>';
 
   if (data.feature_detection_error) {
     html += '<div class="debug-row"><span class="debug-key">Feature error</span><span class="debug-val bad">' + data.feature_detection_error + '</span></div>';
@@ -521,16 +526,16 @@ function showDebug(data) {
   }
 
   html += '<div class="debug-section"><div class="debug-section-title">Diagnosis</div>';
-  if (avgKp < 20) html += '<div class="debug-attempt failed">Very few keypoints — images may be blurry or low contrast.</div>';
-  if (pairs === 0) html += '<div class="debug-attempt failed">No matching pairs — images may not overlap enough.</div>';
-  else if (pairs < 3) html += '<div class="debug-attempt warn">Very few pairs — try images with more overlap (30%+).</div>';
-  else html += '<div class="debug-attempt success">Feature matching looks good — ' + pairs + ' pairs found.</div>';
+  if (avgKp < 20) html += '<div class="debug-attempt failed">Very few keypoints &mdash; images may be blurry or low contrast.</div>';
+  if (pairs === 0) html += '<div class="debug-attempt failed">No matching pairs found &mdash; images may not overlap enough.</div>';
+  else if (pairs < 3) html += '<div class="debug-attempt warn">Very few pairs &mdash; try images with more overlap (30%+).</div>';
+  else html += '<div class="debug-attempt success">Feature matching looks good &mdash; ' + pairs + ' pairs found.</div>';
 
   var success = data.attempts && data.attempts.find(function(a) { return a.result === 'SUCCESS'; });
   if (success) {
     html += '<div class="debug-attempt success">Stitching works! Click Stitch Panorama.</div>';
   } else {
-    html += '<div class="debug-attempt failed">All stitch attempts failed. Paste this report and we can investigate.</div>';
+    html += '<div class="debug-attempt failed">All stitch attempts failed. Paste this report so we can investigate.</div>';
   }
   html += '</div>';
 
@@ -545,12 +550,11 @@ async function startStitch() {
   document.getElementById('progressCard').classList.add('visible');
   document.getElementById('progressTitle').textContent = 'Processing';
   document.getElementById('stitchBtn').disabled = true;
-  document.getElementById('stitchBtn').innerHTML = '<span class="spinner"></span> Processing…';
+  document.getElementById('stitchBtn').innerHTML = '<span class="spinner"></span> Processing&hellip;';
   resetSteps();
 
   try {
     var session_id = await uploadImages();
-
     setStep('stitch');
     setProgress(70, 'Stitching images…');
 
@@ -559,18 +563,30 @@ async function startStitch() {
     var fres = await fetch(API + '/finalize', { method: 'POST', body: form2 });
 
     var ct = fres.headers.get('content-type') || '';
-    if (ct.includes('application/json')) {
-      var err = await fres.json();
-      throw new Error(err.error || 'Stitching failed');
+
+    // If JSON came back it's an error
+    if (ct.indexOf('application/json') !== -1) {
+      var parsed = await safeJSON(fres);
+      throw new Error(parsed.ok ? (parsed.data.error || 'Stitching failed') : parsed.error);
     }
-    if (!fres.ok) throw new Error('Server error ' + fres.status);
+
+    // If not ok and not image
+    if (!fres.ok) {
+      var errText = await fres.text();
+      if (errText.indexOf('Internal') !== -1 || errText.indexOf('<!') !== -1) {
+        throw new Error('Server error — wait 30 seconds and try again.');
+      }
+      throw new Error('Server error ' + fres.status + ': ' + errText.slice(0, 100));
+    }
 
     setStep('done');
     setProgress(100, 'Complete');
     doneAll();
 
     var blob = await fres.blob();
-    if (blob.size < 500) throw new Error('Server returned empty image. Try the Diagnose button.');
+    if (blob.size < 500) {
+      throw new Error('Server returned empty image. Try the Diagnose button to investigate.');
+    }
     var url = URL.createObjectURL(blob);
 
     setTimeout(function() {
