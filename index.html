@@ -7,629 +7,130 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg: #f9f9f7;
-  --white: #ffffff;
-  --ink: #111110;
-  --ink2: #3d3d3a;
-  --muted: #8f8f8c;
-  --border: #e8e8e4;
-  --border2: #d4d4cf;
-  --accent: #1a1a1a;
-  --green: #16a34a;
-  --green-bg: #f0fdf4;
-  --green-border: #bbf7d0;
-  --red: #dc2626;
-  --red-bg: #fef2f2;
-  --red-border: #fecaca;
-  --blue: #2563eb;
-  --radius: 16px;
-  --radius-sm: 10px;
+  --bg: #f9f9f7; --white: #fff; --ink: #111110; --ink2: #3d3d3a;
+  --muted: #8f8f8c; --border: #e8e8e4; --border2: #d4d4cf;
+  --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+  --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+  --blue: #2563eb; --blue-bg: #eff6ff; --blue-border: #bfdbfe;
+  --radius: 16px; --radius-sm: 10px;
 }
-
 html { scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
+header { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 3rem; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; animation: fadeDown 0.5s ease both; }
+.logo { display: flex; align-items: center; gap: 0.6rem; font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--ink); text-decoration: none; font-weight: 700; }
+.logo-mark { width: 32px; height: 32px; background: var(--ink); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.header-tag { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 
-/* ── HEADER ── */
-header {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 3rem;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  animation: fadeDown 0.5s ease both;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  color: var(--ink);
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.logo-mark {
-  width: 32px;
-  height: 32px;
-  background: var(--ink);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-mark svg {
-  width: 18px;
-  height: 18px;
-  stroke: white;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.header-tag {
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* ── LAYOUT ── */
-.page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 3.5rem 2rem 6rem;
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2rem;
-  align-items: start;
-}
-
-/* ── LEFT COLUMN ── */
+.page { max-width: 1100px; margin: 0 auto; padding: 3.5rem 2rem 6rem; display: grid; grid-template-columns: 1fr 380px; gap: 2rem; align-items: start; }
 .left { animation: fadeUp 0.6s 0.1s ease both; }
+.page-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+.page-title em { font-style: italic; font-weight: 400; color: var(--muted); }
+.page-sub { font-size: 0.95rem; color: var(--muted); line-height: 1.7; max-width: 440px; margin-bottom: 2.5rem; }
 
-.page-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.6rem;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: 0.75rem;
-}
-
-.page-title em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--muted);
-}
-
-.page-sub {
-  font-size: 0.95rem;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 440px;
-  margin-bottom: 2.5rem;
-  font-weight: 400;
-}
-
-/* ── UPLOAD CARD ── */
-.upload-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-
-.drop-zone {
-  padding: 3.5rem 2.5rem;
-  text-align: center;
-  cursor: pointer;
-  transition: background 0.2s;
-  position: relative;
-  border-bottom: 1px solid var(--border);
-}
-
-.drop-zone:hover { background: var(--bg); }
-.drop-zone.dragover { background: #f4f4f0; }
+.upload-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+.drop-zone { padding: 3.5rem 2.5rem; text-align: center; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid var(--border); }
+.drop-zone:hover, .drop-zone.dragover { background: var(--bg); }
 .drop-zone input { display: none; }
+.drop-icon-wrap { width: 56px; height: 56px; margin: 0 auto 1.2rem; background: var(--bg); border: 1px solid var(--border2); border-radius: 14px; display: flex; align-items: center; justify-content: center; transition: transform 0.25s, box-shadow 0.25s; }
+.drop-zone:hover .drop-icon-wrap { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+.drop-icon-wrap svg { width: 24px; height: 24px; stroke: var(--ink2); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.drop-title { font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+.drop-sub { font-size: 0.82rem; color: var(--muted); }
+.drop-formats { display: flex; justify-content: center; gap: 0.4rem; flex-wrap: wrap; margin-top: 1rem; }
+.fmt { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.45rem; }
 
-.drop-icon-wrap {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 1.2rem;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.25s, box-shadow 0.25s;
-}
-
-.drop-zone:hover .drop-icon-wrap {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-.drop-icon-wrap svg {
-  width: 24px; height: 24px;
-  stroke: var(--ink2);
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.drop-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 0.3rem;
-}
-
-.drop-sub {
-  font-size: 0.82rem;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.drop-formats {
-  display: flex;
-  justify-content: center;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-.fmt {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.2rem 0.45rem;
-}
-
-/* ── THUMBNAILS ── */
-.thumbs-section {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  display: none;
-}
+.thumbs-section { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: none; }
 .thumbs-section.visible { display: block; }
+.thumbs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.875rem; }
+.thumbs-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.thumbs-count { font-size: 0.78rem; font-weight: 600; color: var(--ink2); background: var(--bg); border: 1px solid var(--border); border-radius: 100px; padding: 0.15rem 0.6rem; }
+.thumbs-grid { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.thumb { width: 68px; height: 52px; border-radius: 7px; object-fit: cover; border: 1px solid var(--border); animation: popIn 0.25s ease both; }
+.thumb-overflow { width: 68px; height: 52px; border-radius: 7px; background: var(--bg); border: 1px dashed var(--border2); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 600; color: var(--muted); }
 
-.thumbs-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.875rem;
-}
+.card-footer { padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.file-info { font-size: 0.82rem; color: var(--muted); }
+.file-info strong { color: var(--ink); font-weight: 600; }
+.btn-row { display: flex; gap: 0.6rem; align-items: center; }
 
-.thumbs-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+.btn { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; padding: 0.65rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none; line-height: 1; }
+.btn-primary { background: var(--ink); color: white; }
+.btn-primary:hover:not(:disabled) { background: #2d2d2d; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+.btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); font-size: 0.8rem; padding: 0.6rem 1.1rem; }
+.btn-ghost:hover { border-color: var(--border2); color: var(--ink2); }
+.btn-debug { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); font-size: 0.8rem; padding: 0.6rem 1.1rem; }
+.btn-debug:hover { background: #dbeafe; }
 
-.thumbs-count {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--ink2);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  padding: 0.15rem 0.6rem;
-}
-
-.thumbs-grid {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.thumb {
-  width: 68px;
-  height: 52px;
-  border-radius: 7px;
-  object-fit: cover;
-  border: 1px solid var(--border);
-  animation: popIn 0.25s ease both;
-}
-
-.thumb-overflow {
-  width: 68px;
-  height: 52px;
-  border-radius: 7px;
-  background: var(--bg);
-  border: 1px dashed var(--border2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-/* ── CARD FOOTER ── */
-.card-footer {
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.file-info {
-  font-size: 0.82rem;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.file-info strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.btn-row {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-}
-
-.btn {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 0.65rem 1.5rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  text-decoration: none;
-  line-height: 1;
-}
-
-.btn-primary {
-  background: var(--ink);
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: #2d2d2d;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-}
-
-.btn-primary:disabled {
-  background: var(--border);
-  color: var(--muted);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-ghost {
-  background: transparent;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  font-size: 0.8rem;
-  padding: 0.6rem 1.1rem;
-}
-
-.btn-ghost:hover {
-  border-color: var(--border2);
-  color: var(--ink2);
-}
-
-/* ── ERROR ── */
-.error-box {
-  margin: 0 1.5rem 1.25rem;
-  padding: 0.875rem 1rem;
-  background: var(--red-bg);
-  border: 1px solid var(--red-border);
-  border-radius: var(--radius-sm);
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--red);
-  display: none;
-}
-.error-box.visible { display: flex; align-items: flex-start; gap: 0.5rem; }
-
-/* ── RIGHT COLUMN ── */
 .right { animation: fadeUp 0.6s 0.2s ease both; }
 
-/* ── PROGRESS CARD ── */
-.progress-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  display: none;
-  margin-bottom: 1.5rem;
-}
-
+.progress-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; margin-bottom: 1.5rem; }
 .progress-card.visible { display: block; animation: fadeUp 0.4s ease both; }
+.progress-card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.progress-card-title { font-size: 0.85rem; font-weight: 600; }
+.pct-badge { font-size: 1.1rem; font-weight: 600; font-family: 'Playfair Display', serif; }
+.progress-bar-wrap { padding: 1.25rem 1.5rem; }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 0.5rem; }
+.progress-bar-fill { height: 100%; background: var(--ink); border-radius: 2px; width: 0%; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); position: relative; }
+.progress-bar-fill::after { content: ''; position: absolute; right: 0; top: 0; width: 50px; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5)); animation: shimmer 1.5s infinite; }
+.progress-status { font-size: 0.75rem; color: var(--muted); }
 
-.progress-card-header {
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.progress-card-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.pct-badge {
-  font-size: 1.1rem;
-  font-weight: 600;
-  font-family: 'Playfair Display', serif;
-  color: var(--ink);
-}
-
-.progress-bar-wrap {
-  padding: 0 1.5rem;
-  padding-top: 1.25rem;
-}
-
-.progress-bar {
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: var(--ink);
-  border-radius: 2px;
-  width: 0%;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.progress-bar-fill::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0;
-  width: 50px; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
-  animation: shimmer 1.5s infinite;
-}
-
-.progress-status {
-  font-size: 0.75rem;
-  color: var(--muted);
-  font-weight: 400;
-  padding-bottom: 1.25rem;
-}
-
-/* ── STEPS ── */
-.steps {
-  padding: 0.5rem 1.5rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.step {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  transition: all 0.3s;
-}
-
-.step.active {
-  background: var(--bg);
-  border-color: var(--border);
-}
-
-.step.done { opacity: 1; }
-
-.step-dot {
-  width: 24px; height: 24px;
-  border-radius: 50%;
-  border: 2px solid var(--border2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.3s;
-  font-size: 0.65rem;
-}
-
-.step.active .step-dot {
-  border-color: var(--ink);
-  background: var(--ink);
-}
-
-.step.done .step-dot {
-  border-color: var(--green);
-  background: var(--green);
-}
-
-.step-label {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--muted);
-  transition: color 0.3s;
-}
-
+.steps { padding: 0 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.step { display: flex; align-items: center; gap: 0.875rem; padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid transparent; transition: all 0.3s; }
+.step.active { background: var(--bg); border-color: var(--border); }
+.step-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; font-size: 0.65rem; }
+.step.active .step-dot { border-color: var(--ink); background: var(--ink); }
+.step.done .step-dot { border-color: var(--green); background: var(--green); }
+.step-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); transition: color 0.3s; }
 .step.active .step-label { color: var(--ink); font-weight: 600; }
 .step.done .step-label { color: var(--green); }
+.step-sublabel { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
 
-.step-sublabel {
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-weight: 400;
-  margin-top: 0.1rem;
-}
+/* DEBUG PANEL */
+.debug-panel { background: #0f0f0f; border: 1px solid #333; border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; display: none; font-family: 'Courier New', monospace; }
+.debug-panel.visible { display: block; animation: fadeUp 0.4s ease both; }
+.debug-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #888; margin-bottom: 1rem; }
+.debug-row { display: flex; justify-content: space-between; padding: 0.35rem 0; border-bottom: 1px solid #222; font-size: 0.75rem; }
+.debug-row:last-child { border-bottom: none; }
+.debug-key { color: #888; }
+.debug-val { color: #4ade80; font-weight: 600; }
+.debug-val.bad { color: #f87171; }
+.debug-val.warn { color: #fbbf24; }
+.debug-section { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #222; }
+.debug-section-title { font-size: 0.7rem; color: #666; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.debug-attempt { padding: 0.4rem 0.6rem; border-radius: 6px; font-size: 0.72rem; margin-bottom: 0.3rem; }
+.debug-attempt.success { background: #052e16; color: #4ade80; }
+.debug-attempt.failed { background: #1f0808; color: #f87171; }
+.debug-attempt.empty { background: #1c1600; color: #fbbf24; }
 
-/* ── INFO CARD ── */
-.info-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-}
+.result-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: none; margin-bottom: 1.5rem; }
+.result-card.visible { display: block; animation: fadeUp 0.5s ease both; }
+.result-card-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.6rem; }
+.result-badge { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--green-bg); border: 1px solid var(--green-border); border-radius: 100px; padding: 0.25rem 0.65rem; font-size: 0.72rem; font-weight: 600; color: var(--green); }
+.result-card-title { font-size: 0.85rem; font-weight: 600; }
+.result-img-wrap { background: var(--bg); display: flex; align-items: center; justify-content: center; max-height: 320px; overflow: hidden; border-bottom: 1px solid var(--border); }
+.result-img-wrap img { width: 100%; object-fit: contain; max-height: 320px; display: block; }
+.result-actions { padding: 1rem 1.5rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
 
-.info-card-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 1rem;
-}
+.error-box { margin: 0 1.5rem 1.25rem; padding: 0.875rem 1rem; background: var(--red-bg); border: 1px solid var(--red-border); border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 500; color: var(--red); display: none; }
+.error-box.visible { display: flex; align-items: flex-start; gap: 0.5rem; }
 
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.82rem;
-}
-
+.info-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+.info-card-title { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
 .info-row:last-child { border-bottom: none; padding-bottom: 0; }
-.info-row:first-of-type { padding-top: 0; }
-
-.info-key { color: var(--muted); font-weight: 400; }
+.info-key { color: var(--muted); }
 .info-val { color: var(--ink); font-weight: 600; }
 .info-val.green { color: var(--green); }
 
-/* ── RESULT CARD ── */
-.result-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  display: none;
-  margin-bottom: 1.5rem;
-}
-.result-card.visible { display: block; animation: fadeUp 0.5s ease both; }
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; }
+.spinner-dark { border-color: rgba(0,0,0,0.1); border-top-color: var(--ink); }
 
-.result-card-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.result-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: var(--green-bg);
-  border: 1px solid var(--green-border);
-  border-radius: 100px;
-  padding: 0.25rem 0.65rem;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--green);
-}
-
-.result-card-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink);
-}
-
-.result-img-wrap {
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-height: 320px;
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-}
-
-.result-img-wrap img {
-  width: 100%;
-  object-fit: contain;
-  max-height: 320px;
-  display: block;
-}
-
-.result-actions {
-  padding: 1rem 1.5rem;
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-/* ── SPINNER ── */
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-  display: inline-block;
-}
-
-.spinner-dark {
-  border-color: rgba(0,0,0,0.1);
-  border-top-color: var(--ink);
-}
-
-/* ── FOOTER ── */
-footer {
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.78rem;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  background: var(--white);
-}
-
+footer { text-align: center; padding: 2rem; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--white); }
 footer a { color: var(--ink2); text-decoration: none; font-weight: 500; }
-footer a:hover { color: var(--ink); }
 
 @keyframes fadeDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes fadeUp   { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:translateY(0)} }
@@ -654,40 +155,30 @@ footer a:hover { color: var(--ink); }
     </div>
     BigPicture
   </a>
-  <div class="header-right">
-    <span class="header-tag">Free · No account needed</span>
-  </div>
+  <div class="header-tag">Free · No account needed</div>
 </header>
 
 <div class="page">
-
-  <!-- LEFT: Upload -->
   <div class="left">
     <h1 class="page-title">Stitch photos into<br><em>one panorama.</em></h1>
-    <p class="page-sub">Upload overlapping images in any order — BigPicture automatically clusters them by visual similarity and stitches them into a single wide image.</p>
+    <p class="page-sub">Upload overlapping images in any order — BigPicture automatically figures out the layout and stitches them into one image.</p>
 
     <div class="upload-card">
-      <!-- Drop Zone -->
       <div class="drop-zone" id="dropZone">
         <input type="file" id="fileInput" accept="image/*" multiple>
         <div class="drop-icon-wrap">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
         <div class="drop-title">Drop photos here or click to browse</div>
-        <div class="drop-sub">Upload any number of images in any order</div>
+        <div class="drop-sub">Upload overlapping images in any order</div>
         <div class="drop-formats">
-          <span class="fmt">JPG</span>
-          <span class="fmt">PNG</span>
-          <span class="fmt">WEBP</span>
-          <span class="fmt">HEIC</span>
-          <span class="fmt">RAW</span>
-          <span class="fmt">TIFF</span>
-          <span class="fmt">BMP</span>
-          <span class="fmt">AVIF</span>
+          <span class="fmt">JPG</span><span class="fmt">PNG</span>
+          <span class="fmt">WEBP</span><span class="fmt">HEIC</span>
+          <span class="fmt">RAW</span><span class="fmt">TIFF</span>
+          <span class="fmt">BMP</span><span class="fmt">AVIF</span>
         </div>
       </div>
 
-      <!-- Thumbnails -->
       <div class="thumbs-section" id="thumbsSection">
         <div class="thumbs-header">
           <span class="thumbs-label">Selected photos</span>
@@ -696,71 +187,59 @@ footer a:hover { color: var(--ink); }
         <div class="thumbs-grid" id="thumbsGrid"></div>
       </div>
 
-      <!-- Error -->
       <div class="error-box" id="errorBox">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
-        <span id="errorText"></span>
+        <span>⚠️</span><span id="errorText"></span>
       </div>
 
-      <!-- Footer -->
       <div class="card-footer">
         <div class="file-info" id="fileInfo">No photos selected</div>
         <div class="btn-row">
           <button class="btn btn-ghost" id="clearBtn" onclick="clearAll()" style="display:none">Clear</button>
+          <button class="btn btn-debug" id="debugBtn" onclick="runDebug()" style="display:none">🔍 Diagnose</button>
           <button class="btn btn-primary" id="stitchBtn" onclick="startStitch()" disabled>Stitch Panorama</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT: Status + Info -->
   <div class="right">
-
-    <!-- Progress Card -->
+    <!-- Progress -->
     <div class="progress-card" id="progressCard">
       <div class="progress-card-header">
         <span class="progress-card-title">Processing</span>
         <span class="pct-badge" id="pctBadge">0%</span>
       </div>
       <div class="progress-bar-wrap">
-        <div class="progress-bar">
-          <div class="progress-bar-fill" id="progressFill"></div>
-        </div>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
         <div class="progress-status" id="progressStatus">Starting…</div>
       </div>
       <div class="steps">
         <div class="step" id="step-session">
           <div class="step-dot"></div>
-          <div>
-            <div class="step-label">Connect to server</div>
-            <div class="step-sublabel">Start processing session</div>
-          </div>
+          <div><div class="step-label">Connect to server</div><div class="step-sublabel">Start session</div></div>
         </div>
         <div class="step" id="step-upload">
           <div class="step-dot"></div>
-          <div>
-            <div class="step-label" id="uploadLabel">Upload & cluster</div>
-            <div class="step-sublabel" id="uploadSub">Grouping similar images</div>
-          </div>
+          <div><div class="step-label" id="uploadLabel">Upload images</div><div class="step-sublabel" id="uploadSub">Sending to server</div></div>
         </div>
         <div class="step" id="step-stitch">
           <div class="step-dot"></div>
-          <div>
-            <div class="step-label">Stitch clusters</div>
-            <div class="step-sublabel">Merging overlapping images</div>
-          </div>
+          <div><div class="step-label">Stitching</div><div class="step-sublabel">Finding overlaps &amp; merging</div></div>
         </div>
-        <div class="step" id="step-merge">
+        <div class="step" id="step-done">
           <div class="step-dot"></div>
-          <div>
-            <div class="step-label">Final merge</div>
-            <div class="step-sublabel">Combining into one panorama</div>
-          </div>
+          <div><div class="step-label">Complete</div><div class="step-sublabel">Encoding final image</div></div>
         </div>
       </div>
     </div>
 
-    <!-- Result Card -->
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debugPanel">
+      <div class="debug-title">🔍 Diagnostic Report</div>
+      <div id="debugContent"></div>
+    </div>
+
+    <!-- Result -->
     <div class="result-card" id="resultCard">
       <div class="result-card-header">
         <div class="result-badge">
@@ -769,53 +248,35 @@ footer a:hover { color: var(--ink); }
         </div>
         <span class="result-card-title">Panorama complete</span>
       </div>
-      <div class="result-img-wrap">
-        <img id="resultImg" src="" alt="Panorama result">
-      </div>
+      <div class="result-img-wrap"><img id="resultImg" src="" alt="Panorama"></div>
       <div class="result-actions">
         <a id="downloadBtn" class="btn btn-primary" download="panorama.jpg">Download</a>
         <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
       </div>
     </div>
 
-    <!-- Info Card -->
+    <!-- Info -->
     <div class="info-card">
       <div class="info-card-title">How it works</div>
-      <div class="info-row">
-        <span class="info-key">Batch size</span>
-        <span class="info-val">10 images per cluster</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Image order</span>
-        <span class="info-val green">Auto-detected</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Clustering</span>
-        <span class="info-val green">Visual similarity</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Storage</span>
-        <span class="info-val green">Never saved</span>
-      </div>
-      <div class="info-row">
-        <span class="info-key">Cost</span>
-        <span class="info-val green">Free</span>
-      </div>
+      <div class="info-row"><span class="info-key">Layout detection</span><span class="info-val green">Automatic</span></div>
+      <div class="info-row"><span class="info-key">Image order</span><span class="info-val green">Any order</span></div>
+      <div class="info-row"><span class="info-key">Blending</span><span class="info-val green">Multiband</span></div>
+      <div class="info-row"><span class="info-key">Storage</span><span class="info-val green">Never saved</span></div>
+      <div class="info-row"><span class="info-key">Cost</span><span class="info-val green">Free</span></div>
     </div>
-
   </div>
 </div>
 
 <footer>
-  BigPicture — <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> · Images processed on server and immediately discarded · Built free with Hugging Face + Cloudflare
+  BigPicture — <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> · Images processed on server and immediately discarded
 </footer>
 
 <script>
 const API = 'https://singh56-bigpicture.hf.space';
 const BATCH_SIZE = 10;
 let selectedFiles = [];
+let currentSessionId = null;
 
-// ── Drop zone ──
 const zone = document.getElementById('dropZone');
 const input = document.getElementById('fileInput');
 
@@ -830,8 +291,7 @@ input.addEventListener('change', () => addFiles([...input.files]));
 
 function addFiles(files) {
   selectedFiles = [...selectedFiles, ...files];
-  renderThumbs();
-  updateUI();
+  renderThumbs(); updateUI();
 }
 
 function renderThumbs() {
@@ -851,8 +311,7 @@ function renderThumbs() {
     ov.textContent = '+' + (selectedFiles.length - max);
     grid.appendChild(ov);
   }
-  const visible = selectedFiles.length > 0;
-  document.getElementById('thumbsSection').classList.toggle('visible', visible);
+  document.getElementById('thumbsSection').classList.toggle('visible', selectedFiles.length > 0);
   document.getElementById('thumbsCount').textContent = selectedFiles.length;
 }
 
@@ -861,31 +320,27 @@ function updateUI() {
   const batches = Math.ceil(n / BATCH_SIZE);
   document.getElementById('stitchBtn').disabled = n < 2;
   document.getElementById('clearBtn').style.display = n > 0 ? '' : 'none';
-
-  if (n === 0) {
-    document.getElementById('fileInfo').innerHTML = 'No photos selected';
-  } else {
-    document.getElementById('fileInfo').innerHTML =
-      `<strong>${n} photo${n > 1 ? 's' : ''}</strong> · ${batches} batch${batches > 1 ? 'es' : ''}`;
-  }
+  document.getElementById('debugBtn').style.display = n >= 2 ? '' : 'none';
+  document.getElementById('fileInfo').innerHTML = n === 0
+    ? 'No photos selected'
+    : `<strong>${n} photo${n>1?'s':''}</strong> · ${batches} batch${batches>1?'es':''}`;
 }
 
 function clearAll() {
-  selectedFiles = [];
+  selectedFiles = []; currentSessionId = null;
   input.value = '';
   document.getElementById('thumbsSection').classList.remove('visible');
   document.getElementById('thumbsGrid').innerHTML = '';
   document.getElementById('progressCard').classList.remove('visible');
   document.getElementById('resultCard').classList.remove('visible');
+  document.getElementById('debugPanel').classList.remove('visible');
   document.getElementById('errorBox').classList.remove('visible');
   document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
-  resetSteps();
-  updateUI();
+  resetSteps(); updateUI();
 }
 
 // ── Steps ──
-const STEPS = ['session','upload','stitch','merge'];
-
+const STEPS = ['session','upload','stitch','done'];
 function setStep(id) {
   STEPS.forEach(s => {
     const el = document.getElementById('step-' + s);
@@ -902,82 +357,162 @@ function setStep(id) {
     }
   });
 }
-
 function doneAll() {
   STEPS.forEach(s => {
-    const el = document.getElementById('step-' + s);
+    const el = document.getElementById('step-'+s);
     el.classList.remove('active'); el.classList.add('done');
     el.querySelector('.step-dot').innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   });
 }
-
 function resetSteps() {
   STEPS.forEach(s => {
-    const el = document.getElementById('step-' + s);
+    const el = document.getElementById('step-'+s);
     el.classList.remove('active','done');
     el.querySelector('.step-dot').innerHTML = '';
   });
 }
-
 function setProgress(pct, status) {
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('pctBadge').textContent = Math.round(pct) + '%';
   if (status) document.getElementById('progressStatus').textContent = status;
 }
 
-// ── Stitch ──
+// ── Start session and upload ──
+async function uploadImages() {
+  setStep('session');
+  setProgress(3, 'Connecting…');
+  const res = await fetch(`${API}/start-session`, { method: 'POST' });
+  const { session_id } = await res.json();
+  currentSessionId = session_id;
+
+  const total = Math.ceil(selectedFiles.length / BATCH_SIZE);
+  setStep('upload');
+  for (let i = 0; i < total; i++) {
+    setProgress(8 + (i/total)*55, `Uploading batch ${i+1} of ${total}…`);
+    document.getElementById('uploadLabel').textContent = `Uploading batch ${i+1} of ${total}`;
+    const batch = selectedFiles.slice(i*BATCH_SIZE, (i+1)*BATCH_SIZE);
+    const form = new FormData();
+    form.append('session_id', session_id);
+    batch.forEach(f => form.append('files', f));
+    const bres = await fetch(`${API}/upload-batch`, { method:'POST', body: form });
+    const json = await bres.json();
+    if (json.error) throw new Error(json.error);
+  }
+  return session_id;
+}
+
+// ── Run debug ──
+async function runDebug() {
+  hideError();
+  document.getElementById('debugPanel').classList.remove('visible');
+  document.getElementById('progressCard').classList.add('visible');
+  document.getElementById('debugBtn').disabled = true;
+  document.getElementById('stitchBtn').disabled = true;
+
+  try {
+    const session_id = await uploadImages();
+    setProgress(70, 'Running diagnostics…');
+
+    const form = new FormData();
+    form.append('session_id', session_id);
+    const res = await fetch(`${API}/debug`, { method: 'POST', body: form });
+    const data = await res.json();
+
+    document.getElementById('progressCard').classList.remove('visible');
+    showDebug(data);
+
+  } catch (err) {
+    document.getElementById('progressCard').classList.remove('visible');
+    showError(err.message);
+  }
+
+  document.getElementById('debugBtn').disabled = false;
+  document.getElementById('stitchBtn').disabled = false;
+  resetSteps();
+}
+
+function showDebug(data) {
+  const panel = document.getElementById('debugPanel');
+  const content = document.getElementById('debugContent');
+  panel.classList.add('visible');
+
+  const avgKp = data.avg_keypoints || 0;
+  const pairs = data.total_pairs_matched || 0;
+  const n = data.total_images || 0;
+  const maxPairs = n * (n-1);
+
+  let html = `
+    <div class="debug-row"><span class="debug-key">Total images</span><span class="debug-val">${n}</span></div>
+    <div class="debug-row"><span class="debug-key">Avg keypoints/image</span><span class="debug-val ${avgKp < 20 ? 'bad' : avgKp < 100 ? 'warn' : ''}">${avgKp}</span></div>
+    <div class="debug-row"><span class="debug-key">Matched pairs</span><span class="debug-val ${pairs === 0 ? 'bad' : pairs < 3 ? 'warn' : ''}">${pairs} / ${maxPairs}</span></div>
+  `;
+
+  if (data.feature_detection_error) {
+    html += `<div class="debug-row"><span class="debug-key">Feature error</span><span class="debug-val bad">${data.feature_detection_error}</span></div>`;
+  }
+
+  if (data.attempts && data.attempts.length) {
+    html += `<div class="debug-section"><div class="debug-section-title">Stitch attempts</div>`;
+    data.attempts.forEach(a => {
+      const cls = a.result === 'SUCCESS' ? 'success' : a.result === 'EMPTY RESULT' ? 'empty' : 'failed';
+      html += `<div class="debug-attempt ${cls}">conf=${a.confidence} → ${a.result}${a.size ? ' ('+a.size+')' : ''}${a.error ? ': '+a.error : ''}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Diagnosis
+  html += `<div class="debug-section"><div class="debug-section-title">Diagnosis</div>`;
+  if (avgKp < 20) {
+    html += `<div class="debug-attempt failed">⚠️ Very few keypoints detected. Images may be too blurry, too dark, or lacking texture.</div>`;
+  }
+  if (pairs === 0) {
+    html += `<div class="debug-attempt failed">⚠️ No matching pairs found. Images may not overlap enough, or look too different.</div>`;
+  } else if (pairs < 3) {
+    html += `<div class="debug-attempt empty">⚠️ Very few pairs matched. Try images with more overlap (30%+).</div>`;
+  } else {
+    html += `<div class="debug-attempt success">✅ Feature matching looks good (${pairs} pairs).</div>`;
+  }
+
+  const success = data.attempts && data.attempts.find(a => a.result === 'SUCCESS');
+  if (success) {
+    html += `<div class="debug-attempt success">✅ Stitching works! Try clicking "Stitch Panorama".</div>`;
+  } else {
+    html += `<div class="debug-attempt failed">❌ All stitch attempts failed. See errors above.</div>`;
+  }
+  html += `</div>`;
+
+  content.innerHTML = html;
+}
+
+// ── Main stitch ──
 async function startStitch() {
   hideError();
   document.getElementById('resultCard').classList.remove('visible');
+  document.getElementById('debugPanel').classList.remove('visible');
   document.getElementById('progressCard').classList.add('visible');
   document.getElementById('stitchBtn').disabled = true;
   document.getElementById('stitchBtn').innerHTML = '<span class="spinner"></span> Processing…';
   resetSteps();
 
   try {
-    setStep('session');
-    setProgress(3, 'Connecting to server…');
-    const res = await fetch(`${API}/start-session`, { method: 'POST' });
-    const { session_id } = await res.json();
-
-    const total = Math.ceil(selectedFiles.length / BATCH_SIZE);
-    setStep('upload');
-
-    for (let i = 0; i < total; i++) {
-      const pct = 8 + ((i / total) * 58);
-      setProgress(pct, `Uploading batch ${i + 1} of ${total}…`);
-      document.getElementById('uploadLabel').textContent = `Uploading batch ${i+1} of ${total}`;
-      document.getElementById('uploadSub').textContent = `Smart clustering by visual similarity`;
-
-      const batch = selectedFiles.slice(i * BATCH_SIZE, (i + 1) * BATCH_SIZE);
-      const form = new FormData();
-      form.append('session_id', session_id);
-      batch.forEach(f => form.append('files', f));
-
-      const bres = await fetch(`${API}/upload-batch`, { method: 'POST', body: form });
-      const json = await bres.json();
-      if (json.error) throw new Error(json.error);
-    }
+    const session_id = await uploadImages();
 
     setStep('stitch');
-    setProgress(70, 'Stitching clusters…');
-    await new Promise(r => setTimeout(r, 300));
-
-    setStep('merge');
-    setProgress(82, 'Final merge…');
+    setProgress(68, 'Stitching images…');
 
     const form2 = new FormData();
     form2.append('session_id', session_id);
-    const fres = await fetch(`${API}/finalize`, { method: 'POST', body: form2 });
+    const fres = await fetch(`${API}/finalize`, { method:'POST', body: form2 });
 
     const ct = fres.headers.get('content-type') || '';
     if (ct.includes('application/json')) {
       const err = await fres.json();
-      throw new Error(err.error || 'Merge failed');
+      throw new Error(err.error || 'Stitching failed');
     }
 
-    doneAll();
+    setStep('done');
     setProgress(100, 'Complete');
+    doneAll();
 
     const blob = await fres.blob();
     const url = URL.createObjectURL(blob);
@@ -992,6 +527,7 @@ async function startStitch() {
     showError(err.message);
     document.getElementById('stitchBtn').disabled = false;
     document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
+    resetSteps();
   }
 }
 
@@ -1001,14 +537,13 @@ function showResult(url) {
   document.getElementById('resultCard').classList.add('visible');
   document.getElementById('stitchBtn').disabled = false;
   document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
-  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('resultCard').scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
 function showError(msg) {
   document.getElementById('errorText').textContent = msg;
   document.getElementById('errorBox').classList.add('visible');
 }
-
 function hideError() {
   document.getElementById('errorBox').classList.remove('visible');
 }
