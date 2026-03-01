@@ -1,605 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BigPicture — Panorama Stitcher</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0e0e0f;--surface:#18181b;--surface2:#222226;--surface3:#2c2c32;
-  --border:#2e2e34;--border2:#3d3d45;
-  --ink:#f0f0ee;--ink2:#a8a8a4;--ink3:#636360;
-  --accent:#e8d5a3;--accent2:#c9a84c;
-  --green:#4ade80;--green-bg:rgba(74,222,128,.1);--green-border:rgba(74,222,128,.25);
-  --red:#f87171;--red-bg:rgba(248,113,113,.1);--red-border:rgba(248,113,113,.25);
-  --amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--amber-border:rgba(251,191,36,.25);
-  --radius:12px;--radius-sm:7px;
-}
-html,body{height:100%;overflow:hidden}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
-
-/* HEADER */
-header{background:rgba(14,14,15,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100}
-.logo{display:flex;align-items:center;gap:.45rem;font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);text-decoration:none}
-.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2)}
-.mode-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:3px;gap:2px}
-.mode-btn{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;padding:.28rem .85rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s;color:var(--ink3);background:transparent}
-.mode-btn.active{background:var(--surface3);color:var(--ink)}
-.header-right{display:flex;align-items:center;gap:.5rem}
-
-/* BUTTONS */
-.btn{font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;padding:.48rem 1.1rem;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:.3rem;line-height:1;text-decoration:none;white-space:nowrap}
-.btn-primary{background:var(--accent);color:#0e0e0f;font-weight:600}
-.btn-primary:hover:not(:disabled){background:var(--accent2);box-shadow:0 3px 14px rgba(232,213,163,.25)}
-.btn-primary:disabled{background:var(--surface3);color:var(--ink3);cursor:not-allowed}
-.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2)}
-.btn-ghost:hover{border-color:var(--border);color:var(--ink);background:var(--surface2)}
-.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red-border);font-size:.75rem;padding:.38rem .8rem}
-.btn-danger:hover{background:var(--red-bg)}
-.btn-sm{padding:.38rem .8rem;font-size:.75rem}
-.btn-lg{padding:.6rem 1.6rem;font-size:.88rem;font-weight:600}
-
-/* MAIN */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
-
-/* UPLOAD SCREEN */
-#uploadScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
-.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:3.5rem 2.5rem;text-align:center;cursor:pointer;transition:all .25s;background:var(--surface);max-width:460px;width:100%;position:relative;overflow:hidden}
-.upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,213,163,.05) 0%,transparent 65%);pointer-events:none}
-.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent2);background:var(--surface2)}
-.upload-zone input{display:none}
-.upload-icon{width:52px;height:52px;margin:0 auto 1rem;background:var(--surface2);border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center}
-.upload-icon svg{width:24px;height:24px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.upload-title{font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:.4rem}
-.upload-sub{font-size:.82rem;color:var(--ink3);margin-bottom:1rem}
-.fmt-row{display:flex;justify-content:center;gap:.3rem;flex-wrap:wrap}
-.fmt{font-size:.63rem;font-weight:600;letter-spacing:.04em;color:var(--ink3);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.15rem .38rem}
-
-/* WORKSPACE */
-#workspace{flex:1;display:none;flex-direction:column;overflow:hidden}
-
-/* TOOLBAR */
-.ws-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.45rem .875rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;flex-wrap:wrap}
-.ws-toolbar .sep{width:1px;height:18px;background:var(--border);margin:0 .1rem}
-.pill{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:.18rem .65rem;font-size:.7rem;color:var(--ink2)}
-.pill strong{color:var(--ink)}
-.hint-text{font-size:.7rem;color:var(--ink3)}
-.mode-indicator{font-size:.7rem;color:var(--accent2);font-weight:500;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:100px;padding:.18rem .65rem}
-
-/* CANVAS */
-.canvas-scroll{flex:1;overflow:auto;position:relative;cursor:default}
-.canvas-board{position:relative;background:var(--bg);background-image:radial-gradient(var(--border) 1px,transparent 1px);background-size:28px 28px;min-width:3000px;min-height:2000px}
-
-/* PHOTO CARDS */
-.pcard{position:absolute;cursor:grab;user-select:none;z-index:1;transition:filter .15s}
-.pcard:hover{z-index:10}
-.pcard.grabbing{cursor:grabbing;z-index:50;filter:drop-shadow(0 10px 30px rgba(0,0,0,.8))}
-.pcard-frame{border-radius:7px;overflow:hidden;border:2px solid var(--border2);background:var(--surface2);transition:border-color .15s}
-.pcard:hover .pcard-frame{border-color:var(--border)}
-.pcard img{display:block;pointer-events:none;width:190px;height:142px;object-fit:cover}
-.pcard .pcard-num{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:.58rem;font-weight:700;padding:.12rem .38rem;border-radius:3px;pointer-events:none;letter-spacing:.02em}
-.pcard .pcard-del{position:absolute;top:4px;right:4px;width:19px;height:19px;background:rgba(0,0,0,.78);border:none;border-radius:4px;color:var(--red);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:.8rem;line-height:1}
-.pcard:hover .pcard-del{display:flex}
-.pcard .pcard-del:hover{background:rgba(248,113,113,.25)}
-
-/* AUTO ARRANGE spinner overlay */
-.arrange-overlay{position:absolute;inset:0;background:rgba(14,14,15,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:.75rem}
-.arrange-overlay.visible{display:flex}
-.arrange-overlay p{font-size:.82rem;color:var(--ink2)}
-
-/* BANNERS */
-.float-banner{display:none;align-items:center;gap:.6rem;border-radius:var(--radius-sm);padding:.55rem .875rem;font-size:.75rem;font-weight:500;position:absolute;top:.75rem;left:50%;transform:translateX(-50%);z-index:300;white-space:nowrap;pointer-events:none}
-.float-banner.visible{display:flex}
-.float-banner.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
-.float-banner.red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
-.float-banner.green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
-.wake-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--amber);margin:0 1px;animation:wakeDot 1.2s infinite}
-.wake-dots span:nth-child(2){animation-delay:.2s}
-.wake-dots span:nth-child(3){animation-delay:.4s}
-
-/* PROGRESS */
-.progress-panel{position:absolute;inset:0;background:rgba(14,14,15,.93);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:400}
-.progress-panel.visible{display:flex}
-.progress-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:320px;max-width:90vw}
-.progress-title{font-family:'DM Serif Display',serif;font-size:1.15rem;text-align:center;margin-bottom:1.25rem}
-.pbar{height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
-.pbar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;width:0%;transition:width .5s ease}
-.pbar-status{font-size:.72rem;color:var(--ink3);text-align:center;margin-bottom:1rem}
-.steps{display:flex;flex-direction:column;gap:.2rem}
-.step{display:flex;align-items:center;gap:.6rem;padding:.38rem .55rem;border-radius:6px;border:1px solid transparent;transition:all .2s;font-size:.75rem}
-.step.active{background:var(--surface2);border-color:var(--border)}
-.step.done{color:var(--green)}
-.step-dot{width:17px;height:17px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.5rem}
-.step.active .step-dot{border-color:var(--accent);background:var(--accent)}
-.step.done .step-dot{border-color:var(--green);background:var(--green)}
-.step-lbl{color:var(--ink3)}
-.step.active .step-lbl{color:var(--ink);font-weight:500}
-.step.done .step-lbl{color:var(--green)}
-
-/* RESULT */
-.result-panel{position:absolute;inset:0;background:rgba(14,14,15,.96);display:none;align-items:center;justify-content:center;z-index:400;padding:1rem}
-.result-panel.visible{display:flex}
-.result-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-width:min(860px,95vw);width:100%}
-.result-top{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.result-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:100px;padding:.18rem .55rem;font-size:.67rem;font-weight:600;color:var(--green)}
-.result-preview{background:#000;max-height:58vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.result-preview img{max-width:100%;max-height:58vh;object-fit:contain;display:block}
-.result-btns{padding:.875rem 1.25rem;display:flex;gap:.5rem}
-
-.spinner{width:11px;height:11px;border:2px solid rgba(14,14,15,.25);border-top-color:#0e0e0f;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
-.spinner-lg{width:26px;height:26px;border-width:3px;border-color:rgba(240,240,238,.1);border-top-color:var(--accent)}
-.spinner-light{border-color:rgba(240,240,238,.15);border-top-color:var(--ink2)}
-
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes wakeDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Picture Stitcher</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #EAEFEF;
+            color: #25343F;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #BFC9D1;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(37, 52, 63, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            margin-top: 0;
+            color: #25343F;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #FF9B51;
+            color: #25343F;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            width: 100%;
+        }
+        button:hover {
+            transform: scale(1.02);
+            background-color: #e88c49;
+        }
+        #statusText {
+            margin-top: 20px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        #resultContainer {
+            margin-top: 30px;
+            display: none;
+        }
+        #resultImage {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 15px;
+            background-color: #25343F;
+            color: #EAEFEF;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <a href="#" class="logo"><div class="logo-dot"></div>BigPicture</a>
-  <div class="mode-toggle">
-    <button class="mode-btn active" id="modeAutoBtn" onclick="setMode('auto')">&#9889; Auto</button>
-    <button class="mode-btn" id="modeManualBtn" onclick="setMode('manual')">&#9998; Manual</button>
-  </div>
-  <div class="header-right" id="headerBtns" style="display:none">
-    <button class="btn btn-ghost btn-sm" onclick="addMoreFiles()">&#43; Add</button>
-    <button class="btn btn-danger" onclick="clearAll()">Clear</button>
-    <button class="btn btn-primary btn-lg" id="stitchBtn" onclick="startStitch()" disabled>Stitch</button>
-  </div>
-</header>
+    <div class="container">
+        <h1>Big Picture Stitcher</h1>
+        <p>Upload your sequence of images to create a seamless panorama.</p>
+        
+        <input type="file" id="imageInput" multiple accept="image/*">
+        <button onclick="uploadImages()">Stitch Images</button>
+        
+        <div id="statusText"></div>
 
-<div class="main">
-
-  <!-- Floating banners -->
-  <div class="float-banner amber" id="wakeBanner">
-    <div class="wake-dots"><span></span><span></span><span></span></div>
-    <span id="wakeMsg">Waking up server…</span>
-  </div>
-  <div class="float-banner red" id="errorBanner"><span>&#9888;</span><span id="errorText"></span></div>
-
-  <!-- UPLOAD -->
-  <div id="uploadScreen">
-    <div class="upload-zone" id="uploadZone">
-      <input type="file" id="fileInput" accept="image/*" multiple>
-      <div class="upload-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      </div>
-      <div class="upload-title">Drop photos here</div>
-      <div class="upload-sub">Auto mode stitches immediately &mdash; Manual lets you arrange first</div>
-      <div class="fmt-row">
-        <span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">WEBP</span>
-        <span class="fmt">HEIC</span><span class="fmt">TIFF</span><span class="fmt">RAW</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- WORKSPACE (canvas) -->
-  <div id="workspace">
-    <div class="ws-toolbar">
-      <span class="pill"><strong id="photoCountEl">0</strong> photos</span>
-      <div class="sep"></div>
-      <span class="mode-indicator" id="modeIndicator">&#9889; Auto mode</span>
-      <div class="sep"></div>
-      <span class="hint-text" id="hintText">Upload photos to begin</span>
-      <div style="margin-left:auto;display:flex;gap:.4rem;align-items:center">
-        <button class="btn btn-ghost btn-sm" id="reArrangeBtn" onclick="runArrange()" style="display:none">&#9881; Re-arrange</button>
-        <button class="btn btn-ghost btn-sm" id="reScanBtn" onclick="reScanAndStitch()" style="display:none" title="Uses your layout as a guide, then re-scans to fine-tune alignment">&#128269; Re-scan &amp; Stitch</button>
-        <button class="btn btn-ghost btn-sm" onclick="resetView()">&#8634; Reset view</button>
-      </div>
-    </div>
-
-    <div class="canvas-scroll" id="canvasScroll">
-      <div class="canvas-board" id="canvasBoard">
-        <!-- arrange loading overlay -->
-        <div class="arrange-overlay" id="arrangeOverlay">
-          <span class="spinner spinner-lg"></span>
-          <p>Analysing images to find best arrangement…</p>
+        <div id="resultContainer">
+            <img id="resultImage" alt="Stitched Result">
+            <br>
+            <a id="downloadLink" class="download-btn">Download Final Image</a>
         </div>
-      </div>
     </div>
-  </div>
 
-  <!-- PROGRESS -->
-  <div class="progress-panel" id="progressPanel">
-    <div class="progress-box">
-      <div class="progress-title" id="progressTitle">Processing…</div>
-      <div class="pbar"><div class="pbar-fill" id="pbarFill"></div></div>
-      <div class="pbar-status" id="pbarStatus">Starting…</div>
-      <div class="steps">
-        <div class="step" id="step-wake"><div class="step-dot"></div><div class="step-lbl">Wake server</div></div>
-        <div class="step" id="step-session"><div class="step-dot"></div><div class="step-lbl">Start session</div></div>
-        <div class="step" id="step-upload"><div class="step-dot"></div><div class="step-lbl" id="uploadLbl">Upload images</div></div>
-        <div class="step" id="step-stitch"><div class="step-dot"></div><div class="step-lbl">Stitching</div></div>
-        <div class="step" id="step-done"><div class="step-dot"></div><div class="step-lbl">Complete</div></div>
-      </div>
-    </div>
-  </div>
+    <script>
+        // Make sure this matches your exact Hugging Face space URL
+        const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
 
-  <!-- RESULT -->
-  <div class="result-panel" id="resultPanel">
-    <div class="result-box">
-      <div class="result-top">
-        <div class="result-badge">&#10003; Done</div>
-        <span style="font-size:.75rem;color:var(--ink3)" id="resultInfo"></span>
-      </div>
-      <div class="result-preview"><img id="resultImg" src="" alt="Result"></div>
-      <div class="result-btns">
-        <a id="dlBtn" class="btn btn-primary" download="panorama.jpg">&#8595; Download</a>
-        <button class="btn btn-ghost" onclick="closeResult()">&#8592; Back</button>
-        <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
-      </div>
-    </div>
-  </div>
+        async function uploadImages() {
+            const fileInput = document.getElementById('imageInput');
+            const statusText = document.getElementById('statusText');
+            const resultContainer = document.getElementById('resultContainer');
+            
+            if (fileInput.files.length < 2) {
+                alert("Please select at least 2 images to stitch.");
+                return;
+            }
 
-</div>
+            // Reset UI
+            resultContainer.style.display = 'none';
+            statusText.innerText = "Uploading your images to the cloud... ☁️";
+            statusText.style.color = "#25343F";
 
-<input type="file" id="fileInputX" accept="image/*" multiple style="display:none">
+            const formData = new FormData();
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append("files", fileInput.files[i]);
+            }
 
-<script>
-var API = 'https://singh56-bigpicture.hf.space';
-var BATCH = 10;
-var allFiles = [];
-var cardPos = {};       // {idx: {x,y}}
-var mode = 'auto';
-var awake = false;
-var sessionId = null;   // reuse session for arrange + finalize
-var dragging = null, dragOX = 0, dragOY = 0;
-var STEPS = ['wake','session','upload','stitch','done'];
-var CHK = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-var SPN = '<span class="spinner spinner-light" style="width:9px;height:9px"></span>';
+            try {
+                // Step 1: Drop off the images and get a receipt (Job ID)
+                const response = await fetch(`${HF_BACKEND_URL}/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
 
-// FILE INPUTS
-var zone=document.getElementById('uploadZone');
-var inp=document.getElementById('fileInput');
-var inpX=document.getElementById('fileInputX');
-zone.addEventListener('click',function(){inp.click();});
-zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('dragover');});
-zone.addEventListener('dragleave',function(){zone.classList.remove('dragover');});
-zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('dragover');addFiles(Array.from(e.dataTransfer.files).filter(function(f){return f.type.startsWith('image/');}));});
-inp.addEventListener('change',function(){addFiles(Array.from(inp.files));inp.value='';});
-inpX.addEventListener('change',function(){addFiles(Array.from(inpX.files));inpX.value='';});
-function addMoreFiles(){inpX.click();}
+                if (data.job_id) {
+                    statusText.innerText = "Processing in the background... This may take a few minutes. ⏱️";
+                    // Step 2: Start checking back every 10 seconds
+                    checkStatus(data.job_id);
+                } else {
+                    statusText.innerText = "Error starting the job.";
+                }
+            } catch (error) {
+                console.error(error);
+                statusText.innerText = "Failed to connect to the backend server.";
+            }
+        }
 
-function addFiles(newFiles){
-  if(!newFiles.length)return;
-  var startIdx=allFiles.length;
-  allFiles=allFiles.concat(newFiles);
-  hideError();
-  document.getElementById('uploadScreen').style.display='none';
-  document.getElementById('workspace').style.display='flex';
-  document.getElementById('headerBtns').style.display='';
-  document.getElementById('stitchBtn').disabled=allFiles.length<2;
-  document.getElementById('photoCountEl').textContent=allFiles.length;
-  // Place new cards at default positions first
-  for(var i=startIdx;i<allFiles.length;i++){
-    var col=i%6, row=Math.floor(i/6);
-    cardPos[i]={x:60+col*210, y:60+row*160};
-  }
-  renderCards(startIdx);
-  // Then call arrange to get smart positions
-  if(mode==='manual'){
-    document.getElementById('hintText').textContent='Drag photos to match overlapping edges, then Stitch';
-    document.getElementById('reArrangeBtn').style.display='';
-    document.getElementById('reScanBtn').style.display='';
-    runArrange();
-  } else {
-    document.getElementById('hintText').textContent='Photos arranged by visual similarity';
-    runArrange();
-  }
-}
+        async function checkStatus(jobId) {
+            const statusText = document.getElementById('statusText');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultImage = document.getElementById('resultImage');
+            const downloadLink = document.getElementById('downloadLink');
 
-// MODE
-function setMode(m){
-  mode=m;
-  document.getElementById('modeAutoBtn').classList.toggle('active',m==='auto');
-  document.getElementById('modeManualBtn').classList.toggle('active',m==='manual');
-  document.getElementById('modeIndicator').textContent=m==='auto'?'⚡ Auto mode':'✏ Manual mode';
-  document.getElementById('reArrangeBtn').style.display=m==='manual'&&allFiles.length>0?'':'none';
-  document.getElementById('reScanBtn').style.display=m==='manual'&&allFiles.length>0?'':'none';
-  // Cards draggable in manual, not in auto
-  document.querySelectorAll('.pcard').forEach(function(c){
-    c.style.cursor=m==='manual'?'grab':'default';
-    c.style.pointerEvents=m==='manual'?'auto':'none';
-  });
-  if(allFiles.length>0){
-    document.getElementById('hintText').textContent=m==='manual'?'Drag photos to match overlapping edges, then Stitch':'Photos arranged by visual similarity';
-  }
-}
-
-// RENDER CARDS
-function renderCards(fromIdx){
-  var board=document.getElementById('canvasBoard');
-  for(var i=fromIdx||0;i<allFiles.length;i++){
-    var old=document.getElementById('pc-'+i);
-    if(old)old.remove();
-    var pos=cardPos[i]||{x:60+i*30,y:60};
-    var card=document.createElement('div');
-    card.className='pcard';
-    card.id='pc-'+i;
-    card.style.left=pos.x+'px';
-    card.style.top=pos.y+'px';
-
-    var frame=document.createElement('div');
-    frame.className='pcard-frame';
-
-    var img=document.createElement('img');
-    img.src=URL.createObjectURL(allFiles[i]);
-    img.draggable=false;
-
-    var num=document.createElement('div');
-    num.className='pcard-num';
-    num.textContent=i+1;
-
-    var del=document.createElement('button');
-    del.className='pcard-del';
-    del.innerHTML='&#215;';
-    del.addEventListener('click',function(idx){return function(e){e.stopPropagation();removeCard(idx);};}(i));
-
-    frame.appendChild(img);
-    card.appendChild(frame);
-    card.appendChild(num);
-    card.appendChild(del);
-
-    card.addEventListener('mousedown',function(e){
-      if(mode!=='manual'||e.button!==0)return;
-      e.preventDefault();
-      dragging=this;
-      // Use card's actual position on the board (not screen rect)
-      // so scroll position doesn't affect the offset
-      dragOX=e.clientX - parseInt(this.style.left||0) - document.getElementById('canvasBoard').getBoundingClientRect().left + document.getElementById('canvasScroll').scrollLeft;
-      dragOY=e.clientY - parseInt(this.style.top||0)  - document.getElementById('canvasBoard').getBoundingClientRect().top  + document.getElementById('canvasScroll').scrollTop;
-      this.classList.add('grabbing');
-    });
-
-    board.appendChild(card);
-  }
-  if(mode!=='manual'){
-    document.querySelectorAll('.pcard').forEach(function(c){c.style.cursor='default';c.style.pointerEvents='none';});
-  }
-}
-
-document.addEventListener('mousemove',function(e){
-  if(!dragging)return;
-  var scroll=document.getElementById('canvasScroll');
-  var boardRect=document.getElementById('canvasBoard').getBoundingClientRect();
-  var x=e.clientX - boardRect.left + scroll.scrollLeft - dragOX;
-  var y=e.clientY - boardRect.top  + scroll.scrollTop  - dragOY;
-  x=Math.max(0,x); y=Math.max(0,y);
-  dragging.style.left=x+'px';
-  dragging.style.top=y+'px';
-  var idx=parseInt(dragging.id.replace('pc-',''));
-  cardPos[idx]={x:x,y:y};
-});
-document.addEventListener('mouseup',function(){
-  if(!dragging)return;
-  dragging.classList.remove('grabbing');
-  dragging=null;
-});
-
-function removeCard(i){
-  var card=document.getElementById('pc-'+i);
-  if(card)card.remove();
-  allFiles.splice(i,1);
-  // Rebuild
-  var board=document.getElementById('canvasBoard');
-  document.querySelectorAll('.pcard').forEach(function(c){c.remove();});
-  cardPos={};
-  allFiles.forEach(function(f,idx){
-    var col=idx%6,row=Math.floor(idx/6);
-    cardPos[idx]={x:60+col*210,y:60+row*160};
-  });
-  renderCards(0);
-  document.getElementById('photoCountEl').textContent=allFiles.length;
-  document.getElementById('stitchBtn').disabled=allFiles.length<2;
-}
-
-function resetView(){
-  var s=document.getElementById('canvasScroll');
-  s.scrollTo({top:0,left:0,behavior:'smooth'});
-}
-
-// ARRANGE — ask server for smart positions
-async function runArrange(){
-  if(allFiles.length<2)return;
-  document.getElementById('arrangeOverlay').classList.add('visible');
-  try{
-    var sid=await ensureSession();
-    // Upload all files for arrangement analysis
-    await uploadAllToSession(sid);
-    var form=new FormData();
-    form.append('session_id',sid);
-    var r=await fetch(API+'/arrange',{method:'POST',body:form});
-    var p=await safeJSON(r);
-    if(!p.ok||!p.data.positions)throw new Error('arrange failed');
-    var positions=p.data.positions;
-    positions.forEach(function(pos,i){
-      cardPos[i]={x:pos.x,y:pos.y};
-      var card=document.getElementById('pc-'+i);
-      if(card){
-        card.style.transition='left .5s ease, top .5s ease';
-        card.style.left=pos.x+'px';
-        card.style.top=pos.y+'px';
-        setTimeout(function(){card.style.transition='';},600);
-      }
-    });
-  }catch(e){
-    console.log('arrange error:',e);
-    // Fail silently — cards stay at default grid positions
-  }
-  document.getElementById('arrangeOverlay').classList.remove('visible');
-}
-
-// Keep a session alive for the arrange+finalize flow
-async function ensureSession(){
-  await wakeServer();
-  if(sessionId){
-    // Test if still alive
-    try{
-      var r=await fetch(API+'/start-session',{method:'POST'});
-      var p=await safeJSON(r);
-      if(p.ok&&p.data.session_id){
-        sessionId=p.data.session_id;
-        sessions_data={};
-      }
-    }catch(e){}
-  } else {
-    var r=await fetch(API+'/start-session',{method:'POST'});
-    var p=await safeJSON(r);
-    if(!p.ok)throw new Error(p.error);
-    sessionId=p.data.session_id;
-  }
-  return sessionId;
-}
-
-async function uploadAllToSession(sid){
-  var ordered=getOrderedFiles();
-  var total=Math.ceil(ordered.length/BATCH);
-  for(var i=0;i<total;i++){
-    var batch=ordered.slice(i*BATCH,(i+1)*BATCH);
-    var form=new FormData();
-    form.append('session_id',sid);
-    batch.forEach(function(f){form.append('files',f);});
-    var r=await fetch(API+'/upload-batch',{method:'POST',body:form});
-    await safeJSON(r);
-  }
-}
-
-// ORDER: manual = sort by canvas position (row then col), auto = as-is
-function getOrderedFiles(){
-  if(mode==='auto')return allFiles.slice();
-  var ROW_SNAP=80;
-  var items=allFiles.map(function(f,i){
-    var p=cardPos[i]||{x:0,y:0};
-    return{f:f,x:p.x,y:p.y};
-  });
-  items.sort(function(a,b){
-    var ra=Math.round(a.y/ROW_SNAP),rb=Math.round(b.y/ROW_SNAP);
-    return ra!==rb?ra-rb:a.x-b.x;
-  });
-  return items.map(function(it){return it.f;});
-}
-
-// WAKE
-async function wakeServer(){
-  if(awake)return;
-  document.getElementById('wakeBanner').classList.add('visible');
-  for(var i=0;i<25;i++){
-    try{
-      var r=await fetch(API+'/health',{signal:AbortSignal.timeout(15000)});
-      if(r.ok){var p=await safeJSON(r);if(p.ok&&p.data.status==='ready'){awake=true;document.getElementById('wakeBanner').classList.remove('visible');return;}}
-    }catch(e){}
-    document.getElementById('wakeMsg').textContent='Waking server… attempt '+(i+1);
-    await new Promise(function(r){setTimeout(r,4000);});
-  }
-  document.getElementById('wakeBanner').classList.remove('visible');
-  throw new Error('Server took too long to wake. Please wait 1 minute and try again.');
-}
-
-// SAFE JSON
-async function safeJSON(res){
-  var t=await res.text();
-  try{return{ok:true,data:JSON.parse(t)};}
-  catch(e){return{ok:false,error:'Server error ('+t.slice(0,60)+')'}}
-}
-
-// STEPS UI
-function setStep(id){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');var dot=el.querySelector('.step-dot');if(s===id){el.classList.add('active');dot.innerHTML=SPN;}else if(STEPS.indexOf(s)<STEPS.indexOf(id)){el.classList.add('done');dot.innerHTML=CHK;}else{dot.innerHTML='';}});}
-function doneAll(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active');el.classList.add('done');el.querySelector('.step-dot').innerHTML=CHK;});}
-function resetSteps(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');el.querySelector('.step-dot').innerHTML='';});}
-function setProg(pct,msg){document.getElementById('pbarFill').style.width=pct+'%';if(msg)document.getElementById('pbarStatus').textContent=msg;}
-function showError(msg){document.getElementById('errorText').textContent=msg;document.getElementById('errorBanner').classList.add('visible');}
-function hideError(){document.getElementById('errorBanner').classList.remove('visible');}
-
-// STITCH
-async function startStitch(){
-  hideError();
-  var ordered=getOrderedFiles();
-  document.getElementById('progressPanel').classList.add('visible');
-  document.getElementById('progressTitle').textContent=mode==='manual'?'Stitching your arrangement…':'Auto-stitching…';
-  document.getElementById('stitchBtn').disabled=true;
-  document.getElementById('stitchBtn').innerHTML='<span class="spinner"></span> Working…';
-  resetSteps();
-
-  try{
-    // Fresh session for stitch
-    await wakeServer();
-    setStep('session');setProg(14,'Starting session…');
-    var sr=await fetch(API+'/start-session',{method:'POST'});
-    var sp=await safeJSON(sr);
-    if(!sp.ok)throw new Error(sp.error);
-    var sid=sp.data.session_id;
-
-    var total=Math.ceil(ordered.length/BATCH);
-    setStep('upload');
-    for(var i=0;i<total;i++){
-      setProg(18+(i/total)*52,'Uploading '+(i+1)+'/'+total+'…');
-      document.getElementById('uploadLbl').textContent='Uploading '+(i+1)+'/'+total;
-      var batch=ordered.slice(i*BATCH,(i+1)*BATCH);
-      var form=new FormData();form.append('session_id',sid);
-      batch.forEach(function(f){form.append('files',f);});
-      var br=await fetch(API+'/upload-batch',{method:'POST',body:form});
-      var bp=await safeJSON(br);
-      if(!bp.ok)throw new Error(bp.error);
-      if(bp.data.error)throw new Error(bp.data.error);
-    }
-
-    setStep('stitch');setProg(73,'Stitching…');
-    var ff=new FormData();ff.append('session_id',sid);
-    var fr=await fetch(API+'/finalize',{method:'POST',body:ff});
-    var ct=fr.headers.get('content-type')||'';
-    if(ct.indexOf('application/json')!==-1||!fr.ok){
-      var ep=await safeJSON(fr);
-      throw new Error(ep.ok?(ep.data.error||'Stitching failed'):ep.error);
-    }
-
-    setStep('done');setProg(100,'Complete!');doneAll();
-    var blob=await fr.blob();
-    if(blob.size<500)throw new Error('Result was empty. Try Manual mode to arrange photos.');
-    var url=URL.createObjectURL(blob);
-
-    setTimeout(function(){
-      document.getElementById('progressPanel').classList.remove('visible');
-      document.getElementById('resultImg').src=url;
-      document.getElementById('dlBtn').href=url;
-      document.getElementById('resultInfo').textContent=(blob.size/1024/1024).toFixed(1)+' MB';
-      document.getElementById('resultPanel').classList.add('visible');
-      document.getElementById('stitchBtn').disabled=false;
-      document.getElementById('stitchBtn').innerHTML='Stitch';
-    },600);
-
-  }catch(e){
-    document.getElementById('progressPanel').classList.remove('visible');
-    showError(e.message);
-    document.getElementById('stitchBtn').disabled=false;
-    document.getElementById('stitchBtn').innerHTML='Stitch';
-    resetSteps();
-  }
-}
-
-// RE-SCAN & STITCH — sends images in user's visual order, stitcher does the rest
-async function reScanAndStitch(){
-  // Just calls regular stitch — the order from getOrderedFiles() IS the user's arrangement
-  // The stitcher automatically fine-tunes alignment regardless of exact pixel positions
-  await startStitch();
-}
-
-function closeResult(){document.getElementById('resultPanel').classList.remove('visible');}
-
-function clearAll(){
-  allFiles=[];cardPos={};awake=false;sessionId=null;
-  document.getElementById('uploadScreen').style.display='';
-  document.getElementById('workspace').style.display='none';
-  document.getElementById('headerBtns').style.display='none';
-  document.getElementById('progressPanel').classList.remove('visible');
-  document.getElementById('resultPanel').classList.remove('visible');
-  document.getElementById('canvasBoard').querySelectorAll('.pcard').forEach(function(c){c.remove();});
-  document.getElementById('stitchBtn').innerHTML='Stitch';
-  document.getElementById('stitchBtn').disabled=true;
-  hideError();resetSteps();
-}
-</script>
+            // Ping the server every 10 seconds (10000 ms)
+            const intervalId = setInterval(async () => {
+                try {
+                    const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
+                    
+                    // If the backend sends an image file back, it's done!
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("image")) {
+                        clearInterval(intervalId); // Stop checking
+                        statusText.innerText = "Stitching Complete! 🎉";
+                        statusText.style.color = "#FF9B51";
+                        
+                        // Convert the image data into a displayable format
+                        const blob = await response.blob();
+                        const imageUrl = URL.createObjectURL(blob);
+                        
+                        resultImage.src = imageUrl;
+                        downloadLink.href = imageUrl;
+                        downloadLink.download = "seamless_stitch.jpg";
+                        resultContainer.style.display = 'block';
+                    } else {
+                        // Otherwise, it's still working or it failed
+                        const data = await response.json();
+                        if (data.status.startsWith("failed")) {
+                            clearInterval(intervalId);
+                            statusText.innerText = "Error: " + data.status;
+                            statusText.style.color = "red";
+                        }
+                    }
+                } catch (error) {
+                    console.error("Polling error:", error);
+                }
+            }, 10000);
+        }
+    </script>
 </body>
 </html>
