@@ -217,149 +217,116 @@
     </div>
 
     <script>
-        const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
-        
-        // --- Smooth Custom Cursor Logic ---
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX - 6 + 'px';
-            cursor.style.top = e.clientY - 6 + 'px';
-        });
-        document.querySelectorAll('button, input, a').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-        });
+       const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
+let pollingInterval;
 
-        // --- UI Logic ---
-        let etaInterval;
-        let statusCycleInterval;
+// --- PERSISTENT SESSION: Check if a job is already running when page loads ---
+window.onload = () => {
+    const savedJobId = localStorage.getItem('activeStitchJob');
+    if (savedJobId) {
+        document.getElementById('uploadUI').style.display = 'none';
+        document.getElementById('processingUI').style.display = 'block';
+        checkStatus(savedJobId); // Resume tracking the background job
+    }
+};
 
-        function updateFileCount() {
-            const fileInput = document.getElementById('imageInput');
-            const display = document.getElementById('fileCountDisplay');
-            const num = document.getElementById('fileCountNum');
-            if (fileInput.files.length > 0) {
-                num.innerText = fileInput.files.length;
-                display.style.display = "block";
-            }
+// --- Custom Cursor Logic ---
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX - 6 + 'px';
+    cursor.style.top = e.clientY - 6 + 'px';
+});
+document.querySelectorAll('button, input, a').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+});
+
+function updateFileCount() {
+    const fileInput = document.getElementById('imageInput');
+    const display = document.getElementById('fileCountDisplay');
+    const num = document.getElementById('fileCountNum');
+    if (fileInput.files.length > 0) {
+        num.innerText = fileInput.files.length;
+        display.style.display = "block";
+    }
+}
+
+async function startProcess() {
+    const fileInput = document.getElementById('imageInput');
+    if (fileInput.files.length < 2) {
+        alert("Please select at least 2 images.");
+        return;
+    }
+
+    document.getElementById('uploadUI').style.display = 'none';
+    document.getElementById('processingUI').style.display = 'block';
+    
+    // Set initial real status
+    document.getElementById('dynamicStatusArea').innerHTML = `<div class="status-text" style="display:block; opacity:1;">Connecting to server...</div>`;
+
+    const formData = new FormData();
+    for (let i = 0; i < fileInput.files.length; i++) {
+        formData.append("files", fileInput.files[i]);
+    }
+
+    try {
+        const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
+        const data = await response.json();
+
+        if (data.job_id) {
+            // Save the Job ID so the user can close the tab!
+            localStorage.setItem('activeStitchJob', data.job_id);
+            checkStatus(data.job_id);
         }
+    } catch (error) {
+        console.error(error);
+        document.getElementById('dynamicStatusArea').innerHTML = "<div style='color: red;'>Connection to cloud failed.</div>";
+    }
+}
 
-        async function startProcess() {
-            const fileInput = document.getElementById('imageInput');
-            if (fileInput.files.length < 2) {
-                alert("Please select at least 2 images.");
-                return;
-            }
+async function checkStatus(jobId) {
+    const resultContainer = document.getElementById('resultContainer');
+    const processingUI = document.getElementById('processingUI');
+    const statusArea = document.getElementById('dynamicStatusArea');
 
-            const imgCount = fileInput.files.length;
+    // Ask the server for the REAL status every 5 seconds
+    pollingInterval = setInterval(async () => {
+        try {
+            const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
+            const contentType = response.headers.get("content-type");
             
-            // Switch UI states smoothly
-            document.getElementById('uploadUI').style.display = 'none';
-            document.getElementById('processingUI').style.display = 'block';
-
-            // Start dynamic UX
-            startETA(imgCount);
-            startStatusCycle();
-
-            const formData = new FormData();
-            for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append("files", fileInput.files[i]);
-            }
-
-            try {
-                const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
+            if (contentType && contentType.includes("image")) {
+                // Job Finished!
+                clearInterval(pollingInterval);
+                localStorage.removeItem('activeStitchJob'); // Clear the saved job
+                
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                document.getElementById('resultImage').src = imageUrl;
+                document.getElementById('downloadLink').href = imageUrl;
+                document.getElementById('downloadLink').download = "seamless_masterpiece.jpg";
+                
+                processingUI.style.display = 'none';
+                resultContainer.style.display = 'block';
+            } else {
+                // Parse the real status from the backend dictionary
                 const data = await response.json();
-
-                if (data.job_id) {
-                    checkStatus(data.job_id);
-                }
-            } catch (error) {
-                console.error(error);
-                document.getElementById('dynamicStatusArea').innerHTML = "<div style='color: red;'>Connection to cloud failed.</div>";
-            }
-        }
-
-        // --- The Illusion of Deep Backend Tracking ---
-        function startStatusCycle() {
-            const statuses = [
-                "Uploading sequence to secure cloud...",
-                "Analyzing spatial geometry of images...",
-                "Extracting SIFT matching features...",
-                "Calculating complex homography...",
-                "Applying exposure compensation blocks...",
-                "Finding optimal seam boundaries...",
-                "Performing multi-band blending...",
-                "Finalizing high-resolution render..."
-            ];
-            
-            const statusArea = document.getElementById('dynamicStatusArea');
-            let currentIndex = 0;
-
-            function showNextStatus() {
-                statusArea.innerHTML = `<div class="status-text">${statuses[currentIndex]}</div>`;
-                currentIndex++;
-                if (currentIndex >= statuses.length) currentIndex = statuses.length - 1; // Stay on last step
-            }
-
-            showNextStatus();
-            // Change text every 4 seconds to match CSS animation
-            statusCycleInterval = setInterval(showNextStatus, 4000); 
-        }
-
-        // --- Dynamic ETA Calculator ---
-        function startETA(imageCount) {
-            // Rough estimate: 2.5 seconds per image for OpenCV processing + 5s buffer
-            let totalSeconds = Math.floor(imageCount * 2.5) + 5; 
-            const etaElement = document.getElementById('etaCountdown');
-
-            function updateDisplay() {
-                let mins = Math.floor(totalSeconds / 60);
-                let secs = totalSeconds % 60;
-                etaElement.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-            }
-
-            updateDisplay();
-            etaInterval = setInterval(() => {
-                if (totalSeconds > 1) {
-                    totalSeconds--;
-                    updateDisplay();
+                
+                if (data.status.startsWith("failed")) {
+                    clearInterval(pollingInterval);
+                    localStorage.removeItem('activeStitchJob');
+                    statusArea.innerHTML = `<div style="color: red; font-weight: bold;">Error: ${data.status}</div>`;
                 } else {
-                    etaElement.innerText = "Almost there...";
+                    // Display the EXACT status string from Python
+                    statusArea.innerHTML = `<div class="status-text" style="display:block; opacity:1;">${data.status}</div>`;
                 }
-            }, 1000);
+            }
+        } catch (error) {
+            console.error("Polling error:", error);
         }
-
-        // --- Cloud Polling ---
-        async function checkStatus(jobId) {
-            const resultContainer = document.getElementById('resultContainer');
-            const processingUI = document.getElementById('processingUI');
-
-            const intervalId = setInterval(async () => {
-                try {
-                    const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
-                    const contentType = response.headers.get("content-type");
-                    
-                    if (contentType && contentType.includes("image")) {
-                        // Job Finished!
-                        clearInterval(intervalId);
-                        clearInterval(etaInterval);
-                        clearInterval(statusCycleInterval);
-                        
-                        const blob = await response.blob();
-                        const imageUrl = URL.createObjectURL(blob);
-                        
-                        document.getElementById('resultImage').src = imageUrl;
-                        document.getElementById('downloadLink').href = imageUrl;
-                        document.getElementById('downloadLink').download = "seamless_stitch.jpg";
-                        
-                        processingUI.style.display = 'none';
-                        resultContainer.style.display = 'block';
-                    }
-                } catch (error) {
-                    console.error("Polling error:", error);
-                }
-            }, 10000);
-        }
+    }, 5000); // Check every 5 seconds now for faster updates
+}
     </script>
 </body>
 </html>
