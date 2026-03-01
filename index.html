@@ -190,12 +190,10 @@ footer a{color:var(--ink2);text-decoration:none;font-weight:500}
         <div class="step" id="step-done"><div class="step-dot"></div><div><div class="step-label">Complete</div><div class="step-sublabel">Encoding final image</div></div></div>
       </div>
     </div>
-
     <div class="debug-panel" id="debugPanel">
       <div class="debug-title">&#128269; Diagnostic Report</div>
       <div id="debugContent"></div>
     </div>
-
     <div class="result-card" id="resultCard">
       <div class="result-card-header">
         <div class="result-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ready</div>
@@ -207,7 +205,6 @@ footer a{color:var(--ink2);text-decoration:none;font-weight:500}
         <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
       </div>
     </div>
-
     <div class="info-card">
       <div class="info-card-title">How it works</div>
       <div class="info-row"><span class="info-key">Layout detection</span><span class="info-val green">Automatic</span></div>
@@ -280,21 +277,29 @@ function doneAll(){STEPS.forEach(function(s){var el=document.getElementById('ste
 function resetSteps(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');el.querySelector('.step-dot').innerHTML='';});}
 function setProgress(pct,msg){document.getElementById('progressFill').style.width=pct+'%';document.getElementById('pctBadge').textContent=Math.round(pct)+'%';if(msg)document.getElementById('progressStatus').textContent=msg;}
 
+// Wake check uses /health which confirms stitching library is loaded
 async function wakeServer(){
   if(awake)return;
   document.getElementById('wakeBanner').classList.add('visible');
   document.getElementById('progressCard').classList.add('visible');
   setStep('wake');setProgress(5,'Waking up server...');
-  for(var i=0;i<20;i++){
+  for(var i=0;i<25;i++){
     try{
-      var r=await fetch(API+'/',{signal:AbortSignal.timeout(15000)});
+      var r=await fetch(API+'/health',{signal:AbortSignal.timeout(15000)});
       if(r.ok){
         var t=await r.text();
-        try{JSON.parse(t);awake=true;document.getElementById('wakeBanner').classList.remove('visible');return;}catch(e){}
+        try{
+          var j=JSON.parse(t);
+          if(j.status==='ready'){
+            awake=true;
+            document.getElementById('wakeBanner').classList.remove('visible');
+            return;
+          }
+        }catch(e){}
       }
     }catch(e){}
-    document.getElementById('wakeMsg').textContent='Waking up server... attempt '+(i+1)+' of 20';
-    setProgress(5+(i/20)*10,'Waking server... attempt '+(i+1));
+    document.getElementById('wakeMsg').textContent='Waking up server... attempt '+(i+1)+' of 25';
+    setProgress(5+(i/25)*10,'Waking server... attempt '+(i+1));
     await new Promise(function(r){setTimeout(r,4000);});
   }
   document.getElementById('wakeBanner').classList.remove('visible');
@@ -304,7 +309,7 @@ async function wakeServer(){
 async function safeJSON(res){
   var t=await res.text();
   try{return{ok:true,data:JSON.parse(t)};}
-  catch(e){return{ok:false,error:'Server returned unexpected response. Please try again.'};}
+  catch(e){return{ok:false,error:'Server returned unexpected response. Please try again. ('+t.slice(0,60)+')'};}
 }
 
 async function uploadImages(){
