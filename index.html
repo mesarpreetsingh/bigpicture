@@ -4,424 +4,626 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BigPicture — Panorama Stitcher</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#f9f9f7;--white:#fff;--ink:#111110;--ink2:#3d3d3a;--muted:#8f8f8c;--border:#e8e8e4;--border2:#d4d4cf;--green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;--red:#dc2626;--red-bg:#fef2f2;--red-border:#fecaca;--blue:#2563eb;--blue-bg:#eff6ff;--blue-border:#bfdbfe;--amber:#d97706;--amber-bg:#fffbeb;--amber-border:#fde68a;--radius:16px;--radius-sm:10px}
+:root{
+  --bg:#0e0e0f;--surface:#18181b;--surface2:#222226;--surface3:#2c2c32;
+  --border:#2e2e34;--border2:#3d3d45;
+  --ink:#f0f0ee;--ink2:#a8a8a4;--ink3:#636360;
+  --accent:#e8d5a3;--accent2:#c9a84c;
+  --green:#4ade80;--green-bg:rgba(74,222,128,.1);--green-border:rgba(74,222,128,.25);
+  --red:#f87171;--red-bg:rgba(248,113,113,.1);--red-border:rgba(248,113,113,.25);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);--blue-border:rgba(96,165,250,.25);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--amber-border:rgba(251,191,36,.25);
+  --radius:14px;--radius-sm:8px;
+}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
-header{background:var(--white);border-bottom:1px solid var(--border);padding:0 3rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;animation:fadeDown 0.5s ease both}
-.logo{display:flex;align-items:center;gap:.6rem;font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ink);text-decoration:none;font-weight:700}
-.logo-mark{width:32px;height:32px;background:var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.logo-mark svg{width:18px;height:18px;stroke:white;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.header-tag{font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.page{max-width:1100px;margin:0 auto;padding:3.5rem 2rem 6rem;display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start}
-.left{animation:fadeUp 0.6s 0.1s ease both}
-.page-title{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:.75rem}
-.page-title em{font-style:italic;font-weight:400;color:var(--muted)}
-.page-sub{font-size:.95rem;color:var(--muted);line-height:1.7;max-width:440px;margin-bottom:2.5rem}
-.wake-banner{display:none;align-items:center;gap:.75rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-sm);padding:.875rem 1.25rem;margin-bottom:1.25rem;font-size:.82rem;color:var(--amber);font-weight:500}
-.wake-banner.visible{display:flex;animation:fadeUp 0.3s ease both}
-.wake-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin:0 2px;animation:wakeDot 1.2s infinite}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ── */
+header{background:rgba(14,14,15,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:.5rem;font-family:'DM Serif Display',serif;font-size:1.35rem;color:var(--ink);text-decoration:none}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);flex-shrink:0}
+.header-right{display:flex;align-items:center;gap:.75rem}
+.mode-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:3px;gap:2px}
+.mode-btn{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:500;padding:.3rem .9rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s;color:var(--ink3);background:transparent}
+.mode-btn.active{background:var(--surface3);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+
+/* ── LAYOUT ── */
+.app{max-width:1200px;margin:0 auto;padding:2rem}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:3rem 2rem;text-align:center;cursor:pointer;transition:all .25s;background:var(--surface);position:relative;overflow:hidden}
+.upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,213,163,.04) 0%,transparent 70%);pointer-events:none}
+.upload-zone:hover{border-color:var(--accent2);background:var(--surface2)}
+.upload-zone.dragover{border-color:var(--accent);background:var(--surface2);transform:scale(1.005)}
+.upload-zone input{display:none}
+.upload-icon{width:48px;height:48px;margin:0 auto .875rem;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.upload-icon svg{width:22px;height:22px;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.upload-title{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--ink);margin-bottom:.35rem}
+.upload-sub{font-size:.82rem;color:var(--ink3);margin-bottom:1rem}
+.fmt-row{display:flex;justify-content:center;gap:.35rem;flex-wrap:wrap}
+.fmt{font-size:.65rem;font-weight:600;letter-spacing:.05em;color:var(--ink3);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.18rem .4rem}
+
+/* ── WAKE BANNER ── */
+.wake-banner{display:none;align-items:center;gap:.75rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:1rem;font-size:.82rem;color:var(--amber);font-weight:500}
+.wake-banner.visible{display:flex}
+.wake-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--amber);margin:0 1px;animation:wakeDot 1.2s infinite}
 .wake-dots span:nth-child(2){animation-delay:.2s}
 .wake-dots span:nth-child(3){animation-delay:.4s}
-.upload-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.5rem}
-.drop-zone{padding:3.5rem 2.5rem;text-align:center;cursor:pointer;transition:background .2s;border-bottom:1px solid var(--border)}
-.drop-zone:hover,.drop-zone.dragover{background:var(--bg)}
-.drop-zone input{display:none}
-.drop-icon-wrap{width:56px;height:56px;margin:0 auto 1.2rem;background:var(--bg);border:1px solid var(--border2);border-radius:14px;display:flex;align-items:center;justify-content:center;transition:transform .25s,box-shadow .25s}
-.drop-zone:hover .drop-icon-wrap{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
-.drop-icon-wrap svg{width:24px;height:24px;stroke:var(--ink2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.drop-title{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:.3rem}
-.drop-sub{font-size:.82rem;color:var(--muted)}
-.drop-formats{display:flex;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
-.fmt{font-size:.68rem;font-weight:600;letter-spacing:.04em;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.2rem .45rem}
-.thumbs-section{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:none}
-.thumbs-section.visible{display:block}
-.thumbs-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.875rem}
-.thumbs-label{font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
-.thumbs-count{font-size:.78rem;font-weight:600;color:var(--ink2);background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:.15rem .6rem}
-.thumbs-grid{display:flex;gap:.5rem;flex-wrap:wrap}
-.thumb{width:68px;height:52px;border-radius:7px;object-fit:cover;border:1px solid var(--border);animation:popIn .25s ease both}
-.thumb-overflow{width:68px;height:52px;border-radius:7px;background:var(--bg);border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:600;color:var(--muted)}
-.card-footer{padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.file-info{font-size:.82rem;color:var(--muted)}
-.file-info strong{color:var(--ink);font-weight:600}
-.btn-row{display:flex;gap:.6rem;align-items:center}
-.btn{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;padding:.65rem 1.5rem;border-radius:8px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:.35rem;text-decoration:none;line-height:1}
-.btn-primary{background:var(--ink);color:white}
-.btn-primary:hover:not(:disabled){background:#2d2d2d;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.2)}
-.btn-primary:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);font-size:.8rem;padding:.6rem 1.1rem}
-.btn-ghost:hover{border-color:var(--border2);color:var(--ink2)}
-.btn-debug{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);font-size:.8rem;padding:.6rem 1.1rem;cursor:pointer}
-.btn-debug:hover{background:#dbeafe}
-.right{animation:fadeUp 0.6s 0.2s ease both}
-.progress-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;margin-bottom:1.5rem}
-.progress-card.visible{display:block;animation:fadeUp .4s ease both}
-.progress-card-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.progress-card-title{font-size:.85rem;font-weight:600}
-.pct-badge{font-size:1.1rem;font-weight:600;font-family:'Playfair Display',serif}
-.progress-bar-wrap{padding:1.25rem 1.5rem}
-.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:.5rem}
-.progress-bar-fill{height:100%;background:var(--ink);border-radius:2px;width:0%;transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
-.progress-bar-fill::after{content:'';position:absolute;right:0;top:0;width:50px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5));animation:shimmer 1.5s infinite}
-.progress-status{font-size:.75rem;color:var(--muted)}
-.steps{padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:.4rem}
-.step{display:flex;align-items:center;gap:.875rem;padding:.75rem 1rem;border-radius:var(--radius-sm);border:1px solid transparent;transition:all .3s}
-.step.active{background:var(--bg);border-color:var(--border)}
-.step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
-.step.active .step-dot{border-color:var(--ink);background:var(--ink)}
+
+/* ── ERROR / INFO BOXES ── */
+.msg-box{display:none;align-items:flex-start;gap:.5rem;border-radius:var(--radius-sm);padding:.75rem 1rem;font-size:.82rem;font-weight:500;margin-bottom:1rem}
+.msg-box.visible{display:flex}
+.msg-box.error{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.msg-box.success{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
+.msg-box.info{background:var(--blue-bg);border:1px solid var(--blue-border);color:var(--blue)}
+
+/* ── TOOLBAR ── */
+.toolbar{display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.toolbar.visible{display:flex}
+.toolbar-left{display:flex;align-items:center;gap:.75rem}
+.photo-count{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--ink)}
+.photo-count span{font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--ink3);font-weight:400;margin-left:.25rem}
+.toolbar-right{display:flex;align-items:center;gap:.5rem}
+
+/* ── BUTTONS ── */
+.btn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;padding:.55rem 1.25rem;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:.35rem;line-height:1;text-decoration:none}
+.btn-primary{background:var(--accent);color:#0e0e0f;font-weight:600}
+.btn-primary:hover:not(:disabled){background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,213,163,.2)}
+.btn-primary:disabled{background:var(--surface3);color:var(--ink3);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--border);color:var(--ink);background:var(--surface2)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red-border)}
+.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:.4rem .85rem;font-size:.75rem}
+.btn-lg{padding:.75rem 2rem;font-size:.9rem;font-weight:600}
+
+/* ── GRID COLS CONTROL ── */
+.cols-control{display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.3rem .5rem}
+.cols-label{font-size:.72rem;color:var(--ink3);white-space:nowrap}
+.cols-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--border);background:var(--surface3);color:var(--ink2);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cols-btn:hover{background:var(--surface);color:var(--ink);border-color:var(--border2)}
+.cols-val{font-size:.82rem;font-weight:600;color:var(--ink);min-width:20px;text-align:center}
+
+/* ── PHOTO GRID ── */
+.grid-wrapper{display:none}
+.grid-wrapper.visible{display:block}
+.photo-grid{display:grid;gap:6px;margin-bottom:1.5rem}
+.photo-tile{position:relative;border-radius:8px;overflow:hidden;background:var(--surface2);border:2px solid transparent;cursor:grab;transition:border-color .2s,transform .15s,box-shadow .15s;aspect-ratio:4/3;user-select:none}
+.photo-tile:hover{border-color:var(--border2)}
+.photo-tile.dragging{opacity:.45;transform:scale(.97);cursor:grabbing;border-color:var(--accent2)}
+.photo-tile.drag-over{border-color:var(--accent);box-shadow:0 0 0 2px rgba(232,213,163,.3)}
+.photo-tile img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.photo-tile .tile-num{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.7);color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;line-height:1.3}
+.photo-tile .tile-del{position:absolute;top:5px;right:5px;width:22px;height:22px;background:rgba(0,0,0,.7);border:none;border-radius:4px;color:var(--red);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:.9rem;transition:background .15s}
+.photo-tile:hover .tile-del{display:flex}
+.photo-tile .tile-del:hover{background:var(--red-bg)}
+.add-tile{border-radius:8px;background:var(--surface);border:1.5px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;aspect-ratio:4/3;gap:.35rem;color:var(--ink3);font-size:.75rem}
+.add-tile:hover{border-color:var(--accent2);color:var(--ink2);background:var(--surface2)}
+.add-tile svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── PROGRESS ── */
+.progress-wrap{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.progress-wrap.visible{display:block}
+.progress-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:1rem}
+.progress-bar{height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:.5rem}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;width:0%;transition:width .5s ease}
+.progress-status{font-size:.78rem;color:var(--ink3)}
+.steps{display:flex;flex-direction:column;gap:.3rem;margin-top:1rem}
+.step{display:flex;align-items:center;gap:.7rem;padding:.5rem .75rem;border-radius:var(--radius-sm);border:1px solid transparent;transition:all .25s;font-size:.8rem}
+.step.active{background:var(--surface2);border-color:var(--border);color:var(--ink)}
+.step.done{color:var(--green)}
+.step-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s}
+.step.active .step-dot{border-color:var(--accent);background:var(--accent)}
 .step.done .step-dot{border-color:var(--green);background:var(--green)}
-.step-label{font-size:.82rem;font-weight:500;color:var(--muted);transition:color .3s}
-.step.active .step-label{color:var(--ink);font-weight:600}
+.step-label{color:var(--ink3);transition:color .25s}
+.step.active .step-label{color:var(--ink);font-weight:500}
 .step.done .step-label{color:var(--green)}
-.step-sublabel{font-size:.72rem;color:var(--muted);margin-top:.1rem}
-.debug-panel{background:#0f0f0f;border:1px solid #333;border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem;display:none;font-family:'Courier New',monospace}
-.debug-panel.visible{display:block;animation:fadeUp .4s ease both}
-.debug-title{font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:1rem}
-.debug-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #222;font-size:.75rem}
-.debug-row:last-child{border-bottom:none}
-.debug-key{color:#888}
-.debug-val{color:#4ade80;font-weight:600}
-.debug-val.bad{color:#f87171}
-.debug-val.warn{color:#fbbf24}
-.debug-section{margin-top:.75rem;padding-top:.75rem;border-top:1px solid #222}
-.debug-section-title{font-size:.7rem;color:#666;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
-.debug-attempt{padding:.4rem .6rem;border-radius:6px;font-size:.72rem;margin-bottom:.3rem}
-.debug-attempt.success{background:#052e16;color:#4ade80}
-.debug-attempt.failed{background:#1f0808;color:#f87171}
-.debug-attempt.warn{background:#1c1600;color:#fbbf24}
-.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;margin-bottom:1.5rem}
-.result-card.visible{display:block;animation:fadeUp .5s ease both}
-.result-card-header{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem}
-.result-badge{display:inline-flex;align-items:center;gap:.35rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:100px;padding:.25rem .65rem;font-size:.72rem;font-weight:600;color:var(--green)}
-.result-card-title{font-size:.85rem;font-weight:600}
-.result-img-wrap{background:var(--bg);display:flex;align-items:center;justify-content:center;max-height:320px;overflow:hidden;border-bottom:1px solid var(--border)}
-.result-img-wrap img{width:100%;object-fit:contain;max-height:320px;display:block}
-.result-actions{padding:1rem 1.5rem;display:flex;gap:.6rem;flex-wrap:wrap}
-.error-box{margin:0 1.5rem 1.25rem;padding:.875rem 1rem;background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--radius-sm);font-size:.82rem;font-weight:500;color:var(--red);display:none}
-.error-box.visible{display:flex;align-items:flex-start;gap:.5rem}
-.info-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
-.info-card-title{font-size:.75rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
-.info-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.82rem}
-.info-row:last-child{border-bottom:none;padding-bottom:0}
-.info-key{color:var(--muted)}
-.info-val{color:var(--ink);font-weight:600}
-.info-val.green{color:var(--green)}
-.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
-.spinner-dark{border-color:rgba(0,0,0,.1);border-top-color:var(--ink)}
-footer{text-align:center;padding:2rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);background:var(--white)}
-footer a{color:var(--ink2);text-decoration:none;font-weight:500}
-@keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+
+/* ── RESULT ── */
+.result-wrap{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.result-wrap.visible{display:block;animation:fadeUp .4s ease both}
+.result-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.result-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:100px;padding:.2rem .6rem;font-size:.7rem;font-weight:600;color:var(--green)}
+.result-img-wrap{background:#000;max-height:400px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.result-img-wrap img{width:100%;max-height:400px;object-fit:contain;display:block}
+.result-actions{padding:.875rem 1.25rem;display:flex;gap:.5rem;flex-wrap:wrap}
+
+/* ── MANUAL MODE HINT ── */
+.manual-hint{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem;display:none}
+.manual-hint.visible{display:block}
+.manual-hint-title{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+.manual-hint p{font-size:.82rem;color:var(--ink2);line-height:1.6}
+.hint-steps{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+.hint-step{display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:.25rem .7rem;font-size:.72rem;color:var(--ink2)}
+.hint-step-num{width:16px;height:16px;border-radius:50%;background:var(--accent2);color:#0e0e0f;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.spinner{width:12px;height:12px;border:2px solid rgba(14,14,15,.3);border-top-color:#0e0e0f;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner-light{border-color:rgba(240,240,238,.15);border-top-color:var(--ink2)}
+
+footer{text-align:center;padding:2rem;font-size:.75rem;color:var(--ink3);border-top:1px solid var(--border);margin-top:2rem}
+footer a{color:var(--ink2);text-decoration:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes shimmer{from{opacity:0}50%{opacity:1}to{opacity:0}}
 @keyframes wakeDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-@media(max-width:820px){.page{grid-template-columns:1fr}.right{order:-1}header{padding:0 1.5rem}.page{padding:2rem 1.25rem 4rem}}
+
+@media(max-width:600px){
+  header{padding:0 1rem}
+  .app{padding:1.25rem 1rem}
+  .mode-toggle{display:none}
+}
 </style>
 </head>
 <body>
+
 <header>
   <a href="#" class="logo">
-    <div class="logo-mark">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="18" height="7" rx="1"/></svg>
-    </div>
+    <div class="logo-dot"></div>
     BigPicture
   </a>
-  <div class="header-tag">Free &middot; No account needed</div>
+  <div class="header-right">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeAuto" onclick="setMode('auto')">&#9889; Auto</button>
+      <button class="mode-btn" id="modeManual" onclick="setMode('manual')">&#9998; Manual</button>
+    </div>
+  </div>
 </header>
 
-<div class="page">
-  <div class="left">
-    <h1 class="page-title">Stitch photos into<br><em>one panorama.</em></h1>
-    <p class="page-sub">Upload overlapping images in any order &mdash; BigPicture automatically figures out the layout and stitches them into one image.</p>
-    <div class="wake-banner" id="wakeBanner">
-      <div class="wake-dots"><span></span><span></span><span></span></div>
-      <span id="wakeMsg">Waking up server &mdash; this takes about 30 seconds on first use&hellip;</span>
+<div class="app">
+
+  <!-- Wake banner -->
+  <div class="wake-banner" id="wakeBanner">
+    <div class="wake-dots"><span></span><span></span><span></span></div>
+    <span id="wakeMsg">Waking up server — first use takes ~30 seconds…</span>
+  </div>
+
+  <!-- Messages -->
+  <div class="msg-box error" id="errorBox"><span>&#9888;</span><span id="errorText"></span></div>
+  <div class="msg-box success" id="successBox"><span>&#10003;</span><span id="successText"></span></div>
+
+  <!-- Upload zone (shown when no files) -->
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" accept="image/*" multiple>
+    <div class="upload-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     </div>
-    <div class="upload-card">
-      <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" accept="image/*" multiple>
-        <div class="drop-icon-wrap">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <div class="drop-title">Drop photos here or click to browse</div>
-        <div class="drop-sub">Upload overlapping images in any order</div>
-        <div class="drop-formats">
-          <span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">WEBP</span><span class="fmt">HEIC</span><span class="fmt">RAW</span><span class="fmt">TIFF</span><span class="fmt">BMP</span>
-        </div>
-      </div>
-      <div class="thumbs-section" id="thumbsSection">
-        <div class="thumbs-header">
-          <span class="thumbs-label">Selected photos</span>
-          <span class="thumbs-count" id="thumbsCount">0</span>
-        </div>
-        <div class="thumbs-grid" id="thumbsGrid"></div>
-      </div>
-      <div class="error-box" id="errorBox"><span>&#9888;</span><span id="errorText"></span></div>
-      <div class="card-footer">
-        <div class="file-info" id="fileInfo">No photos selected</div>
-        <div class="btn-row">
-          <button class="btn btn-ghost" id="clearBtn" onclick="clearAll()" style="display:none">Clear</button>
-          <button class="btn btn-debug" id="debugBtn" onclick="runDebug()" style="display:none">&#128269; Diagnose</button>
-          <button class="btn btn-primary" id="stitchBtn" onclick="startStitch()" disabled>Stitch Panorama</button>
-        </div>
-      </div>
+    <div class="upload-title">Drop your photos here</div>
+    <div class="upload-sub">or click to browse — upload in any order</div>
+    <div class="fmt-row">
+      <span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">WEBP</span>
+      <span class="fmt">HEIC</span><span class="fmt">RAW</span><span class="fmt">TIFF</span>
     </div>
   </div>
 
-  <div class="right">
-    <div class="progress-card" id="progressCard">
-      <div class="progress-card-header">
-        <span class="progress-card-title" id="progressTitle">Processing</span>
-        <span class="pct-badge" id="pctBadge">0%</span>
-      </div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
-        <div class="progress-status" id="progressStatus">Starting&hellip;</div>
-      </div>
-      <div class="steps">
-        <div class="step" id="step-wake"><div class="step-dot"></div><div><div class="step-label">Wake server</div><div class="step-sublabel">Cold start ~30 seconds</div></div></div>
-        <div class="step" id="step-session"><div class="step-dot"></div><div><div class="step-label">Start session</div><div class="step-sublabel">Connect to server</div></div></div>
-        <div class="step" id="step-upload"><div class="step-dot"></div><div><div class="step-label" id="uploadLabel">Upload images</div><div class="step-sublabel">Sending to server</div></div></div>
-        <div class="step" id="step-stitch"><div class="step-dot"></div><div><div class="step-label">Stitching</div><div class="step-sublabel">Finding overlaps &amp; merging</div></div></div>
-        <div class="step" id="step-done"><div class="step-dot"></div><div><div class="step-label">Complete</div><div class="step-sublabel">Encoding final image</div></div></div>
-      </div>
-    </div>
-    <div class="debug-panel" id="debugPanel">
-      <div class="debug-title">&#128269; Diagnostic Report</div>
-      <div id="debugContent"></div>
-    </div>
-    <div class="result-card" id="resultCard">
-      <div class="result-card-header">
-        <div class="result-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ready</div>
-        <span class="result-card-title">Panorama complete</span>
-      </div>
-      <div class="result-img-wrap"><img id="resultImg" src="" alt="Panorama"></div>
-      <div class="result-actions">
-        <a id="downloadBtn" class="btn btn-primary" download="panorama.jpg">Download</a>
-        <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
-      </div>
-    </div>
-    <div class="info-card">
-      <div class="info-card-title">How it works</div>
-      <div class="info-row"><span class="info-key">Layout detection</span><span class="info-val green">Automatic</span></div>
-      <div class="info-row"><span class="info-key">Image order</span><span class="info-val green">Any order</span></div>
-      <div class="info-row"><span class="info-key">Blending</span><span class="info-val green">Multiband</span></div>
-      <div class="info-row"><span class="info-key">Storage</span><span class="info-val green">Never saved</span></div>
-      <div class="info-row"><span class="info-key">Cost</span><span class="info-val green">Free</span></div>
+  <!-- Manual mode hint -->
+  <div class="manual-hint" id="manualHint">
+    <div class="manual-hint-title">Manual Mode — You control the layout</div>
+    <p>Drag photos into the correct grid order before stitching. This gives you much more accurate results.</p>
+    <div class="hint-steps">
+      <div class="hint-step"><div class="hint-step-num">1</div> Upload photos</div>
+      <div class="hint-step"><div class="hint-step-num">2</div> Drag to arrange</div>
+      <div class="hint-step"><div class="hint-step-num">3</div> Set grid columns</div>
+      <div class="hint-step"><div class="hint-step-num">4</div> Click Stitch</div>
     </div>
   </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-left">
+      <div class="photo-count" id="photoCount">0 <span>photos</span></div>
+      <!-- Cols control (manual only) -->
+      <div class="cols-control" id="colsControl" style="display:none">
+        <span class="cols-label">Columns:</span>
+        <button class="cols-btn" onclick="changeCols(-1)">&#8722;</button>
+        <span class="cols-val" id="colsVal">4</span>
+        <button class="cols-btn" onclick="changeCols(1)">&#43;</button>
+      </div>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="addMore()">&#43; Add more</button>
+      <button class="btn btn-ghost btn-sm" id="diagnoseBtn" onclick="runDiagnose()" style="display:none">&#128269; Diagnose</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()">Clear</button>
+      <button class="btn btn-primary btn-lg" id="stitchBtn" onclick="startStitch()" disabled>Stitch Panorama</button>
+    </div>
+  </div>
+
+  <!-- Photo grid -->
+  <div class="grid-wrapper" id="gridWrapper">
+    <div class="photo-grid" id="photoGrid"></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-title" id="progressTitle">Processing…</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-status" id="progressStatus">Starting…</div>
+    <div class="steps">
+      <div class="step" id="step-wake"><div class="step-dot"></div><div class="step-label">Wake server</div></div>
+      <div class="step" id="step-session"><div class="step-dot"></div><div class="step-label">Start session</div></div>
+      <div class="step" id="step-upload"><div class="step-dot"></div><div class="step-label" id="uploadLabel">Upload images</div></div>
+      <div class="step" id="step-stitch"><div class="step-dot"></div><div class="step-label">Stitching</div></div>
+      <div class="step" id="step-done"><div class="step-dot"></div><div class="step-label">Complete</div></div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-header">
+      <div class="result-badge">&#10003; Ready</div>
+      <span style="font-size:.82rem;color:var(--ink3)" id="resultInfo"></span>
+    </div>
+    <div class="result-img-wrap"><img id="resultImg" src="" alt="Panorama"></div>
+    <div class="result-actions">
+      <a id="downloadBtn" class="btn btn-primary" download="panorama.jpg">&#8595; Download</a>
+      <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
+    </div>
+  </div>
+
 </div>
 
-<footer>BigPicture &mdash; <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> &middot; Images processed on server and immediately discarded</footer>
+<footer>
+  BigPicture &mdash; <a href="https://github.com/mesarpreetsingh/bigpicture" target="_blank">Open source</a> &middot; Images never stored
+</footer>
+
+<input type="file" id="fileInputExtra" accept="image/*" multiple style="display:none">
 
 <script>
-var API='https://singh56-bigpicture.hf.space';
-var BATCH=10;
-var files=[];
-var awake=false;
-var CHK='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-var SPN='<span class="spinner spinner-dark" style="width:10px;height:10px;border-width:2px"></span>';
-var STEPS=['wake','session','upload','stitch','done'];
+var API = 'https://singh56-bigpicture.hf.space';
+var BATCH = 10;
+var allFiles = [];   // original File objects in display order
+var mode = 'auto';   // 'auto' | 'manual'
+var cols = 4;
+var awake = false;
+var dragSrc = null;
 
-var zone=document.getElementById('dropZone');
-var inp=document.getElementById('fileInput');
-zone.addEventListener('click',function(){inp.click();});
-zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('dragover');});
-zone.addEventListener('dragleave',function(){zone.classList.remove('dragover');});
-zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('dragover');addFiles(Array.from(e.dataTransfer.files).filter(function(f){return f.type.startsWith('image/');}));});
-inp.addEventListener('change',function(){addFiles(Array.from(inp.files));});
+var CHK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+var SPN = '<span class="spinner spinner-light"></span>';
+var STEPS = ['wake','session','upload','stitch','done'];
 
-function addFiles(f){files=files.concat(f);renderThumbs();updateUI();}
-
-function renderThumbs(){
-  var g=document.getElementById('thumbsGrid');g.innerHTML='';
-  files.slice(0,14).forEach(function(f,i){var im=document.createElement('img');im.className='thumb';im.src=URL.createObjectURL(f);im.style.animationDelay=(i*.03)+'s';g.appendChild(im);});
-  if(files.length>14){var ov=document.createElement('div');ov.className='thumb-overflow';ov.textContent='+'+(files.length-14);g.appendChild(ov);}
-  document.getElementById('thumbsSection').classList.toggle('visible',files.length>0);
-  document.getElementById('thumbsCount').textContent=files.length;
+// ── Mode ──
+function setMode(m) {
+  mode = m;
+  document.getElementById('modeAuto').classList.toggle('active', m === 'auto');
+  document.getElementById('modeManual').classList.toggle('active', m === 'manual');
+  document.getElementById('colsControl').style.display = m === 'manual' ? '' : 'none';
+  document.getElementById('diagnoseBtn').style.display = m === 'manual' ? '' : 'none';
+  document.getElementById('manualHint').classList.toggle('visible', m === 'manual' && allFiles.length === 0);
+  renderGrid();
 }
 
-function updateUI(){
-  var n=files.length,b=Math.ceil(n/BATCH);
-  document.getElementById('stitchBtn').disabled=n<2;
-  document.getElementById('clearBtn').style.display=n>0?'':'none';
-  var db=document.getElementById('debugBtn');
-  db.style.display=n>=2?'':'none';
-  db.removeAttribute('disabled');
-  document.getElementById('fileInfo').innerHTML=n===0?'No photos selected':'<strong>'+n+' photo'+(n>1?'s':'')+'</strong> &middot; '+b+' batch'+(b>1?'es':'');
+// ── File input ──
+var zone = document.getElementById('uploadZone');
+var inp = document.getElementById('fileInput');
+var inpExtra = document.getElementById('fileInputExtra');
+
+zone.addEventListener('click', function(e){ if(e.target===zone||e.target.closest('.upload-zone'))inp.click(); });
+zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', function(){ zone.classList.remove('dragover'); });
+zone.addEventListener('drop', function(e){
+  e.preventDefault(); zone.classList.remove('dragover');
+  addFiles(Array.from(e.dataTransfer.files).filter(function(f){return f.type.startsWith('image/');}));
+});
+inp.addEventListener('change', function(){ addFiles(Array.from(inp.files)); inp.value=''; });
+inpExtra.addEventListener('change', function(){ addFiles(Array.from(inpExtra.files)); inpExtra.value=''; });
+
+function addMore(){ inpExtra.click(); }
+
+function addFiles(newFiles) {
+  allFiles = allFiles.concat(newFiles);
+  hideMessages();
+  renderGrid();
+  updateToolbar();
 }
 
-function clearAll(){
-  files=[];inp.value='';
-  ['thumbsSection','progressCard','resultCard','debugPanel','errorBox','wakeBanner'].forEach(function(id){document.getElementById(id).classList.remove('visible');});
-  document.getElementById('thumbsGrid').innerHTML='';
-  document.getElementById('stitchBtn').innerHTML='Stitch Panorama';
-  resetSteps();updateUI();
+function removeFile(idx) {
+  allFiles.splice(idx, 1);
+  renderGrid();
+  updateToolbar();
 }
 
-function setStep(id){
+function changeCols(delta) {
+  cols = Math.max(1, Math.min(12, cols + delta));
+  document.getElementById('colsVal').textContent = cols;
+  renderGrid();
+}
+
+// ── Render grid ──
+function renderGrid() {
+  var hasFiles = allFiles.length > 0;
+  document.getElementById('uploadZone').style.display = hasFiles ? 'none' : '';
+  document.getElementById('manualHint').classList.toggle('visible', mode==='manual' && !hasFiles);
+  document.getElementById('toolbar').classList.toggle('visible', hasFiles);
+  document.getElementById('gridWrapper').classList.toggle('visible', hasFiles);
+
+  var grid = document.getElementById('photoGrid');
+  var gridCols = mode === 'manual' ? cols : Math.min(allFiles.length, Math.max(3, Math.round(Math.sqrt(allFiles.length * 1.5))));
+  grid.style.gridTemplateColumns = 'repeat('+gridCols+', 1fr)';
+
+  grid.innerHTML = '';
+  allFiles.forEach(function(f, i) {
+    var tile = document.createElement('div');
+    tile.className = 'photo-tile';
+    tile.draggable = true;
+    tile.dataset.idx = i;
+
+    var img = document.createElement('img');
+    img.src = URL.createObjectURL(f);
+    img.loading = 'lazy';
+
+    var num = document.createElement('div');
+    num.className = 'tile-num';
+    num.textContent = i + 1;
+
+    var del = document.createElement('button');
+    del.className = 'tile-del';
+    del.innerHTML = '&#215;';
+    del.title = 'Remove';
+    del.addEventListener('click', function(e){ e.stopPropagation(); removeFile(i); });
+
+    tile.appendChild(img);
+    tile.appendChild(num);
+    tile.appendChild(del);
+
+    // Drag only in manual mode
+    if (mode === 'manual') {
+      tile.addEventListener('dragstart', onDragStart);
+      tile.addEventListener('dragover', onDragOver);
+      tile.addEventListener('dragleave', onDragLeave);
+      tile.addEventListener('drop', onDrop);
+      tile.addEventListener('dragend', onDragEnd);
+    } else {
+      tile.style.cursor = 'default';
+      tile.draggable = false;
+    }
+
+    grid.appendChild(tile);
+  });
+
+  // Add "+" tile in manual mode
+  if (mode === 'manual' && hasFiles) {
+    var addTile = document.createElement('div');
+    addTile.className = 'add-tile';
+    addTile.innerHTML = '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Add more</span>';
+    addTile.addEventListener('click', addMore);
+    grid.appendChild(addTile);
+  }
+
+  document.getElementById('photoCount').innerHTML = allFiles.length + ' <span>photo' + (allFiles.length!==1?'s':'') + '</span>';
+}
+
+// ── Drag and drop reorder ──
+function onDragStart(e) {
+  dragSrc = this;
+  this.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (this !== dragSrc) this.classList.add('drag-over');
+}
+function onDragLeave() { this.classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  if (!dragSrc || dragSrc === this) return;
+  var fromIdx = parseInt(dragSrc.dataset.idx);
+  var toIdx = parseInt(this.dataset.idx);
+  var moved = allFiles.splice(fromIdx, 1)[0];
+  allFiles.splice(toIdx, 0, moved);
+  renderGrid();
+  updateToolbar();
+}
+function onDragEnd() {
+  document.querySelectorAll('.photo-tile').forEach(function(t){
+    t.classList.remove('dragging','drag-over');
+  });
+  dragSrc = null;
+}
+
+// ── Toolbar ──
+function updateToolbar() {
+  document.getElementById('stitchBtn').disabled = allFiles.length < 2;
+}
+
+function clearAll() {
+  allFiles = [];
+  awake = false;
+  hideMessages();
+  document.getElementById('progressWrap').classList.remove('visible');
+  document.getElementById('resultWrap').classList.remove('visible');
+  document.getElementById('wakeBanner').classList.remove('visible');
+  document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
+  document.getElementById('stitchBtn').disabled = true;
+  resetSteps();
+  renderGrid();
+  updateToolbar();
+}
+
+// ── Steps ──
+function setStep(id) {
   STEPS.forEach(function(s){
-    var el=document.getElementById('step-'+s);if(!el)return;
+    var el = document.getElementById('step-'+s); if(!el)return;
     el.classList.remove('active','done');
-    var dot=el.querySelector('.step-dot');
-    if(s===id){el.classList.add('active');dot.innerHTML=SPN;}
-    else if(STEPS.indexOf(s)<STEPS.indexOf(id)){el.classList.add('done');dot.innerHTML=CHK;}
-    else{dot.innerHTML='';}
+    var dot = el.querySelector('.step-dot');
+    if (s===id){ el.classList.add('active'); dot.innerHTML=SPN; }
+    else if (STEPS.indexOf(s)<STEPS.indexOf(id)){ el.classList.add('done'); dot.innerHTML=CHK; }
+    else { dot.innerHTML=''; }
   });
 }
-function doneAll(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active');el.classList.add('done');el.querySelector('.step-dot').innerHTML=CHK;});}
-function resetSteps(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');el.querySelector('.step-dot').innerHTML='';});}
-function setProgress(pct,msg){document.getElementById('progressFill').style.width=pct+'%';document.getElementById('pctBadge').textContent=Math.round(pct)+'%';if(msg)document.getElementById('progressStatus').textContent=msg;}
+function doneAll(){
+  STEPS.forEach(function(s){
+    var el=document.getElementById('step-'+s); if(!el)return;
+    el.classList.remove('active'); el.classList.add('done');
+    el.querySelector('.step-dot').innerHTML=CHK;
+  });
+}
+function resetSteps(){
+  STEPS.forEach(function(s){
+    var el=document.getElementById('step-'+s); if(!el)return;
+    el.classList.remove('active','done');
+    el.querySelector('.step-dot').innerHTML='';
+  });
+}
+function setProgress(pct, msg){
+  document.getElementById('progressFill').style.width = pct+'%';
+  if(msg) document.getElementById('progressStatus').textContent = msg;
+}
 
-// Wake check uses /health which confirms stitching library is loaded
-async function wakeServer(){
-  if(awake)return;
+// ── Messages ──
+function showError(msg){ document.getElementById('errorText').textContent=msg; document.getElementById('errorBox').classList.add('visible'); }
+function hideMessages(){ document.getElementById('errorBox').classList.remove('visible'); document.getElementById('successBox').classList.remove('visible'); }
+
+// ── Safe JSON ──
+async function safeJSON(res) {
+  var t = await res.text();
+  try { return {ok:true,data:JSON.parse(t)}; }
+  catch(e){ return {ok:false,error:'Server error. Please try again. ('+t.slice(0,60)+')'}; }
+}
+
+// ── Wake server ──
+async function wakeServer() {
+  if (awake) return;
   document.getElementById('wakeBanner').classList.add('visible');
-  document.getElementById('progressCard').classList.add('visible');
-  setStep('wake');setProgress(5,'Waking up server...');
-  for(var i=0;i<25;i++){
-    try{
-      var r=await fetch(API+'/health',{signal:AbortSignal.timeout(15000)});
-      if(r.ok){
-        var t=await r.text();
-        try{
-          var j=JSON.parse(t);
-          if(j.status==='ready'){
-            awake=true;
-            document.getElementById('wakeBanner').classList.remove('visible');
-            return;
-          }
-        }catch(e){}
+  setStep('wake'); setProgress(4, 'Waking up server…');
+  for (var i=0; i<25; i++) {
+    try {
+      var r = await fetch(API+'/health', {signal:AbortSignal.timeout(15000)});
+      if (r.ok) {
+        var p = await safeJSON(r);
+        if (p.ok && p.data.status==='ready') {
+          awake = true;
+          document.getElementById('wakeBanner').classList.remove('visible');
+          return;
+        }
       }
-    }catch(e){}
-    document.getElementById('wakeMsg').textContent='Waking up server... attempt '+(i+1)+' of 25';
-    setProgress(5+(i/25)*10,'Waking server... attempt '+(i+1));
+    } catch(e){}
+    document.getElementById('wakeMsg').textContent = 'Waking up server… attempt '+(i+1)+' of 25';
+    setProgress(4+(i/25)*10, 'Waking server… attempt '+(i+1));
     await new Promise(function(r){setTimeout(r,4000);});
   }
   document.getElementById('wakeBanner').classList.remove('visible');
   throw new Error('Server took too long to wake up. Please wait 1 minute and try again.');
 }
 
-async function safeJSON(res){
-  var t=await res.text();
-  try{return{ok:true,data:JSON.parse(t)};}
-  catch(e){return{ok:false,error:'Server returned unexpected response. Please try again. ('+t.slice(0,60)+')'};}
-}
-
-async function uploadImages(){
+// ── Upload images (in current display order) ──
+async function uploadImages() {
   await wakeServer();
-  setStep('session');setProgress(18,'Starting session...');
-  var r=await fetch(API+'/start-session',{method:'POST'});
-  var p=await safeJSON(r);
-  if(!p.ok)throw new Error(p.error);
-  if(p.data.error)throw new Error(p.data.error);
-  var sid=p.data.session_id;
-  var total=Math.ceil(files.length/BATCH);
+  setStep('session'); setProgress(16, 'Starting session…');
+  var r = await fetch(API+'/start-session', {method:'POST'});
+  var p = await safeJSON(r);
+  if (!p.ok) throw new Error(p.error);
+  if (p.data.error) throw new Error(p.data.error);
+  var sid = p.data.session_id;
+
+  var total = Math.ceil(allFiles.length/BATCH);
   setStep('upload');
-  for(var i=0;i<total;i++){
-    setProgress(22+(i/total)*45,'Uploading batch '+(i+1)+' of '+total+'...');
-    document.getElementById('uploadLabel').textContent='Uploading batch '+(i+1)+' of '+total;
-    var batch=files.slice(i*BATCH,(i+1)*BATCH);
-    var form=new FormData();form.append('session_id',sid);
-    batch.forEach(function(f){form.append('files',f);});
-    var br=await fetch(API+'/upload-batch',{method:'POST',body:form});
-    var bp=await safeJSON(br);
-    if(!bp.ok)throw new Error(bp.error);
-    if(bp.data.error)throw new Error(bp.data.error);
+  for (var i=0; i<total; i++) {
+    setProgress(20+(i/total)*50, 'Uploading batch '+(i+1)+' of '+total+'…');
+    document.getElementById('uploadLabel').textContent = 'Uploading '+(i+1)+'/'+total;
+    var batch = allFiles.slice(i*BATCH, (i+1)*BATCH);
+    var form = new FormData();
+    form.append('session_id', sid);
+    batch.forEach(function(f){ form.append('files', f); });
+    var br = await fetch(API+'/upload-batch', {method:'POST', body:form});
+    var bp = await safeJSON(br);
+    if (!bp.ok) throw new Error(bp.error);
+    if (bp.data.error) throw new Error(bp.data.error);
   }
   return sid;
 }
 
-async function runDebug(){
-  hideError();
-  document.getElementById('debugPanel').classList.remove('visible');
-  document.getElementById('progressCard').classList.add('visible');
-  document.getElementById('progressTitle').textContent='Diagnosing';
+// ── Stitch ──
+async function startStitch() {
+  hideMessages();
+  document.getElementById('resultWrap').classList.remove('visible');
+  document.getElementById('progressWrap').classList.add('visible');
+  document.getElementById('progressTitle').textContent = mode==='manual' ? 'Stitching in your order…' : 'Auto-stitching…';
+  document.getElementById('stitchBtn').disabled = true;
+  document.getElementById('stitchBtn').innerHTML = '<span class="spinner"></span> Processing…';
   resetSteps();
-  try{
-    var sid=await uploadImages();
-    setProgress(72,'Running diagnostics...');
-    var form=new FormData();form.append('session_id',sid);
-    var r=await fetch(API+'/debug',{method:'POST',body:form});
-    var p=await safeJSON(r);
-    document.getElementById('progressCard').classList.remove('visible');
-    if(!p.ok)throw new Error(p.error);
-    showDebug(p.data);
-  }catch(e){document.getElementById('progressCard').classList.remove('visible');showError(e.message);}
-  document.getElementById('progressTitle').textContent='Processing';
-  resetSteps();
-}
 
-function showDebug(d){
-  document.getElementById('debugPanel').classList.add('visible');
-  var kp=d.avg_keypoints||0,pairs=d.total_pairs_matched||0,n=d.total_images||0,max=n*(n-1);
-  var h='<div class="debug-row"><span class="debug-key">Total images</span><span class="debug-val">'+n+'</span></div>'+
-    '<div class="debug-row"><span class="debug-key">Avg keypoints/image</span><span class="debug-val '+(kp<20?'bad':kp<100?'warn':'')+'">'+kp+'</span></div>'+
-    '<div class="debug-row"><span class="debug-key">Matched pairs</span><span class="debug-val '+(pairs===0?'bad':pairs<3?'warn':'')+'">'+pairs+' / '+max+'</span></div>';
-  if(d.feature_detection_error)h+='<div class="debug-row"><span class="debug-key">Error</span><span class="debug-val bad">'+d.feature_detection_error+'</span></div>';
-  if(d.attempts&&d.attempts.length){
-    h+='<div class="debug-section"><div class="debug-section-title">Stitch attempts</div>';
-    d.attempts.forEach(function(a){var c=a.result==='SUCCESS'?'success':a.result==='EMPTY RESULT'?'warn':'failed';h+='<div class="debug-attempt '+c+'">conf='+a.confidence+' &rarr; '+a.result+(a.size?' ('+a.size+')':'')+(a.error?': '+a.error:'')+'</div>';});
-    h+='</div>';
-  }
-  h+='<div class="debug-section"><div class="debug-section-title">Diagnosis</div>';
-  if(kp<20)h+='<div class="debug-attempt failed">Very few keypoints &mdash; images may be blurry.</div>';
-  if(pairs===0)h+='<div class="debug-attempt failed">No matching pairs &mdash; images may not overlap.</div>';
-  else if(pairs<3)h+='<div class="debug-attempt warn">Very few pairs &mdash; try more overlap between images.</div>';
-  else h+='<div class="debug-attempt success">Feature matching looks good &mdash; '+pairs+' pairs found.</div>';
-  var ok=d.attempts&&d.attempts.find(function(a){return a.result==='SUCCESS';});
-  h+=ok?'<div class="debug-attempt success">Stitching works! Click Stitch Panorama.</div>':'<div class="debug-attempt failed">All attempts failed. Paste this report so we can fix it.</div>';
-  h+='</div>';
-  document.getElementById('debugContent').innerHTML=h;
-}
+  try {
+    var sid = await uploadImages();
+    setStep('stitch'); setProgress(72, 'Stitching images…');
 
-async function startStitch(){
-  hideError();
-  document.getElementById('resultCard').classList.remove('visible');
-  document.getElementById('debugPanel').classList.remove('visible');
-  document.getElementById('progressCard').classList.add('visible');
-  document.getElementById('progressTitle').textContent='Processing';
-  document.getElementById('stitchBtn').disabled=true;
-  document.getElementById('stitchBtn').innerHTML='<span class="spinner"></span> Processing&hellip;';
-  resetSteps();
-  try{
-    var sid=await uploadImages();
-    setStep('stitch');setProgress(70,'Stitching images...');
-    var form=new FormData();form.append('session_id',sid);
-    var fr=await fetch(API+'/finalize',{method:'POST',body:form});
-    var ct=fr.headers.get('content-type')||'';
-    if(ct.indexOf('application/json')!==-1||!fr.ok){
-      var p=await safeJSON(fr);
-      throw new Error(p.ok?(p.data.error||'Stitching failed'):p.error);
+    var form = new FormData();
+    form.append('session_id', sid);
+    var fr = await fetch(API+'/finalize', {method:'POST', body:form});
+    var ct = fr.headers.get('content-type')||'';
+
+    if (ct.indexOf('application/json')!==-1 || !fr.ok) {
+      var ep = await safeJSON(fr);
+      throw new Error(ep.ok ? (ep.data.error||'Stitching failed') : ep.error);
     }
-    setStep('done');setProgress(100,'Complete');doneAll();
-    var blob=await fr.blob();
-    if(blob.size<500)throw new Error('Server returned empty image. Try the Diagnose button.');
-    var url=URL.createObjectURL(blob);
-    setTimeout(function(){document.getElementById('progressCard').classList.remove('visible');showResult(url);},700);
-  }catch(e){
-    document.getElementById('progressCard').classList.remove('visible');
+
+    setStep('done'); setProgress(100, 'Complete!'); doneAll();
+    var blob = await fr.blob();
+    if (blob.size < 500) throw new Error('Result image was empty. Try the Diagnose button.');
+    var url = URL.createObjectURL(blob);
+
+    setTimeout(function(){
+      document.getElementById('progressWrap').classList.remove('visible');
+      showResult(url, blob.size);
+    }, 600);
+
+  } catch(e) {
+    document.getElementById('progressWrap').classList.remove('visible');
     showError(e.message);
-    document.getElementById('stitchBtn').disabled=false;
-    document.getElementById('stitchBtn').innerHTML='Stitch Panorama';
+    document.getElementById('stitchBtn').disabled = false;
+    document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
     resetSteps();
   }
 }
 
-function showResult(url){
-  document.getElementById('resultImg').src=url;
-  document.getElementById('downloadBtn').href=url;
-  document.getElementById('resultCard').classList.add('visible');
-  document.getElementById('stitchBtn').disabled=false;
-  document.getElementById('stitchBtn').innerHTML='Stitch Panorama';
-  document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'nearest'});
+// ── Diagnose ──
+async function runDiagnose() {
+  hideMessages();
+  document.getElementById('progressWrap').classList.add('visible');
+  document.getElementById('progressTitle').textContent = 'Diagnosing…';
+  resetSteps();
+
+  try {
+    var sid = await uploadImages();
+    setProgress(72, 'Running diagnostics…');
+    var form = new FormData();
+    form.append('session_id', sid);
+    var r = await fetch(API+'/debug', {method:'POST', body:form});
+    var p = await safeJSON(r);
+    document.getElementById('progressWrap').classList.remove('visible');
+    if (!p.ok) throw new Error(p.error);
+    var d = p.data;
+    var lines = [
+      'Images: '+d.total_images,
+      'Avg keypoints: '+d.avg_keypoints,
+      'Matched pairs: '+(d.total_pairs_matched||0),
+    ];
+    if (d.attempts) {
+      d.attempts.forEach(function(a){ lines.push('conf='+a.confidence+' → '+a.result+(a.size?' ('+a.size+')':'')+(a.error?': '+a.error:'')); });
+    }
+    showError(lines.join(' | '));
+  } catch(e) {
+    document.getElementById('progressWrap').classList.remove('visible');
+    showError(e.message);
+  }
+  resetSteps();
 }
-function showError(msg){document.getElementById('errorText').textContent=msg;document.getElementById('errorBox').classList.add('visible');}
-function hideError(){document.getElementById('errorBox').classList.remove('visible');}
+
+function showResult(url, size) {
+  document.getElementById('resultImg').src = url;
+  document.getElementById('downloadBtn').href = url;
+  document.getElementById('resultInfo').textContent = (size/1024/1024).toFixed(1)+' MB';
+  document.getElementById('resultWrap').classList.add('visible');
+  document.getElementById('stitchBtn').disabled = false;
+  document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
+  document.getElementById('resultWrap').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── Init ──
+setMode('auto');
 </script>
 </body>
 </html>
