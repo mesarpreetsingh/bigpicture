@@ -14,7 +14,6 @@
   --accent:#e8d5a3;--accent2:#c9a84c;
   --green:#4ade80;--green-bg:rgba(74,222,128,.1);--green-border:rgba(74,222,128,.25);
   --red:#f87171;--red-bg:rgba(248,113,113,.1);--red-border:rgba(248,113,113,.25);
-  --blue:#60a5fa;--blue-bg:rgba(96,165,250,.1);--blue-border:rgba(96,165,250,.25);
   --amber:#fbbf24;--amber-bg:rgba(251,191,36,.1);--amber-border:rgba(251,191,36,.25);
   --radius:12px;--radius-sm:7px;
 }
@@ -22,32 +21,32 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
 
 /* HEADER */
-header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100}
+header{background:rgba(14,14,15,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.25rem;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:100}
 .logo{display:flex;align-items:center;gap:.45rem;font-family:'DM Serif Display',serif;font-size:1.25rem;color:var(--ink);text-decoration:none}
 .logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2)}
-.header-center{display:flex;align-items:center;gap:.5rem}
 .mode-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:3px;gap:2px}
 .mode-btn{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;padding:.28rem .85rem;border-radius:100px;border:none;cursor:pointer;transition:all .2s;color:var(--ink3);background:transparent}
-.mode-btn.active{background:var(--surface3);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.mode-btn.active{background:var(--surface3);color:var(--ink)}
 .header-right{display:flex;align-items:center;gap:.5rem}
 
 /* BUTTONS */
 .btn{font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:500;padding:.48rem 1.1rem;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;gap:.3rem;line-height:1;text-decoration:none;white-space:nowrap}
 .btn-primary{background:var(--accent);color:#0e0e0f;font-weight:600}
-.btn-primary:hover:not(:disabled){background:var(--accent2);box-shadow:0 3px 12px rgba(232,213,163,.25)}
+.btn-primary:hover:not(:disabled){background:var(--accent2);box-shadow:0 3px 14px rgba(232,213,163,.25)}
 .btn-primary:disabled{background:var(--surface3);color:var(--ink3);cursor:not-allowed}
 .btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2)}
 .btn-ghost:hover{border-color:var(--border);color:var(--ink);background:var(--surface2)}
 .btn-danger{background:transparent;color:var(--red);border:1px solid var(--red-border);font-size:.75rem;padding:.38rem .8rem}
 .btn-danger:hover{background:var(--red-bg)}
 .btn-sm{padding:.38rem .8rem;font-size:.75rem}
+.btn-lg{padding:.6rem 1.6rem;font-size:.88rem;font-weight:600}
 
-/* MAIN AREA */
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
 
 /* UPLOAD SCREEN */
 #uploadScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
-.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:3.5rem 2.5rem;text-align:center;cursor:pointer;transition:all .25s;background:var(--surface);max-width:480px;width:100%;position:relative;overflow:hidden}
+.upload-zone{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:3.5rem 2.5rem;text-align:center;cursor:pointer;transition:all .25s;background:var(--surface);max-width:460px;width:100%;position:relative;overflow:hidden}
 .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,213,163,.05) 0%,transparent 65%);pointer-events:none}
 .upload-zone:hover,.upload-zone.dragover{border-color:var(--accent2);background:var(--surface2)}
 .upload-zone input{display:none}
@@ -58,122 +57,110 @@ header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1p
 .fmt-row{display:flex;justify-content:center;gap:.3rem;flex-wrap:wrap}
 .fmt{font-size:.63rem;font-weight:600;letter-spacing:.04em;color:var(--ink3);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.15rem .38rem}
 
-/* CANVAS SCREEN */
-#canvasScreen{flex:1;display:none;flex-direction:column;overflow:hidden}
+/* WORKSPACE */
+#workspace{flex:1;display:none;flex-direction:column;overflow:hidden}
 
-/* CANVAS TOOLBAR */
-.canvas-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem .875rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;flex-shrink:0}
-.toolbar-group{display:flex;align-items:center;gap:.4rem}
-.toolbar-sep{width:1px;height:20px;background:var(--border);margin:0 .15rem}
-.photo-pill{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:.2rem .65rem;font-size:.72rem;color:var(--ink2)}
-.photo-pill strong{color:var(--ink)}
-.arrange-hint{font-size:.72rem;color:var(--ink3);display:flex;align-items:center;gap:.3rem}
-.arrange-hint.hidden{display:none}
+/* TOOLBAR */
+.ws-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.45rem .875rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;flex-wrap:wrap}
+.ws-toolbar .sep{width:1px;height:18px;background:var(--border);margin:0 .1rem}
+.pill{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:.18rem .65rem;font-size:.7rem;color:var(--ink2)}
+.pill strong{color:var(--ink)}
+.hint-text{font-size:.7rem;color:var(--ink3)}
+.mode-indicator{font-size:.7rem;color:var(--accent2);font-weight:500;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:100px;padding:.18rem .65rem}
 
-/* FREEFORM CANVAS */
-.canvas-outer{flex:1;overflow:hidden;position:relative;cursor:default}
-.canvas-inner{position:absolute;top:0;left:0;width:100%;height:100%;overflow:auto}
-.canvas-board{position:relative;min-width:2400px;min-height:1600px;background:var(--bg);background-image:radial-gradient(var(--border) 1px,transparent 1px);background-size:32px 32px}
+/* CANVAS */
+.canvas-scroll{flex:1;overflow:auto;position:relative;cursor:default}
+.canvas-board{position:relative;background:var(--bg);background-image:radial-gradient(var(--border) 1px,transparent 1px);background-size:28px 28px;min-width:3000px;min-height:2000px}
 
 /* PHOTO CARDS */
-.photo-card{position:absolute;cursor:grab;user-select:none;transition:box-shadow .15s;z-index:1}
-.photo-card:hover{z-index:10}
-.photo-card.grabbed{cursor:grabbing;z-index:50;box-shadow:0 12px 40px rgba(0,0,0,.7)}
-.photo-card-inner{border-radius:8px;overflow:hidden;border:2px solid var(--border2);background:var(--surface2);transition:border-color .2s}
-.photo-card:hover .photo-card-inner{border-color:var(--border)}
-.photo-card.selected .photo-card-inner{border-color:var(--accent)}
-.photo-card img{display:block;pointer-events:none;max-width:200px;max-height:150px;width:auto;height:auto}
-.photo-card .card-label{background:rgba(0,0,0,.75);color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .4rem;border-radius:3px;position:absolute;top:6px;left:6px;pointer-events:none}
-.photo-card .card-del{position:absolute;top:5px;right:5px;width:20px;height:20px;background:rgba(0,0,0,.75);border:none;border-radius:4px;color:var(--red);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:.85rem;line-height:1}
-.photo-card:hover .card-del{display:flex}
-.photo-card .card-del:hover{background:var(--red-bg)}
+.pcard{position:absolute;cursor:grab;user-select:none;z-index:1;transition:filter .15s}
+.pcard:hover{z-index:10}
+.pcard.grabbing{cursor:grabbing;z-index:50;filter:drop-shadow(0 10px 30px rgba(0,0,0,.8))}
+.pcard-frame{border-radius:7px;overflow:hidden;border:2px solid var(--border2);background:var(--surface2);transition:border-color .15s}
+.pcard:hover .pcard-frame{border-color:var(--border)}
+.pcard img{display:block;pointer-events:none;width:190px;height:142px;object-fit:cover}
+.pcard .pcard-num{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.78);color:#fff;font-size:.58rem;font-weight:700;padding:.12rem .38rem;border-radius:3px;pointer-events:none;letter-spacing:.02em}
+.pcard .pcard-del{position:absolute;top:4px;right:4px;width:19px;height:19px;background:rgba(0,0,0,.78);border:none;border-radius:4px;color:var(--red);cursor:pointer;display:none;align-items:center;justify-content:center;font-size:.8rem;line-height:1}
+.pcard:hover .pcard-del{display:flex}
+.pcard .pcard-del:hover{background:rgba(248,113,113,.25)}
 
-/* AUTO grid preview */
-.grid-screen{flex:1;display:none;flex-direction:column;overflow:hidden}
-.grid-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem .875rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;flex-wrap:wrap}
-.auto-grid{flex:1;overflow:auto;padding:1rem;display:grid;gap:4px}
-.auto-tile{border-radius:6px;overflow:hidden;border:1.5px solid var(--border);background:var(--surface2);aspect-ratio:4/3;position:relative}
-.auto-tile img{width:100%;height:100%;object-fit:cover;display:block}
-.auto-tile .tile-num{position:absolute;top:4px;left:4px;background:rgba(0,0,0,.7);color:#fff;font-size:.6rem;font-weight:700;padding:.12rem .35rem;border-radius:3px}
+/* AUTO ARRANGE spinner overlay */
+.arrange-overlay{position:absolute;inset:0;background:rgba(14,14,15,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:200;flex-direction:column;gap:.75rem}
+.arrange-overlay.visible{display:flex}
+.arrange-overlay p{font-size:.82rem;color:var(--ink2)}
 
-/* OVERLAYS */
-.wake-banner{display:none;align-items:center;gap:.6rem;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-sm);padding:.6rem .875rem;font-size:.78rem;color:var(--amber);font-weight:500;position:absolute;top:.75rem;left:50%;transform:translateX(-50%);z-index:200;white-space:nowrap}
-.wake-banner.visible{display:flex}
+/* BANNERS */
+.float-banner{display:none;align-items:center;gap:.6rem;border-radius:var(--radius-sm);padding:.55rem .875rem;font-size:.75rem;font-weight:500;position:absolute;top:.75rem;left:50%;transform:translateX(-50%);z-index:300;white-space:nowrap;pointer-events:none}
+.float-banner.visible{display:flex}
+.float-banner.amber{background:var(--amber-bg);border:1px solid var(--amber-border);color:var(--amber)}
+.float-banner.red{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
+.float-banner.green{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
 .wake-dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--amber);margin:0 1px;animation:wakeDot 1.2s infinite}
 .wake-dots span:nth-child(2){animation-delay:.2s}
 .wake-dots span:nth-child(3){animation-delay:.4s}
 
-.msg-box{display:none;align-items:flex-start;gap:.5rem;border-radius:var(--radius-sm);padding:.6rem .875rem;font-size:.78rem;font-weight:500;position:absolute;bottom:.75rem;left:50%;transform:translateX(-50%);z-index:200;max-width:90vw;white-space:nowrap}
-.msg-box.visible{display:flex}
-.msg-box.error{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red)}
-.msg-box.success{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green)}
-
-/* PROGRESS PANEL */
-.progress-panel{position:absolute;inset:0;background:rgba(14,14,15,.92);backdrop-filter:blur(8px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:300}
+/* PROGRESS */
+.progress-panel{position:absolute;inset:0;background:rgba(14,14,15,.93);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:400}
 .progress-panel.visible{display:flex}
-.progress-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:340px;max-width:90vw}
-.progress-title{font-family:'DM Serif Display',serif;font-size:1.2rem;margin-bottom:1.25rem;text-align:center}
-.progress-bar{height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:.5rem}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;width:0%;transition:width .5s ease}
-.progress-status{font-size:.75rem;color:var(--ink3);text-align:center}
-.steps{display:flex;flex-direction:column;gap:.25rem;margin-top:1rem}
-.step{display:flex;align-items:center;gap:.6rem;padding:.4rem .6rem;border-radius:6px;border:1px solid transparent;transition:all .25s;font-size:.77rem}
-.step.active{background:var(--surface2);border-color:var(--border);color:var(--ink)}
+.progress-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:320px;max-width:90vw}
+.progress-title{font-family:'DM Serif Display',serif;font-size:1.15rem;text-align:center;margin-bottom:1.25rem}
+.pbar{height:3px;background:var(--surface3);border-radius:2px;overflow:hidden;margin-bottom:.4rem}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px;width:0%;transition:width .5s ease}
+.pbar-status{font-size:.72rem;color:var(--ink3);text-align:center;margin-bottom:1rem}
+.steps{display:flex;flex-direction:column;gap:.2rem}
+.step{display:flex;align-items:center;gap:.6rem;padding:.38rem .55rem;border-radius:6px;border:1px solid transparent;transition:all .2s;font-size:.75rem}
+.step.active{background:var(--surface2);border-color:var(--border)}
 .step.done{color:var(--green)}
-.step-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.55rem}
+.step-dot{width:17px;height:17px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.5rem}
 .step.active .step-dot{border-color:var(--accent);background:var(--accent)}
 .step.done .step-dot{border-color:var(--green);background:var(--green)}
-.step-label{color:var(--ink3)}
-.step.active .step-label{color:var(--ink);font-weight:500}
-.step.done .step-label{color:var(--green)}
+.step-lbl{color:var(--ink3)}
+.step.active .step-lbl{color:var(--ink);font-weight:500}
+.step.done .step-lbl{color:var(--green)}
 
 /* RESULT */
-.result-panel{position:absolute;inset:0;background:rgba(14,14,15,.95);display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:300;padding:1rem}
+.result-panel{position:absolute;inset:0;background:rgba(14,14,15,.96);display:none;align-items:center;justify-content:center;z-index:400;padding:1rem}
 .result-panel.visible{display:flex}
-.result-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-width:min(800px,95vw);width:100%}
-.result-header{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.result-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:100px;padding:.2rem .55rem;font-size:.68rem;font-weight:600;color:var(--green)}
-.result-preview{background:#000;max-height:55vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.result-preview img{max-width:100%;max-height:55vh;object-fit:contain;display:block}
-.result-actions{padding:.875rem 1.25rem;display:flex;gap:.5rem}
+.result-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-width:min(860px,95vw);width:100%}
+.result-top{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.result-badge{display:inline-flex;align-items:center;gap:.3rem;background:var(--green-bg);border:1px solid var(--green-border);border-radius:100px;padding:.18rem .55rem;font-size:.67rem;font-weight:600;color:var(--green)}
+.result-preview{background:#000;max-height:58vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.result-preview img{max-width:100%;max-height:58vh;object-fit:contain;display:block}
+.result-btns{padding:.875rem 1.25rem;display:flex;gap:.5rem}
 
 .spinner{width:11px;height:11px;border:2px solid rgba(14,14,15,.25);border-top-color:#0e0e0f;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner-lg{width:26px;height:26px;border-width:3px;border-color:rgba(240,240,238,.1);border-top-color:var(--accent)}
 .spinner-light{border-color:rgba(240,240,238,.15);border-top-color:var(--ink2)}
 
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes wakeDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
 
 <header>
   <a href="#" class="logo"><div class="logo-dot"></div>BigPicture</a>
-  <div class="header-center">
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="modeAutoBtn" onclick="setMode('auto')">&#9889; Auto</button>
-      <button class="mode-btn" id="modeManualBtn" onclick="setMode('manual')">&#9998; Manual</button>
-    </div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="modeAutoBtn" onclick="setMode('auto')">&#9889; Auto</button>
+    <button class="mode-btn" id="modeManualBtn" onclick="setMode('manual')">&#9998; Manual</button>
   </div>
-  <div class="header-right" id="headerRight" style="display:none">
+  <div class="header-right" id="headerBtns" style="display:none">
     <button class="btn btn-ghost btn-sm" onclick="addMoreFiles()">&#43; Add</button>
     <button class="btn btn-danger" onclick="clearAll()">Clear</button>
-    <button class="btn btn-primary" id="stitchBtn" onclick="startStitch()" disabled>Stitch Panorama</button>
+    <button class="btn btn-primary btn-lg" id="stitchBtn" onclick="startStitch()" disabled>Stitch</button>
   </div>
 </header>
 
 <div class="main">
 
-  <!-- Wake banner -->
-  <div class="wake-banner" id="wakeBanner">
+  <!-- Floating banners -->
+  <div class="float-banner amber" id="wakeBanner">
     <div class="wake-dots"><span></span><span></span><span></span></div>
     <span id="wakeMsg">Waking up server…</span>
   </div>
+  <div class="float-banner red" id="errorBanner"><span>&#9888;</span><span id="errorText"></span></div>
 
-  <!-- Error/success messages -->
-  <div class="msg-box error" id="errorBox"><span>&#9888;</span><span id="errorText"></span></div>
-
-  <!-- UPLOAD SCREEN -->
+  <!-- UPLOAD -->
   <div id="uploadScreen">
     <div class="upload-zone" id="uploadZone">
       <input type="file" id="fileInput" accept="image/*" multiple>
@@ -181,43 +168,36 @@ header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1p
         <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
       </div>
       <div class="upload-title">Drop photos here</div>
-      <div class="upload-sub">Upload in any order — Auto mode arranges them, Manual lets you drag</div>
+      <div class="upload-sub">Auto mode stitches immediately &mdash; Manual lets you arrange first</div>
       <div class="fmt-row">
         <span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">WEBP</span>
-        <span class="fmt">HEIC</span><span class="fmt">RAW</span><span class="fmt">TIFF</span>
+        <span class="fmt">HEIC</span><span class="fmt">TIFF</span><span class="fmt">RAW</span>
       </div>
     </div>
   </div>
 
-  <!-- AUTO GRID SCREEN -->
-  <div class="grid-screen" id="autoScreen">
-    <div class="grid-toolbar">
-      <div class="toolbar-group">
-        <span class="photo-pill"><strong id="autoCount">0</strong> photos</span>
-        <span class="arrange-hint">&#10003; Auto-arranged by visual similarity</span>
+  <!-- WORKSPACE (canvas) -->
+  <div id="workspace">
+    <div class="ws-toolbar">
+      <span class="pill"><strong id="photoCountEl">0</strong> photos</span>
+      <div class="sep"></div>
+      <span class="mode-indicator" id="modeIndicator">&#9889; Auto mode</span>
+      <div class="sep"></div>
+      <span class="hint-text" id="hintText">Upload photos to begin</span>
+      <div style="margin-left:auto;display:flex;gap:.4rem;align-items:center">
+        <button class="btn btn-ghost btn-sm" id="reArrangeBtn" onclick="runArrange()" style="display:none">&#9881; Re-arrange</button>
+        <button class="btn btn-ghost btn-sm" id="reScanBtn" onclick="reScanAndStitch()" style="display:none" title="Uses your layout as a guide, then re-scans to fine-tune alignment">&#128269; Re-scan &amp; Stitch</button>
+        <button class="btn btn-ghost btn-sm" onclick="resetView()">&#8634; Reset view</button>
       </div>
     </div>
-    <div class="auto-grid" id="autoGrid"></div>
-  </div>
 
-  <!-- MANUAL FREEFORM CANVAS SCREEN -->
-  <div class="grid-screen" id="manualScreen">
-    <div class="canvas-toolbar">
-      <div class="toolbar-group">
-        <span class="photo-pill"><strong id="manualCount">0</strong> photos</span>
-      </div>
-      <div class="toolbar-sep"></div>
-      <div class="toolbar-group">
-        <span class="arrange-hint" id="manualHint">&#9998;&nbsp; Drag photos to arrange them — overlapping edges should line up</span>
-      </div>
-      <div class="toolbar-group" style="margin-left:auto">
-        <button class="btn btn-ghost btn-sm" onclick="autoArrangeCanvas()">&#9881; Auto-arrange</button>
-        <button class="btn btn-ghost btn-sm" onclick="resetCanvasView()">&#9654; Reset view</button>
-      </div>
-    </div>
-    <div class="canvas-outer" id="canvasOuter">
-      <div class="canvas-inner" id="canvasInner">
-        <div class="canvas-board" id="canvasBoard"></div>
+    <div class="canvas-scroll" id="canvasScroll">
+      <div class="canvas-board" id="canvasBoard">
+        <!-- arrange loading overlay -->
+        <div class="arrange-overlay" id="arrangeOverlay">
+          <span class="spinner spinner-lg"></span>
+          <p>Analysing images to find best arrangement…</p>
+        </div>
       </div>
     </div>
   </div>
@@ -226,14 +206,14 @@ header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1p
   <div class="progress-panel" id="progressPanel">
     <div class="progress-box">
       <div class="progress-title" id="progressTitle">Processing…</div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-status" id="progressStatus">Starting…</div>
+      <div class="pbar"><div class="pbar-fill" id="pbarFill"></div></div>
+      <div class="pbar-status" id="pbarStatus">Starting…</div>
       <div class="steps">
-        <div class="step" id="step-wake"><div class="step-dot"></div><div class="step-label">Wake server</div></div>
-        <div class="step" id="step-session"><div class="step-dot"></div><div class="step-label">Start session</div></div>
-        <div class="step" id="step-upload"><div class="step-dot"></div><div class="step-label" id="uploadLabel">Upload images</div></div>
-        <div class="step" id="step-stitch"><div class="step-dot"></div><div class="step-label">Stitching</div></div>
-        <div class="step" id="step-done"><div class="step-dot"></div><div class="step-label">Complete</div></div>
+        <div class="step" id="step-wake"><div class="step-dot"></div><div class="step-lbl">Wake server</div></div>
+        <div class="step" id="step-session"><div class="step-dot"></div><div class="step-lbl">Start session</div></div>
+        <div class="step" id="step-upload"><div class="step-dot"></div><div class="step-lbl" id="uploadLbl">Upload images</div></div>
+        <div class="step" id="step-stitch"><div class="step-dot"></div><div class="step-lbl">Stitching</div></div>
+        <div class="step" id="step-done"><div class="step-dot"></div><div class="step-lbl">Complete</div></div>
       </div>
     </div>
   </div>
@@ -241,13 +221,13 @@ header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1p
   <!-- RESULT -->
   <div class="result-panel" id="resultPanel">
     <div class="result-box">
-      <div class="result-header">
-        <div class="result-badge">&#10003; Ready</div>
-        <span style="font-size:.78rem;color:var(--ink3)" id="resultInfo"></span>
+      <div class="result-top">
+        <div class="result-badge">&#10003; Done</div>
+        <span style="font-size:.75rem;color:var(--ink3)" id="resultInfo"></span>
       </div>
-      <div class="result-preview"><img id="resultImg" src="" alt="Panorama"></div>
-      <div class="result-actions">
-        <a id="downloadBtn" class="btn btn-primary" download="panorama.jpg">&#8595; Download</a>
+      <div class="result-preview"><img id="resultImg" src="" alt="Result"></div>
+      <div class="result-btns">
+        <a id="dlBtn" class="btn btn-primary" download="panorama.jpg">&#8595; Download</a>
         <button class="btn btn-ghost" onclick="closeResult()">&#8592; Back</button>
         <button class="btn btn-ghost" onclick="clearAll()">Start over</button>
       </div>
@@ -256,423 +236,369 @@ header{background:rgba(14,14,15,.95);backdrop-filter:blur(12px);border-bottom:1p
 
 </div>
 
-<input type="file" id="fileInputExtra" accept="image/*" multiple style="display:none">
+<input type="file" id="fileInputX" accept="image/*" multiple style="display:none">
 
 <script>
 var API = 'https://singh56-bigpicture.hf.space';
 var BATCH = 10;
-var allFiles = [];        // File objects in stitching order
-var cardPositions = {};   // {idx: {x,y}} for manual canvas
+var allFiles = [];
+var cardPos = {};       // {idx: {x,y}}
 var mode = 'auto';
 var awake = false;
+var sessionId = null;   // reuse session for arrange + finalize
+var dragging = null, dragOX = 0, dragOY = 0;
 var STEPS = ['wake','session','upload','stitch','done'];
 var CHK = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 var SPN = '<span class="spinner spinner-light" style="width:9px;height:9px"></span>';
 
-// ── FILE INPUTS ──
-var zone = document.getElementById('uploadZone');
-var inp = document.getElementById('fileInput');
-var inpX = document.getElementById('fileInputExtra');
+// FILE INPUTS
+var zone=document.getElementById('uploadZone');
+var inp=document.getElementById('fileInput');
+var inpX=document.getElementById('fileInputX');
+zone.addEventListener('click',function(){inp.click();});
+zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('dragover');});
+zone.addEventListener('dragleave',function(){zone.classList.remove('dragover');});
+zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('dragover');addFiles(Array.from(e.dataTransfer.files).filter(function(f){return f.type.startsWith('image/');}));});
+inp.addEventListener('change',function(){addFiles(Array.from(inp.files));inp.value='';});
+inpX.addEventListener('change',function(){addFiles(Array.from(inpX.files));inpX.value='';});
+function addMoreFiles(){inpX.click();}
 
-zone.addEventListener('click', function(){ inp.click(); });
-zone.addEventListener('dragover', function(e){ e.preventDefault(); zone.classList.add('dragover'); });
-zone.addEventListener('dragleave', function(){ zone.classList.remove('dragover'); });
-zone.addEventListener('drop', function(e){
-  e.preventDefault(); zone.classList.remove('dragover');
-  addFiles(Array.from(e.dataTransfer.files).filter(function(f){ return f.type.startsWith('image/'); }));
-});
-inp.addEventListener('change', function(){ addFiles(Array.from(inp.files)); inp.value=''; });
-inpX.addEventListener('change', function(){ addFiles(Array.from(inpX.files)); inpX.value=''; });
-function addMoreFiles(){ inpX.click(); }
-
-// ── ADD FILES ──
-function addFiles(newFiles) {
-  var startIdx = allFiles.length;
-  allFiles = allFiles.concat(newFiles);
+function addFiles(newFiles){
+  if(!newFiles.length)return;
+  var startIdx=allFiles.length;
+  allFiles=allFiles.concat(newFiles);
   hideError();
-
-  if (allFiles.length > 0) {
-    document.getElementById('uploadScreen').style.display = 'none';
-    document.getElementById('headerRight').style.display = '';
-    document.getElementById('stitchBtn').disabled = allFiles.length < 2;
-    if (mode === 'auto') {
-      showAutoScreen();
-    } else {
-      showManualScreen(startIdx);
-    }
+  document.getElementById('uploadScreen').style.display='none';
+  document.getElementById('workspace').style.display='flex';
+  document.getElementById('headerBtns').style.display='';
+  document.getElementById('stitchBtn').disabled=allFiles.length<2;
+  document.getElementById('photoCountEl').textContent=allFiles.length;
+  // Place new cards at default positions first
+  for(var i=startIdx;i<allFiles.length;i++){
+    var col=i%6, row=Math.floor(i/6);
+    cardPos[i]={x:60+col*210, y:60+row*160};
+  }
+  renderCards(startIdx);
+  // Then call arrange to get smart positions
+  if(mode==='manual'){
+    document.getElementById('hintText').textContent='Drag photos to match overlapping edges, then Stitch';
+    document.getElementById('reArrangeBtn').style.display='';
+    document.getElementById('reScanBtn').style.display='';
+    runArrange();
+  } else {
+    document.getElementById('hintText').textContent='Photos arranged by visual similarity';
+    runArrange();
   }
 }
 
-// ── MODE ──
-function setMode(m) {
-  mode = m;
-  document.getElementById('modeAutoBtn').classList.toggle('active', m==='auto');
-  document.getElementById('modeManualBtn').classList.toggle('active', m==='manual');
-  if (allFiles.length > 0) {
-    if (m === 'auto') showAutoScreen();
-    else showManualScreen(0);
-  }
-}
-
-// ── AUTO SCREEN — simple grid showing arranged order ──
-function showAutoScreen() {
-  document.getElementById('autoScreen').style.display = 'flex';
-  document.getElementById('manualScreen').style.display = 'none';
-  renderAutoGrid();
-}
-
-function renderAutoGrid() {
-  var n = allFiles.length;
-  document.getElementById('autoCount').textContent = n;
-  var cols = Math.min(n, Math.max(3, Math.ceil(Math.sqrt(n * 1.6))));
-  var grid = document.getElementById('autoGrid');
-  grid.style.gridTemplateColumns = 'repeat('+cols+', 1fr)';
-  grid.innerHTML = '';
-  allFiles.forEach(function(f, i) {
-    var tile = document.createElement('div');
-    tile.className = 'auto-tile';
-    var img = document.createElement('img');
-    img.src = URL.createObjectURL(f);
-    img.loading = 'lazy';
-    var num = document.createElement('div');
-    num.className = 'tile-num';
-    num.textContent = i+1;
-    tile.appendChild(img);
-    tile.appendChild(num);
-    grid.appendChild(tile);
+// MODE
+function setMode(m){
+  mode=m;
+  document.getElementById('modeAutoBtn').classList.toggle('active',m==='auto');
+  document.getElementById('modeManualBtn').classList.toggle('active',m==='manual');
+  document.getElementById('modeIndicator').textContent=m==='auto'?'⚡ Auto mode':'✏ Manual mode';
+  document.getElementById('reArrangeBtn').style.display=m==='manual'&&allFiles.length>0?'':'none';
+  document.getElementById('reScanBtn').style.display=m==='manual'&&allFiles.length>0?'':'none';
+  // Cards draggable in manual, not in auto
+  document.querySelectorAll('.pcard').forEach(function(c){
+    c.style.cursor=m==='manual'?'grab':'default';
+    c.style.pointerEvents=m==='manual'?'auto':'none';
   });
-}
-
-// ── MANUAL CANVAS ──
-var CARD_W = 180;
-var CARD_H = 135;
-var dragging = null;
-var dragOX = 0, dragOY = 0;
-
-function showManualScreen(fromIdx) {
-  document.getElementById('autoScreen').style.display = 'none';
-  document.getElementById('manualScreen').style.display = 'flex';
-  document.getElementById('manualCount').textContent = allFiles.length;
-
-  // Place new cards
-  var board = document.getElementById('canvasBoard');
-  for (var i = fromIdx; i < allFiles.length; i++) {
-    if (!cardPositions[i]) {
-      cardPositions[i] = getInitialPos(i);
-    }
-    createCard(i, board);
+  if(allFiles.length>0){
+    document.getElementById('hintText').textContent=m==='manual'?'Drag photos to match overlapping edges, then Stitch':'Photos arranged by visual similarity';
   }
 }
 
-function getInitialPos(i) {
-  // Lay out in rough rows of 5 as starting point
-  var perRow = 5;
-  var col = i % perRow;
-  var row = Math.floor(i / perRow);
-  return {
-    x: 80 + col * (CARD_W + 20),
-    y: 80 + row * (CARD_H + 20)
-  };
+// RENDER CARDS
+function renderCards(fromIdx){
+  var board=document.getElementById('canvasBoard');
+  for(var i=fromIdx||0;i<allFiles.length;i++){
+    var old=document.getElementById('pc-'+i);
+    if(old)old.remove();
+    var pos=cardPos[i]||{x:60+i*30,y:60};
+    var card=document.createElement('div');
+    card.className='pcard';
+    card.id='pc-'+i;
+    card.style.left=pos.x+'px';
+    card.style.top=pos.y+'px';
+
+    var frame=document.createElement('div');
+    frame.className='pcard-frame';
+
+    var img=document.createElement('img');
+    img.src=URL.createObjectURL(allFiles[i]);
+    img.draggable=false;
+
+    var num=document.createElement('div');
+    num.className='pcard-num';
+    num.textContent=i+1;
+
+    var del=document.createElement('button');
+    del.className='pcard-del';
+    del.innerHTML='&#215;';
+    del.addEventListener('click',function(idx){return function(e){e.stopPropagation();removeCard(idx);};}(i));
+
+    frame.appendChild(img);
+    card.appendChild(frame);
+    card.appendChild(num);
+    card.appendChild(del);
+
+    card.addEventListener('mousedown',function(e){
+      if(mode!=='manual'||e.button!==0)return;
+      e.preventDefault();
+      dragging=this;
+      // Use card's actual position on the board (not screen rect)
+      // so scroll position doesn't affect the offset
+      dragOX=e.clientX - parseInt(this.style.left||0) - document.getElementById('canvasBoard').getBoundingClientRect().left + document.getElementById('canvasScroll').scrollLeft;
+      dragOY=e.clientY - parseInt(this.style.top||0)  - document.getElementById('canvasBoard').getBoundingClientRect().top  + document.getElementById('canvasScroll').scrollTop;
+      this.classList.add('grabbing');
+    });
+
+    board.appendChild(card);
+  }
+  if(mode!=='manual'){
+    document.querySelectorAll('.pcard').forEach(function(c){c.style.cursor='default';c.style.pointerEvents='none';});
+  }
 }
 
-function createCard(i, board) {
-  // Remove existing card if any
-  var old = document.getElementById('card-'+i);
-  if (old) old.remove();
-
-  var pos = cardPositions[i];
-  var card = document.createElement('div');
-  card.className = 'photo-card';
-  card.id = 'card-'+i;
-  card.style.left = pos.x + 'px';
-  card.style.top  = pos.y + 'px';
-
-  var inner = document.createElement('div');
-  inner.className = 'photo-card-inner';
-
-  var img = document.createElement('img');
-  img.src = URL.createObjectURL(allFiles[i]);
-  img.width = CARD_W;
-  img.height = CARD_H;
-  img.style.objectFit = 'cover';
-  img.draggable = false;
-
-  var lbl = document.createElement('div');
-  lbl.className = 'card-label';
-  lbl.textContent = i+1;
-
-  var del = document.createElement('button');
-  del.className = 'card-del';
-  del.innerHTML = '&#215;';
-  del.addEventListener('click', function(e){ e.stopPropagation(); removeCard(i); });
-
-  inner.appendChild(img);
-  card.appendChild(inner);
-  card.appendChild(lbl);
-  card.appendChild(del);
-
-  card.addEventListener('mousedown', function(e){
-    if (e.button !== 0) return;
-    e.preventDefault();
-    dragging = card;
-    var rect = card.getBoundingClientRect();
-    var boardRect = document.getElementById('canvasBoard').getBoundingClientRect();
-    dragOX = e.clientX - rect.left;
-    dragOY = e.clientY - rect.top;
-    card.classList.add('grabbed');
-    card.style.zIndex = 50;
-  });
-
-  board.appendChild(card);
-}
-
-document.addEventListener('mousemove', function(e){
-  if (!dragging) return;
-  var boardRect = document.getElementById('canvasBoard').getBoundingClientRect();
-  var outer = document.getElementById('canvasInner');
-  var x = e.clientX - boardRect.left - dragOX + outer.scrollLeft;
-  var y = e.clientY - boardRect.top  - dragOY + outer.scrollTop;
-  x = Math.max(0, x);
-  y = Math.max(0, y);
-  dragging.style.left = x + 'px';
-  dragging.style.top  = y + 'px';
-  var idx = parseInt(dragging.id.replace('card-',''));
-  cardPositions[idx] = {x:x, y:y};
+document.addEventListener('mousemove',function(e){
+  if(!dragging)return;
+  var scroll=document.getElementById('canvasScroll');
+  var boardRect=document.getElementById('canvasBoard').getBoundingClientRect();
+  var x=e.clientX - boardRect.left + scroll.scrollLeft - dragOX;
+  var y=e.clientY - boardRect.top  + scroll.scrollTop  - dragOY;
+  x=Math.max(0,x); y=Math.max(0,y);
+  dragging.style.left=x+'px';
+  dragging.style.top=y+'px';
+  var idx=parseInt(dragging.id.replace('pc-',''));
+  cardPos[idx]={x:x,y:y};
+});
+document.addEventListener('mouseup',function(){
+  if(!dragging)return;
+  dragging.classList.remove('grabbing');
+  dragging=null;
 });
 
-document.addEventListener('mouseup', function(){
-  if (!dragging) return;
-  dragging.classList.remove('grabbed');
-  dragging.style.zIndex = '';
-  dragging = null;
-});
-
-function removeCard(i) {
-  var card = document.getElementById('card-'+i);
-  if (card) card.remove();
-  allFiles.splice(i, 1);
-  // Rebuild all cards with new indices
-  rebuildCanvas();
-}
-
-function rebuildCanvas() {
-  var board = document.getElementById('canvasBoard');
-  board.innerHTML = '';
-  cardPositions = {};
-  allFiles.forEach(function(f, i) {
-    cardPositions[i] = getInitialPos(i);
-    createCard(i, board);
+function removeCard(i){
+  var card=document.getElementById('pc-'+i);
+  if(card)card.remove();
+  allFiles.splice(i,1);
+  // Rebuild
+  var board=document.getElementById('canvasBoard');
+  document.querySelectorAll('.pcard').forEach(function(c){c.remove();});
+  cardPos={};
+  allFiles.forEach(function(f,idx){
+    var col=idx%6,row=Math.floor(idx/6);
+    cardPos[idx]={x:60+col*210,y:60+row*160};
   });
-  document.getElementById('manualCount').textContent = allFiles.length;
-  document.getElementById('stitchBtn').disabled = allFiles.length < 2;
+  renderCards(0);
+  document.getElementById('photoCountEl').textContent=allFiles.length;
+  document.getElementById('stitchBtn').disabled=allFiles.length<2;
 }
 
-function autoArrangeCanvas() {
-  // Reset to clean grid layout
-  var board = document.getElementById('canvasBoard');
-  allFiles.forEach(function(f, i) {
-    var perRow = 5;
-    var col = i % perRow;
-    var row = Math.floor(i / perRow);
-    var x = 80 + col * (CARD_W + 16);
-    var y = 80 + row * (CARD_H + 16);
-    cardPositions[i] = {x:x, y:y};
-    var card = document.getElementById('card-'+i);
-    if (card) { card.style.left = x+'px'; card.style.top = y+'px'; }
-  });
+function resetView(){
+  var s=document.getElementById('canvasScroll');
+  s.scrollTo({top:0,left:0,behavior:'smooth'});
 }
 
-function resetCanvasView() {
-  var outer = document.getElementById('canvasInner');
-  outer.scrollTop = 0;
-  outer.scrollLeft = 0;
-}
-
-// ── Get files in correct order for stitching ──
-// Auto: array order as-is
-// Manual: sorted by canvas position (left-to-right, top-to-bottom)
-function getOrderedFiles() {
-  if (mode === 'auto') return allFiles.slice();
-
-  // Sort cards by their y position (row), then x (column)
-  var ROW_SNAP = CARD_H * 0.6; // snap threshold for "same row"
-  var indexed = allFiles.map(function(f, i){
-    var pos = cardPositions[i] || {x:0,y:0};
-    return {f:f, i:i, x:pos.x, y:pos.y};
-  });
-
-  // Sort top-to-bottom, left-to-right with row snapping
-  indexed.sort(function(a, b){
-    var rowA = Math.round(a.y / ROW_SNAP);
-    var rowB = Math.round(b.y / ROW_SNAP);
-    if (rowA !== rowB) return rowA - rowB;
-    return a.x - b.x;
-  });
-
-  return indexed.map(function(item){ return item.f; });
-}
-
-// ── Clear ──
-function clearAll() {
-  allFiles = [];
-  cardPositions = {};
-  awake = false;
-  document.getElementById('uploadScreen').style.display = '';
-  document.getElementById('autoScreen').style.display = 'none';
-  document.getElementById('manualScreen').style.display = 'none';
-  document.getElementById('headerRight').style.display = 'none';
-  document.getElementById('progressPanel').classList.remove('visible');
-  document.getElementById('resultPanel').classList.remove('visible');
-  document.getElementById('canvasBoard').innerHTML = '';
-  document.getElementById('autoGrid').innerHTML = '';
-  document.getElementById('stitchBtn').innerHTML = 'Stitch Panorama';
-  document.getElementById('stitchBtn').disabled = true;
-  hideError();
-  resetSteps();
-}
-
-function closeResult() {
-  document.getElementById('resultPanel').classList.remove('visible');
-}
-
-// ── STEPS ──
-function setStep(id) {
-  STEPS.forEach(function(s){
-    var el = document.getElementById('step-'+s); if(!el) return;
-    el.classList.remove('active','done');
-    var dot = el.querySelector('.step-dot');
-    if (s===id){ el.classList.add('active'); dot.innerHTML=SPN; }
-    else if (STEPS.indexOf(s)<STEPS.indexOf(id)){ el.classList.add('done'); dot.innerHTML=CHK; }
-    else { dot.innerHTML=''; }
-  });
-}
-function doneAll(){
-  STEPS.forEach(function(s){
-    var el=document.getElementById('step-'+s); if(!el) return;
-    el.classList.remove('active'); el.classList.add('done');
-    el.querySelector('.step-dot').innerHTML=CHK;
-  });
-}
-function resetSteps(){
-  STEPS.forEach(function(s){
-    var el=document.getElementById('step-'+s); if(!el) return;
-    el.classList.remove('active','done');
-    el.querySelector('.step-dot').innerHTML='';
-  });
-}
-function setProgress(pct, msg){
-  document.getElementById('progressFill').style.width=pct+'%';
-  if(msg) document.getElementById('progressStatus').textContent=msg;
-}
-
-// ── MESSAGES ──
-function showError(msg){ document.getElementById('errorText').textContent=msg; document.getElementById('errorBox').classList.add('visible'); }
-function hideError(){ document.getElementById('errorBox').classList.remove('visible'); }
-
-// ── SAFE JSON ──
-async function safeJSON(res) {
-  var t = await res.text();
-  try { return {ok:true,data:JSON.parse(t)}; }
-  catch(e){ return {ok:false,error:'Server error. Please try again. ('+t.slice(0,60)+')'}; }
-}
-
-// ── WAKE ──
-async function wakeServer() {
-  if (awake) return;
-  document.getElementById('wakeBanner').classList.add('visible');
-  setStep('wake'); setProgress(4, 'Waking up server…');
-  for (var i=0; i<25; i++) {
-    try {
-      var r = await fetch(API+'/health', {signal:AbortSignal.timeout(15000)});
-      if (r.ok) {
-        var p = await safeJSON(r);
-        if (p.ok && p.data.status==='ready') {
-          awake=true;
-          document.getElementById('wakeBanner').classList.remove('visible');
-          return;
-        }
+// ARRANGE — ask server for smart positions
+async function runArrange(){
+  if(allFiles.length<2)return;
+  document.getElementById('arrangeOverlay').classList.add('visible');
+  try{
+    var sid=await ensureSession();
+    // Upload all files for arrangement analysis
+    await uploadAllToSession(sid);
+    var form=new FormData();
+    form.append('session_id',sid);
+    var r=await fetch(API+'/arrange',{method:'POST',body:form});
+    var p=await safeJSON(r);
+    if(!p.ok||!p.data.positions)throw new Error('arrange failed');
+    var positions=p.data.positions;
+    positions.forEach(function(pos,i){
+      cardPos[i]={x:pos.x,y:pos.y};
+      var card=document.getElementById('pc-'+i);
+      if(card){
+        card.style.transition='left .5s ease, top .5s ease';
+        card.style.left=pos.x+'px';
+        card.style.top=pos.y+'px';
+        setTimeout(function(){card.style.transition='';},600);
       }
-    } catch(e){}
+    });
+  }catch(e){
+    console.log('arrange error:',e);
+    // Fail silently — cards stay at default grid positions
+  }
+  document.getElementById('arrangeOverlay').classList.remove('visible');
+}
+
+// Keep a session alive for the arrange+finalize flow
+async function ensureSession(){
+  await wakeServer();
+  if(sessionId){
+    // Test if still alive
+    try{
+      var r=await fetch(API+'/start-session',{method:'POST'});
+      var p=await safeJSON(r);
+      if(p.ok&&p.data.session_id){
+        sessionId=p.data.session_id;
+        sessions_data={};
+      }
+    }catch(e){}
+  } else {
+    var r=await fetch(API+'/start-session',{method:'POST'});
+    var p=await safeJSON(r);
+    if(!p.ok)throw new Error(p.error);
+    sessionId=p.data.session_id;
+  }
+  return sessionId;
+}
+
+async function uploadAllToSession(sid){
+  var ordered=getOrderedFiles();
+  var total=Math.ceil(ordered.length/BATCH);
+  for(var i=0;i<total;i++){
+    var batch=ordered.slice(i*BATCH,(i+1)*BATCH);
+    var form=new FormData();
+    form.append('session_id',sid);
+    batch.forEach(function(f){form.append('files',f);});
+    var r=await fetch(API+'/upload-batch',{method:'POST',body:form});
+    await safeJSON(r);
+  }
+}
+
+// ORDER: manual = sort by canvas position (row then col), auto = as-is
+function getOrderedFiles(){
+  if(mode==='auto')return allFiles.slice();
+  var ROW_SNAP=80;
+  var items=allFiles.map(function(f,i){
+    var p=cardPos[i]||{x:0,y:0};
+    return{f:f,x:p.x,y:p.y};
+  });
+  items.sort(function(a,b){
+    var ra=Math.round(a.y/ROW_SNAP),rb=Math.round(b.y/ROW_SNAP);
+    return ra!==rb?ra-rb:a.x-b.x;
+  });
+  return items.map(function(it){return it.f;});
+}
+
+// WAKE
+async function wakeServer(){
+  if(awake)return;
+  document.getElementById('wakeBanner').classList.add('visible');
+  for(var i=0;i<25;i++){
+    try{
+      var r=await fetch(API+'/health',{signal:AbortSignal.timeout(15000)});
+      if(r.ok){var p=await safeJSON(r);if(p.ok&&p.data.status==='ready'){awake=true;document.getElementById('wakeBanner').classList.remove('visible');return;}}
+    }catch(e){}
     document.getElementById('wakeMsg').textContent='Waking server… attempt '+(i+1);
-    setProgress(4+(i/25)*10,'Waking server… attempt '+(i+1));
     await new Promise(function(r){setTimeout(r,4000);});
   }
   document.getElementById('wakeBanner').classList.remove('visible');
-  throw new Error('Server took too long to wake up. Please wait 1 minute and try again.');
+  throw new Error('Server took too long to wake. Please wait 1 minute and try again.');
 }
 
-// ── UPLOAD ──
-async function uploadOrderedFiles(orderedFiles) {
-  await wakeServer();
-  setStep('session'); setProgress(16,'Starting session…');
-  var r = await fetch(API+'/start-session',{method:'POST'});
-  var p = await safeJSON(r);
-  if(!p.ok) throw new Error(p.error);
-  if(p.data.error) throw new Error(p.data.error);
-  var sid = p.data.session_id;
-
-  var total = Math.ceil(orderedFiles.length/BATCH);
-  setStep('upload');
-  for (var i=0; i<total; i++) {
-    setProgress(20+(i/total)*50,'Uploading '+(i+1)+'/'+total+'…');
-    document.getElementById('uploadLabel').textContent='Uploading '+(i+1)+'/'+total;
-    var batch = orderedFiles.slice(i*BATCH,(i+1)*BATCH);
-    var form = new FormData();
-    form.append('session_id',sid);
-    batch.forEach(function(f){ form.append('files',f); });
-    var br = await fetch(API+'/upload-batch',{method:'POST',body:form});
-    var bp = await safeJSON(br);
-    if(!bp.ok) throw new Error(bp.error);
-    if(bp.data.error) throw new Error(bp.data.error);
-  }
-  return sid;
+// SAFE JSON
+async function safeJSON(res){
+  var t=await res.text();
+  try{return{ok:true,data:JSON.parse(t)};}
+  catch(e){return{ok:false,error:'Server error ('+t.slice(0,60)+')'}}
 }
 
-// ── STITCH ──
-async function startStitch() {
+// STEPS UI
+function setStep(id){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');var dot=el.querySelector('.step-dot');if(s===id){el.classList.add('active');dot.innerHTML=SPN;}else if(STEPS.indexOf(s)<STEPS.indexOf(id)){el.classList.add('done');dot.innerHTML=CHK;}else{dot.innerHTML='';}});}
+function doneAll(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active');el.classList.add('done');el.querySelector('.step-dot').innerHTML=CHK;});}
+function resetSteps(){STEPS.forEach(function(s){var el=document.getElementById('step-'+s);if(!el)return;el.classList.remove('active','done');el.querySelector('.step-dot').innerHTML='';});}
+function setProg(pct,msg){document.getElementById('pbarFill').style.width=pct+'%';if(msg)document.getElementById('pbarStatus').textContent=msg;}
+function showError(msg){document.getElementById('errorText').textContent=msg;document.getElementById('errorBanner').classList.add('visible');}
+function hideError(){document.getElementById('errorBanner').classList.remove('visible');}
+
+// STITCH
+async function startStitch(){
   hideError();
-  var orderedFiles = getOrderedFiles();
+  var ordered=getOrderedFiles();
   document.getElementById('progressPanel').classList.add('visible');
-  document.getElementById('progressTitle').textContent = mode==='manual' ? 'Stitching in your order…' : 'Auto-stitching…';
+  document.getElementById('progressTitle').textContent=mode==='manual'?'Stitching your arrangement…':'Auto-stitching…';
   document.getElementById('stitchBtn').disabled=true;
-  document.getElementById('stitchBtn').innerHTML='<span class="spinner"></span> Processing…';
+  document.getElementById('stitchBtn').innerHTML='<span class="spinner"></span> Working…';
   resetSteps();
 
-  try {
-    var sid = await uploadOrderedFiles(orderedFiles);
-    setStep('stitch'); setProgress(72,'Stitching…');
-    var form = new FormData();
-    form.append('session_id',sid);
-    var fr = await fetch(API+'/finalize',{method:'POST',body:form});
-    var ct = fr.headers.get('content-type')||'';
+  try{
+    // Fresh session for stitch
+    await wakeServer();
+    setStep('session');setProg(14,'Starting session…');
+    var sr=await fetch(API+'/start-session',{method:'POST'});
+    var sp=await safeJSON(sr);
+    if(!sp.ok)throw new Error(sp.error);
+    var sid=sp.data.session_id;
 
+    var total=Math.ceil(ordered.length/BATCH);
+    setStep('upload');
+    for(var i=0;i<total;i++){
+      setProg(18+(i/total)*52,'Uploading '+(i+1)+'/'+total+'…');
+      document.getElementById('uploadLbl').textContent='Uploading '+(i+1)+'/'+total;
+      var batch=ordered.slice(i*BATCH,(i+1)*BATCH);
+      var form=new FormData();form.append('session_id',sid);
+      batch.forEach(function(f){form.append('files',f);});
+      var br=await fetch(API+'/upload-batch',{method:'POST',body:form});
+      var bp=await safeJSON(br);
+      if(!bp.ok)throw new Error(bp.error);
+      if(bp.data.error)throw new Error(bp.data.error);
+    }
+
+    setStep('stitch');setProg(73,'Stitching…');
+    var ff=new FormData();ff.append('session_id',sid);
+    var fr=await fetch(API+'/finalize',{method:'POST',body:ff});
+    var ct=fr.headers.get('content-type')||'';
     if(ct.indexOf('application/json')!==-1||!fr.ok){
-      var ep = await safeJSON(fr);
+      var ep=await safeJSON(fr);
       throw new Error(ep.ok?(ep.data.error||'Stitching failed'):ep.error);
     }
 
-    setStep('done'); setProgress(100,'Complete!'); doneAll();
-    var blob = await fr.blob();
-    if(blob.size<500) throw new Error('Result was empty. Try the other mode or check image overlap.');
-    var url = URL.createObjectURL(blob);
+    setStep('done');setProg(100,'Complete!');doneAll();
+    var blob=await fr.blob();
+    if(blob.size<500)throw new Error('Result was empty. Try Manual mode to arrange photos.');
+    var url=URL.createObjectURL(blob);
 
     setTimeout(function(){
       document.getElementById('progressPanel').classList.remove('visible');
       document.getElementById('resultImg').src=url;
-      document.getElementById('downloadBtn').href=url;
+      document.getElementById('dlBtn').href=url;
       document.getElementById('resultInfo').textContent=(blob.size/1024/1024).toFixed(1)+' MB';
       document.getElementById('resultPanel').classList.add('visible');
       document.getElementById('stitchBtn').disabled=false;
-      document.getElementById('stitchBtn').innerHTML='Stitch Panorama';
+      document.getElementById('stitchBtn').innerHTML='Stitch';
     },600);
 
-  } catch(e) {
+  }catch(e){
     document.getElementById('progressPanel').classList.remove('visible');
     showError(e.message);
     document.getElementById('stitchBtn').disabled=false;
-    document.getElementById('stitchBtn').innerHTML='Stitch Panorama';
+    document.getElementById('stitchBtn').innerHTML='Stitch';
     resetSteps();
   }
+}
+
+// RE-SCAN & STITCH — sends images in user's visual order, stitcher does the rest
+async function reScanAndStitch(){
+  // Just calls regular stitch — the order from getOrderedFiles() IS the user's arrangement
+  // The stitcher automatically fine-tunes alignment regardless of exact pixel positions
+  await startStitch();
+}
+
+function closeResult(){document.getElementById('resultPanel').classList.remove('visible');}
+
+function clearAll(){
+  allFiles=[];cardPos={};awake=false;sessionId=null;
+  document.getElementById('uploadScreen').style.display='';
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('headerBtns').style.display='none';
+  document.getElementById('progressPanel').classList.remove('visible');
+  document.getElementById('resultPanel').classList.remove('visible');
+  document.getElementById('canvasBoard').querySelectorAll('.pcard').forEach(function(c){c.remove();});
+  document.getElementById('stitchBtn').innerHTML='Stitch';
+  document.getElementById('stitchBtn').disabled=true;
+  hideError();resetSteps();
 }
 </script>
 </body>
