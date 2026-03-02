@@ -2,271 +2,310 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Seamless Stitcher</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Picture | Professional Stitcher</title>
     <style>
-        /* --- Strict Color Palette & Font --- */
+        /* --- Strictly Applied Color Palette --- */
         :root {
             --bg-color: #EAEFEF;
-            --soft-panel: rgba(191, 201, 209, 0.4); /* #BFC9D1 with transparency */
+            --soft-accent: #BFC9D1;
             --dark-text: #25343F;
-            --accent-orange: #FF9B51;
+            --vibrant-orange: #FF9B51;
         }
 
         body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
             background-color: var(--bg-color);
             color: var(--dark-text);
+            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
             cursor: none; 
         }
 
-        /* --- Refined, Smaller Custom Cursor --- */
+        /* --- Refined, Small Custom Cursor --- */
         .custom-cursor {
-            width: 8px; 
+            width: 8px;
             height: 8px;
-            background-color: var(--accent-orange);
+            background-color: var(--vibrant-orange);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
             transition: transform 0.15s ease-out;
+            mix-blend-mode: multiply;
         }
         .custom-cursor.active {
-            transform: scale(1.5); /* Less wild expansion */
+            transform: scale(2);
             background-color: var(--dark-text);
+            opacity: 0.5;
         }
 
-        /* --- Interactive Background Blobs --- */
+        /* --- Organic Background Blobs (No Boxes) --- */
         .blob {
-            position: absolute;
+            position: fixed;
             border-radius: 50%;
             filter: blur(80px);
             z-index: -1;
             opacity: 0.5;
-            transition: transform 0.3s ease-out;
+            animation: float 12s infinite ease-in-out alternate;
         }
-        .blob-1 { top: 10%; left: 10%; width: 50vw; height: 50vw; background: #BFC9D1; }
-        .blob-2 { bottom: 10%; right: 10%; width: 40vw; height: 40vw; background: rgba(255, 155, 81, 0.3); }
+        .blob-1 { top: -10%; left: -5%; width: 50vw; height: 50vw; background: var(--soft-accent); }
+        .blob-2 { bottom: -10%; right: -5%; width: 45vw; height: 45vw; background: rgba(255, 155, 81, 0.15); animation-delay: -6s; }
 
-        /* --- Fluid Glass Panel (No harsh boxes) --- */
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 60px) scale(1.05); }
+        }
+
+        /* --- Desktop vs Mobile Architecture --- */
+        .app-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .app-wrapper {
+                grid-template-columns: 1fr; /* Stacks seamlessly on mobile */
+                gap: 20px;
+            }
+        }
+
+        /* --- Glassmorphism Panels --- */
         .glass-panel {
-            background: var(--soft-panel);
+            background: rgba(191, 201, 209, 0.3); /* Transparent Soft Accent */
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: clamp(20px, 5vw, 40px);
-            padding: clamp(20px, 6vw, 50px);
-            width: 90%;
-            max-width: 650px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(37, 52, 63, 0.08);
-        }
-
-        h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 10px 0; font-weight: 300; }
-        p { font-size: clamp(1rem, 2.5vw, 1.2rem); opacity: 0.8; margin-bottom: 30px; }
-
-        /* --- Interactive Drag & Drop Zone --- */
-        .drop-zone {
-            border: 2px dashed var(--dark-text);
-            border-radius: 20px;
-            padding: 40px 20px;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(37, 52, 63, 0.05);
             transition: all 0.3s ease;
-            cursor: none;
+        }
+
+        .glass-panel:hover {
+            box-shadow: 0 25px 60px rgba(37, 52, 63, 0.08);
+            transform: translateY(-2px);
+        }
+
+        h1 { font-weight: 300; font-size: 2.8rem; margin-top: 0; margin-bottom: 10px; line-height: 1.1; }
+        p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; }
+
+        /* --- Interactive UI Elements --- */
+        .file-upload-wrapper {
             position: relative;
-            background: rgba(234, 239, 239, 0.3);
-        }
-        .drop-zone.dragover {
-            background: rgba(255, 155, 81, 0.1);
-            border-color: var(--accent-orange);
-            transform: scale(1.02);
-        }
-        .drop-zone input[type="file"] {
-            position: absolute;
+            overflow: hidden;
             width: 100%;
-            height: 100%;
-            top: 0;
+            margin-bottom: 20px;
+        }
+        .file-upload-wrapper input[type="file"] {
+            font-size: 100px;
+            position: absolute;
             left: 0;
+            top: 0;
             opacity: 0;
             cursor: none;
+            height: 100%;
         }
-
-        /* --- Buttons --- */
         .btn-main {
             background-color: var(--dark-text);
             color: var(--bg-color);
             border: none;
-            padding: 16px 40px;
+            padding: 16px 30px;
             font-size: 1.1rem;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             width: 100%;
-            margin-top: 20px;
             font-weight: 600;
+            display: inline-block;
+            text-align: center;
+            box-sizing: border-box;
+            cursor: none;
         }
         .btn-main:hover {
-            background-color: var(--accent-orange);
+            background-color: var(--vibrant-orange);
             color: var(--dark-text);
-            transform: translateY(-2px);
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(255, 155, 81, 0.2);
         }
 
-        /* --- The Pipeline Stepper --- */
-        #processingUI { display: none; }
-        .stepper {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            position: relative;
+        .orange-num {
+            color: var(--vibrant-orange);
+            font-weight: 700;
+            font-size: 1.5rem;
         }
-        .stepper::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: #BFC9D1;
-            z-index: 1;
-            transform: translateY(-50%);
-        }
-        .step {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #BFC9D1;
-            color: var(--bg-color);
+
+        /* --- The Live Cloud Console (Interactive Waiting Area) --- */
+        .console-window {
+            background: rgba(37, 52, 63, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            scroll-behavior: smooth;
+        }
+        .console-line {
+            opacity: 0;
+            animation: slideIn 0.3s ease forwards;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(191, 201, 209, 0.3);
+        }
+        .console-line:last-child {
+            color: var(--vibrant-orange);
             font-weight: bold;
-            z-index: 2;
-            transition: all 0.4s ease;
+            border-bottom: none;
         }
-        .step.active {
-            background: var(--accent-orange);
-            box-shadow: 0 0 15px var(--accent-orange);
-            transform: scale(1.2);
-        }
-        
-        .status-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-top: 20px;
-            color: var(--dark-text);
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        #resultContainer { display: none; animation: slideUp 0.8s ease; }
-        #resultImage { max-width: 100%; border-radius: 20px; margin-top: 20px; }
-        
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- Results Area --- */
+        #resultContainer { display: none; text-align: center; animation: fadeIn 0.8s ease; }
+        #resultImage { max-width: 100%; border-radius: 15px; box-shadow: 0 15px 40px rgba(37, 52, 63, 0.15); margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .custom-cursor { display: none; } /* Disable custom cursor on touch devices */
-            body { cursor: auto; }
-            .drop-zone input[type="file"] { cursor: pointer; }
-        }
+        /* Scrollbar Styling for Console */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--soft-accent); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--vibrant-orange); }
+
     </style>
 </head>
 <body>
 
     <div class="custom-cursor" id="cursor"></div>
-    <div class="blob blob-1" id="blob1"></div>
-    <div class="blob blob-2" id="blob2"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
-    <div class="glass-panel">
-        <h1>Seamless Stitcher</h1>
-        <p>Drop your sequence to create the big picture.</p>
+    <div class="app-wrapper">
         
-        <div id="uploadUI">
-            <div class="drop-zone" id="dropZone">
-                <span id="dropText">Drag & drop images here<br>or click to browse</span>
-                <input type="file" id="imageInput" multiple accept="image/*" onchange="handleFiles()">
+        <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: center;">
+            <h1>Big Picture<br><span style="color: var(--vibrant-orange);">Stitcher</span></h1>
+            <p>Upload your sequence. Our cloud engine calculates the exact geometry to blend them flawlessly.</p>
+            
+            <div id="uploadUI">
+                <div class="file-upload-wrapper">
+                    <button class="btn-main" style="background-color: var(--soft-accent); color: var(--dark-text);">Select Image Sequence</button>
+                    <input type="file" id="imageInput" multiple accept="image/*" onchange="updateFileCount()">
+                </div>
+                
+                <div id="fileCountDisplay" style="margin-bottom: 20px; display: none; font-size: 1.1rem;">
+                    Ready to process <span class="orange-num" id="fileCountNum">0</span> high-res files.
+                </div>
+                
+                <button class="btn-main" id="startBtn" onclick="startProcess()">Initialize Engine</button>
             </div>
-            <button class="btn-main" id="startBtn" style="display:none;" onclick="startProcess()">Start Processing</button>
         </div>
 
-        <div id="processingUI">
-            <div class="stepper">
-                <div class="step active" id="step1">1</div>
-                <div class="step" id="step2">2</div>
-                <div class="step" id="step3">3</div>
+        <div class="glass-panel" id="actionPanel" style="min-height: 350px; display: flex; flex-direction: column; justify-content: center;">
+            
+            <div id="emptyState" style="text-align: center; opacity: 0.6;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--dark-text)" stroke-width="1.5" style="margin-bottom: 15px;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                </svg>
+                <p style="margin: 0;">Awaiting sequence initialization...</p>
             </div>
-            <div class="status-text" id="dynamicStatusArea">Connecting to cloud...</div>
-        </div>
 
-        <div id="resultContainer">
-            <h2 style="color: var(--accent-orange);">Masterpiece Ready</h2>
-            <img id="resultImage" alt="Stitched Result">
-            <a id="downloadLink" class="btn-main" style="display: inline-block; text-decoration: none; box-sizing: border-box;">Download High-Res Image</a>
+            <div id="processingUI" style="display: none; height: 100%;">
+                <h3 style="margin-top: 0; color: var(--dark-text);">Cloud Engine Live Feed</h3>
+                <div class="console-window" id="consoleWindow">
+                    </div>
+            </div>
+
+            <div id="resultContainer">
+                <img id="resultImage" alt="Stitched Masterpiece">
+                <a id="downloadLink" class="btn-main" style="text-decoration: none;">Download Masterpiece</a>
+                <button class="btn-main" style="background-color: transparent; border: 2px solid var(--soft-accent); color: var(--dark-text); margin-top: 10px;" onclick="resetApp()">Start New Sequence</button>
+            </div>
+
         </div>
     </div>
 
     <script>
         const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
         let pollingInterval;
+        let lastLoggedStatus = "";
 
-        // --- Session Persistence ---
+        // --- Persistent Session ---
         window.onload = () => {
             const savedJobId = localStorage.getItem('activeStitchJob');
             if (savedJobId) {
-                document.getElementById('uploadUI').style.display = 'none';
-                document.getElementById('processingUI').style.display = 'block';
+                switchToProcessingUI();
+                logToConsole("Session restored. Reconnecting to cloud engine...");
                 checkStatus(savedJobId);
             }
         };
 
-        // --- Interactive Mouse Effects ---
+        // --- Custom Cursor ---
         const cursor = document.getElementById('cursor');
-        const blob1 = document.getElementById('blob1');
-        const blob2 = document.getElementById('blob2');
-
         document.addEventListener('mousemove', e => {
-            if (window.innerWidth > 768) {
-                cursor.style.left = e.clientX - 4 + 'px';
-                cursor.style.top = e.clientY - 4 + 'px';
-                
-                // Gentle parallax for background blobs to keep user entertained
-                const x = e.clientX / window.innerWidth;
-                const y = e.clientY / window.innerHeight;
-                blob1.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
-                blob2.style.transform = `translate(${x * -40}px, ${y * -40}px)`;
-            }
+            cursor.style.left = e.clientX - 4 + 'px';
+            cursor.style.top = e.clientY - 4 + 'px';
         });
-
-        document.querySelectorAll('button, input, a, .drop-zone').forEach(el => {
+        document.querySelectorAll('button, input, a, .glass-panel').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('active'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         });
 
-        // --- Drag & Drop Interactions ---
-        const dropZone = document.getElementById('dropZone');
-        dropZone.addEventListener('dragover', (e) => { dropZone.classList.add('dragover'); });
-        dropZone.addEventListener('dragleave', (e) => { dropZone.classList.remove('dragover'); });
-        dropZone.addEventListener('drop', (e) => { dropZone.classList.remove('dragover'); });
-
-        function handleFiles() {
+        // --- UI Flow ---
+        function updateFileCount() {
             const fileInput = document.getElementById('imageInput');
-            const dropText = document.getElementById('dropText');
-            const startBtn = document.getElementById('startBtn');
-            
             if (fileInput.files.length > 0) {
-                dropText.innerHTML = `<span style="color: var(--accent-orange); font-size: 1.5rem; font-weight:bold;">${fileInput.files.length}</span> images ready.`;
-                startBtn.style.display = 'block';
+                document.getElementById('fileCountNum').innerText = fileInput.files.length;
+                document.getElementById('fileCountDisplay').style.display = "block";
+            }
+        }
+
+        function switchToProcessingUI() {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('processingUI').style.display = 'block';
+            document.getElementById('startBtn').innerText = "Processing...";
+            document.getElementById('startBtn').style.opacity = "0.5";
+            document.getElementById('startBtn').style.pointerEvents = "none";
+        }
+
+        function logToConsole(message) {
+            // Only add a new line if the message actually changed
+            if (message !== lastLoggedStatus) {
+                const consoleWindow = document.getElementById('consoleWindow');
+                const newLine = document.createElement('div');
+                newLine.className = 'console-line';
+                
+                // Add timestamp
+                const time = new Date().toLocaleTimeString([], {hour12: false});
+                newLine.innerHTML = `<span style="color: var(--soft-accent);">[${time}]</span> ${message}`;
+                
+                consoleWindow.appendChild(newLine);
+                consoleWindow.scrollTop = consoleWindow.scrollHeight; // Auto-scroll to bottom
+                lastLoggedStatus = message;
             }
         }
 
         async function startProcess() {
             const fileInput = document.getElementById('imageInput');
-            document.getElementById('uploadUI').style.display = 'none';
-            document.getElementById('processingUI').style.display = 'block';
+            if (fileInput.files.length < 2) {
+                alert("Please select at least 2 images.");
+                return;
+            }
+
+            switchToProcessingUI();
+            logToConsole("Initializing sequence upload...");
 
             const formData = new FormData();
             for (let i = 0; i < fileInput.files.length; i++) {
@@ -276,63 +315,71 @@
             try {
                 const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
                 const data = await response.json();
+
                 if (data.job_id) {
+                    logToConsole(`Job ID [${data.job_id.substring(0,8)}] assigned. Upload complete.`);
                     localStorage.setItem('activeStitchJob', data.job_id);
                     checkStatus(data.job_id);
                 }
             } catch (error) {
-                document.getElementById('dynamicStatusArea').innerText = "Connection failed.";
+                logToConsole("<span style='color: red;'>CRITICAL ERROR: Connection to cloud failed.</span>");
             }
         }
 
         async function checkStatus(jobId) {
-            const statusArea = document.getElementById('dynamicStatusArea');
-            const step1 = document.getElementById('step1');
-            const step2 = document.getElementById('step2');
-            const step3 = document.getElementById('step3');
-
             pollingInterval = setInterval(async () => {
                 try {
                     const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
                     const contentType = response.headers.get("content-type");
                     
                     if (contentType && contentType.includes("image")) {
+                        // Finished!
                         clearInterval(pollingInterval);
                         localStorage.removeItem('activeStitchJob');
+                        
+                        logToConsole("Render complete. Fetching payload...");
                         
                         const blob = await response.blob();
                         const imageUrl = URL.createObjectURL(blob);
                         
                         document.getElementById('resultImage').src = imageUrl;
                         document.getElementById('downloadLink').href = imageUrl;
-                        document.getElementById('downloadLink').download = "seamless_masterpiece.jpg";
+                        document.getElementById('downloadLink').download = "bigpicture_master.jpg";
                         
-                        document.getElementById('processingUI').style.display = 'none';
-                        document.getElementById('resultContainer').style.display = 'block';
+                        setTimeout(() => {
+                            document.getElementById('processingUI').style.display = 'none';
+                            document.getElementById('resultContainer').style.display = 'block';
+                            
+                            // Reset button
+                            const btn = document.getElementById('startBtn');
+                            btn.innerText = "Initialize Engine";
+                            btn.style.opacity = "1";
+                            btn.style.pointerEvents = "auto";
+                        }, 1000); // Slight delay so they can read the final log
+
                     } else {
                         const data = await response.json();
                         if (data.status.startsWith("failed")) {
                             clearInterval(pollingInterval);
                             localStorage.removeItem('activeStitchJob');
-                            statusArea.innerHTML = `<span style="color: red;">Error: ${data.status}</span>`;
+                            logToConsole(`<span style='color: red;'>ERROR: ${data.status}</span>`);
                         } else {
-                            // Print the exact real data from Python
-                            statusArea.innerText = data.status;
-
-                            // Smart Pipeline Updates based on real text
-                            if (data.status.includes("Loading full-resolution")) {
-                                step1.classList.remove('active');
-                                step2.classList.add('active'); // Moved to phase 2
-                            } else if (data.status.includes("heavy stitching algorithm")) {
-                                step2.classList.remove('active');
-                                step3.classList.add('active'); // Moved to final phase
-                            }
+                            logToConsole(data.status); // Push the real status from Python to the console
                         }
                     }
                 } catch (error) {
                     console.error("Polling error:", error);
                 }
-            }, 5000);
+            }, 4000);
+        }
+
+        function resetApp() {
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('consoleWindow').innerHTML = ''; // Clear logs
+            document.getElementById('imageInput').value = ''; // Clear files
+            document.getElementById('fileCountDisplay').style.display = 'none';
+            lastLoggedStatus = "";
         }
     </script>
 </body>
