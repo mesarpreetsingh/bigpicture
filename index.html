@@ -3,330 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Big Picture | Advanced Stitching</title>
+    <title>Big Picture | Seamless Stitcher</title>
     <style>
-        /* --- Color Palette & Soothing Theme --- */
+        /* --- Premium Color Palette --- */
         :root {
-            --bg-color: #EAEFEF;
-            --soft-accent: #BFC9D1;
-            --dark-text: #25343F;
-            --vibrant-orange: #FF9B51;
+            --light-base: #EAEFEF;
+            --soft-blue: #BFC9D1;
+            --deep-slate: #25343F;
+            --accent-orange: #FF9B51;
         }
 
+        /* --- Soothing, Fluid Reset --- */
+        * { box-sizing: border-box; }
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--dark-text);
-            overflow-x: hidden;
+            background-color: var(--light-base);
+            color: var(--deep-slate);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: none; /* Hide default cursor for custom smooth cursor */
+            overflow-x: hidden;
+            cursor: none; /* Hide default for custom cursor */
         }
 
-        /* --- Custom Soothing Cursor (Small, controlled) --- */
+        /* --- Subtle, Controlled Custom Cursor --- */
         .custom-cursor {
-            width: 12px;
-            height: 12px;
-            background-color: var(--vibrant-orange);
+            width: 8px; /* Small and precise */
+            height: 8px;
+            background-color: var(--accent-orange);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.1s ease-out;
-            mix-blend-mode: multiply;
+            transition: transform 0.15s ease-out, background-color 0.15s ease;
+            box-shadow: 0 0 10px rgba(255, 153, 81, 0.4);
         }
         .custom-cursor.active {
-            transform: scale(2.5);
-            background-color: var(--soft-accent);
-            opacity: 0.7;
+            transform: scale(2); /* Less wild expansion */
+            background-color: var(--deep-slate);
         }
 
-        /* --- Organic Background (No harsh boxes) --- */
-        .blob {
+        /* --- Animated, Organic Background --- */
+        .bg-shapes {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--light-base) 0%, #ffffff 100%);
+        }
+        .shape {
             position: absolute;
             border-radius: 50%;
-            filter: blur(60px);
-            z-index: -1;
-            opacity: 0.6;
-            animation: float 10s infinite ease-in-out alternate;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: drift 15s infinite alternate ease-in-out;
         }
-        .blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: var(--soft-accent); }
-        .blob-2 { bottom: -10%; right: -10%; width: 35vw; height: 35vw; background: rgba(255, 155, 81, 0.2); animation-delay: -5s; }
+        .shape-1 { width: 50vw; height: 50vw; background: var(--soft-blue); top: -10%; left: -10%; }
+        .shape-2 { width: 40vw; height: 40vw; background: rgba(255, 155, 81, 0.15); bottom: -10%; right: -10%; animation-delay: -5s; }
 
-        @keyframes float {
+        @keyframes drift {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 50px) scale(1.1); }
+            100% { transform: translate(5vw, 5vh) scale(1.1); }
         }
 
-        /* --- Glassmorphism UI --- */
-        .glass-panel {
-            background: rgba(234, 239, 239, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(191, 201, 209, 0.5);
-            border-radius: 40px;
-            padding: 50px;
+        /* --- Glassmorphism Container (No hard boxes) --- */
+        .app-container {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(191, 201, 209, 0.4);
+            border-radius: 3rem; /* Very soft, pill-like corners */
+            padding: 3rem 2rem;
             width: 90%;
-            max-width: 650px;
+            max-width: 600px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(37, 52, 63, 0.05);
+            box-shadow: 0 25px 50px rgba(37, 52, 63, 0.08);
             transition: all 0.5s ease;
         }
 
-        h1 { font-weight: 300; font-size: 2.5rem; margin-bottom: 10px; }
-        p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; }
+        h1 { font-weight: 300; font-size: 2.5rem; margin: 0 0 10px 0; letter-spacing: -0.5px; }
+        p { font-size: 1.1rem; opacity: 0.7; margin-bottom: 2rem; }
 
-        /* --- Inputs & Buttons --- */
-        .file-upload-wrapper {
+        /* --- Interactive Upload Area --- */
+        .upload-area {
             position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
+            border: 2px dashed var(--soft-blue);
+            border-radius: 2rem;
+            padding: 3rem 1rem;
+            transition: all 0.3s ease;
+            cursor: none;
+            background: rgba(234, 239, 239, 0.3);
         }
-        .file-upload-wrapper input[type="file"] {
-            font-size: 100px;
+        .upload-area:hover {
+            background: rgba(191, 201, 209, 0.2);
+            border-color: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+        .upload-area input[type="file"] {
             position: absolute;
-            left: 0;
-            top: 0;
+            top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0;
             cursor: none;
         }
-        .btn-main {
-            background-color: var(--dark-text);
-            color: var(--bg-color);
+        .upload-icon {
+            width: 50px; height: 50px;
+            fill: var(--deep-slate);
+            margin-bottom: 15px;
+            transition: fill 0.3s ease;
+        }
+        .upload-area:hover .upload-icon { fill: var(--accent-orange); }
+
+        /* --- Buttons --- */
+        .btn {
+            background-color: var(--deep-slate);
+            color: var(--light-base);
             border: none;
-            padding: 18px 40px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 15px;
-            box-shadow: 0 10px 20px rgba(37, 52, 63, 0.1);
-        }
-        .btn-main:hover {
-            background-color: var(--vibrant-orange);
-            color: var(--dark-text);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(255, 155, 81, 0.3);
-        }
-
-        /* --- Dynamic Numbers --- */
-        .orange-num {
-            color: var(--vibrant-orange);
-            font-weight: 700;
-            font-size: 1.3em;
-        }
-
-        /* --- Processing SVG Animation --- */
-        #processingUI { display: none; margin-top: 30px; }
-        
-        .circular-loader {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px auto;
-        }
-        .circular-loader svg {
-            animation: rotate 2s linear infinite;
-            transform-origin: center center;
-            width: 100%;
-            height: 100%;
-        }
-        .loader-path {
-            stroke: var(--vibrant-orange);
-            stroke-dasharray: 1, 200;
-            stroke-dashoffset: 0;
-            animation: dash 1.5s ease-in-out infinite;
-            stroke-linecap: round;
-        }
-
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
-        @keyframes dash {
-            0% { stroke-dasharray: 1, 200; stroke-dashoffset: 0; }
-            50% { stroke-dasharray: 89, 200; stroke-dashoffset: -35px; }
-            100% { stroke-dasharray: 89, 200; stroke-dashoffset: -124px; }
-        }
-
-        /* --- Staggered Status Text --- */
-        .status-container {
-            margin-top: 20px;
+            padding: 16px 32px;
             font-size: 1.1rem;
-            height: 60px;
+            border-radius: 50px; /* Pill shape */
+            margin-top: 1.5rem;
+            width: 100%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(37, 52, 63, 0.15);
         }
-        .status-text {
-            display: none;
-            animation: fadeInOut 4s ease-in-out forwards;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(10px); }
-            10% { opacity: 1; transform: translateY(0); }
-            90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
+        .btn:hover {
+            background-color: var(--accent-orange);
+            color: var(--deep-slate);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 155, 81, 0.25);
         }
 
-        #resultContainer { display: none; margin-top: 30px; animation: fadeIn 1s ease; }
-        #resultImage { max-width: 100%; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        /* --- Vibrant Number Highlights --- */
+        .highlight { color: var(--accent-orange); font-weight: 700; font-size: 1.2em; }
+
+        /* --- Stitching Animation (Visual interest while waiting) --- */
+        .stitching-anim {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 2rem 0;
+        }
+        .stitch-block {
+            width: 30px; height: 40px;
+            background-color: var(--soft-blue);
+            border-radius: 8px;
+            animation: pulse-merge 2s infinite ease-in-out alternate;
+        }
+        .stitch-block:nth-child(2) { background-color: var(--accent-orange); animation-delay: 0.5s; }
+        .stitch-block:nth-child(3) { background-color: var(--deep-slate); animation-delay: 1s; }
+
+        @keyframes pulse-merge {
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-10px) scale(1.1); opacity: 1; }
+        }
+
+        /* --- Real Progress Text --- */
+        #dynamicStatusArea {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--deep-slate);
+            min-height: 50px;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        #resultContainer { display: none; margin-top: 2rem; animation: slideUp 0.8s ease; }
+        #resultImage { max-width: 100%; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 600px) {
+            .app-container { padding: 2rem 1.5rem; border-radius: 2rem; }
+            h1 { font-size: 2rem; }
+            .custom-cursor { display: none; } /* Better UX for touch devices */
+        }
     </style>
 </head>
 <body>
 
     <div class="custom-cursor" id="cursor"></div>
 
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
 
-    <div class="glass-panel" id="mainPanel">
-        <h1>Seamless Stitcher</h1>
-        <p>Drop your sequence to create the big picture.</p>
+    <div class="app-container">
+        <h1>Big Picture</h1>
+        <p>Seamlessly stitch your environment.</p>
         
         <div id="uploadUI">
-            <div class="file-upload-wrapper">
-                <button class="btn-main" style="background-color: var(--soft-accent); color: var(--dark-text);">Select Images</button>
+            <div class="upload-area" id="dropZone">
+                <svg class="upload-icon" viewBox="0 0 24 24">
+                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.36 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                </svg>
+                <div style="font-weight: 600; font-size: 1.2rem;">Select or Drop Images</div>
+                <div style="font-size: 0.9rem; opacity: 0.7; margin-top: 5px;">High-resolution supported</div>
                 <input type="file" id="imageInput" multiple accept="image/*" onchange="updateFileCount()">
             </div>
-            <div id="fileCountDisplay" style="margin-top: 15px; display: none;">
-                Selected <span class="orange-num" id="fileCountNum">0</span> images.
-            </div>
-            <button class="btn-main" onclick="startProcess()">Start Processing</button>
-        </div>
 
-        <div id="processingUI">
-            <div class="circular-loader">
-                <svg viewBox="25 25 50 50">
-                    <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke-width="4" />
-                </svg>
+            <div id="fileCountDisplay" style="margin-top: 1.5rem; display: none;">
+                Ready to fuse <span class="highlight" id="fileCountNum">0</span> images.
             </div>
             
-            <div class="status-container" id="dynamicStatusArea">
-                </div>
+            <button class="btn" onclick="startProcess()">Commence Stitching</button>
+        </div>
 
-            <div style="margin-top: 15px; font-size: 1.2rem;">
-                Estimated Time: <span class="orange-num" id="etaCountdown">00:00</span>
+        <div id="processingUI" style="display: none;">
+            <div class="stitching-anim">
+                <div class="stitch-block"></div>
+                <div class="stitch-block"></div>
+                <div class="stitch-block"></div>
+            </div>
+            
+            <div style="font-size: 1.2rem; font-weight: bold;">Processing Job</div>
+            <p style="margin-top: 5px; font-size: 0.9rem;">You can safely close this tab. Your session is saved.</p>
+            
+            <div id="dynamicStatusArea">
+                Connecting to secure cloud...
             </div>
         </div>
 
         <div id="resultContainer">
-            <img id="resultImage" alt="Stitched Result">
-            <a id="downloadLink" class="btn-main" style="display: inline-block; text-decoration: none; margin-top: 20px; box-sizing: border-box;">Download Masterpiece</a>
+            <img id="resultImage" alt="Stitched Masterpiece">
+            <a id="downloadLink" class="btn" style="display: inline-block; text-decoration: none; box-sizing: border-box;">Download Masterpiece</a>
         </div>
     </div>
 
     <script>
-       const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
-let pollingInterval;
+        const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
+        let pollingInterval;
 
-// --- PERSISTENT SESSION: Check if a job is already running when page loads ---
-window.onload = () => {
-    const savedJobId = localStorage.getItem('activeStitchJob');
-    if (savedJobId) {
-        document.getElementById('uploadUI').style.display = 'none';
-        document.getElementById('processingUI').style.display = 'block';
-        checkStatus(savedJobId); // Resume tracking the background job
-    }
-};
-
-// --- Custom Cursor Logic ---
-const cursor = document.getElementById('cursor');
-document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX - 6 + 'px';
-    cursor.style.top = e.clientY - 6 + 'px';
-});
-document.querySelectorAll('button, input, a').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-});
-
-function updateFileCount() {
-    const fileInput = document.getElementById('imageInput');
-    const display = document.getElementById('fileCountDisplay');
-    const num = document.getElementById('fileCountNum');
-    if (fileInput.files.length > 0) {
-        num.innerText = fileInput.files.length;
-        display.style.display = "block";
-    }
-}
-
-async function startProcess() {
-    const fileInput = document.getElementById('imageInput');
-    if (fileInput.files.length < 2) {
-        alert("Please select at least 2 images.");
-        return;
-    }
-
-    document.getElementById('uploadUI').style.display = 'none';
-    document.getElementById('processingUI').style.display = 'block';
-    
-    // Set initial real status
-    document.getElementById('dynamicStatusArea').innerHTML = `<div class="status-text" style="display:block; opacity:1;">Connecting to server...</div>`;
-
-    const formData = new FormData();
-    for (let i = 0; i < fileInput.files.length; i++) {
-        formData.append("files", fileInput.files[i]);
-    }
-
-    try {
-        const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
-        const data = await response.json();
-
-        if (data.job_id) {
-            // Save the Job ID so the user can close the tab!
-            localStorage.setItem('activeStitchJob', data.job_id);
-            checkStatus(data.job_id);
-        }
-    } catch (error) {
-        console.error(error);
-        document.getElementById('dynamicStatusArea').innerHTML = "<div style='color: red;'>Connection to cloud failed.</div>";
-    }
-}
-
-async function checkStatus(jobId) {
-    const resultContainer = document.getElementById('resultContainer');
-    const processingUI = document.getElementById('processingUI');
-    const statusArea = document.getElementById('dynamicStatusArea');
-
-    // Ask the server for the REAL status every 5 seconds
-    pollingInterval = setInterval(async () => {
-        try {
-            const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
-            const contentType = response.headers.get("content-type");
-            
-            if (contentType && contentType.includes("image")) {
-                // Job Finished!
-                clearInterval(pollingInterval);
-                localStorage.removeItem('activeStitchJob'); // Clear the saved job
-                
-                const blob = await response.blob();
-                const imageUrl = URL.createObjectURL(blob);
-                
-                document.getElementById('resultImage').src = imageUrl;
-                document.getElementById('downloadLink').href = imageUrl;
-                document.getElementById('downloadLink').download = "seamless_masterpiece.jpg";
-                
-                processingUI.style.display = 'none';
-                resultContainer.style.display = 'block';
-            } else {
-                // Parse the real status from the backend dictionary
-                const data = await response.json();
-                
-                if (data.status.startsWith("failed")) {
-                    clearInterval(pollingInterval);
-                    localStorage.removeItem('activeStitchJob');
-                    statusArea.innerHTML = `<div style="color: red; font-weight: bold;">Error: ${data.status}</div>`;
-                } else {
-                    // Display the EXACT status string from Python
-                    statusArea.innerHTML = `<div class="status-text" style="display:block; opacity:1;">${data.status}</div>`;
-                }
+        // --- Persistent Session ---
+        window.onload = () => {
+            const savedJobId = localStorage.getItem('activeStitchJob');
+            if (savedJobId) {
+                document.getElementById('uploadUI').style.display = 'none';
+                document.getElementById('processingUI').style.display = 'block';
+                checkStatus(savedJobId); 
             }
-        } catch (error) {
-            console.error("Polling error:", error);
+        };
+
+        // --- Cursor Logic ---
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX - 4 + 'px'; // Centered based on new 8px size
+            cursor.style.top = e.clientY - 4 + 'px';
+        });
+        document.querySelectorAll('button, input, a, .upload-area').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+        });
+
+        function updateFileCount() {
+            const fileInput = document.getElementById('imageInput');
+            const display = document.getElementById('fileCountDisplay');
+            const num = document.getElementById('fileCountNum');
+            if (fileInput.files.length > 0) {
+                num.innerText = fileInput.files.length;
+                display.style.display = "block";
+            }
         }
-    }, 5000); // Check every 5 seconds now for faster updates
-}
+
+        async function startProcess() {
+            const fileInput = document.getElementById('imageInput');
+            if (fileInput.files.length < 2) {
+                alert("Please select at least 2 images.");
+                return;
+            }
+
+            document.getElementById('uploadUI').style.display = 'none';
+            document.getElementById('processingUI').style.display = 'block';
+            document.getElementById('dynamicStatusArea').innerText = "Uploading payload...";
+
+            const formData = new FormData();
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append("files", fileInput.files[i]);
+            }
+
+            try {
+                const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.job_id) {
+                    localStorage.setItem('activeStitchJob', data.job_id);
+                    checkStatus(data.job_id);
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('dynamicStatusArea').innerHTML = "<span style='color: #e74c3c;'>Connection to cloud failed.</span>";
+            }
+        }
+
+        async function checkStatus(jobId) {
+            const resultContainer = document.getElementById('resultContainer');
+            const processingUI = document.getElementById('processingUI');
+            const statusArea = document.getElementById('dynamicStatusArea');
+
+            pollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
+                    const contentType = response.headers.get("content-type");
+                    
+                    if (contentType && contentType.includes("image")) {
+                        clearInterval(pollingInterval);
+                        localStorage.removeItem('activeStitchJob'); 
+                        
+                        const blob = await response.blob();
+                        const imageUrl = URL.createObjectURL(blob);
+                        
+                        document.getElementById('resultImage').src = imageUrl;
+                        document.getElementById('downloadLink').href = imageUrl;
+                        document.getElementById('downloadLink').download = "big_picture_stitch.jpg";
+                        
+                        processingUI.style.display = 'none';
+                        resultContainer.style.display = 'block';
+                    } else {
+                        const data = await response.json();
+                        
+                        if (data.status.startsWith("failed")) {
+                            clearInterval(pollingInterval);
+                            localStorage.removeItem('activeStitchJob');
+                            statusArea.innerHTML = `<span style="color: #e74c3c; font-weight: bold;">Error: ${data.status}</span>`;
+                        } else {
+                            // Display the exact REAL string from Python
+                            statusArea.innerText = data.status;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Polling error:", error);
+                }
+            }, 5000); 
+        }
     </script>
 </body>
 </html>
