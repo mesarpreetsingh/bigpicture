@@ -3,313 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Big Picture | Professional Stitcher</title>
+    <title>Seamless Stitcher | Professional</title>
     <style>
-        /* --- Strictly Applied Color Palette --- */
+        /* --- Professional Color Palette --- */
         :root {
-            --bg-color: #EAEFEF;
-            --soft-accent: #BFC9D1;
-            --dark-text: #25343F;
-            --vibrant-orange: #FF9B51;
+            --bg-light: #EAEFEF;
+            --panel-soft: #BFC9D1;
+            --text-dark: #25343F;
+            --accent-orange: #FF9B51;
         }
 
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--dark-text);
-            overflow-x: hidden;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: none; 
+            cursor: none; /* Custom cursor */
+            overflow-x: hidden;
         }
 
-        /* --- Refined, Small Custom Cursor --- */
+        /* --- Refined, Smaller Custom Cursor --- */
         .custom-cursor {
             width: 8px;
             height: 8px;
-            background-color: var(--vibrant-orange);
+            background-color: var(--accent-orange);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.15s ease-out;
-            mix-blend-mode: multiply;
+            transition: transform 0.1s ease-out;
         }
         .custom-cursor.active {
-            transform: scale(2);
-            background-color: var(--dark-text);
-            opacity: 0.5;
+            transform: scale(1.5); /* Less wild expansion */
+            background-color: var(--text-dark);
+            opacity: 0.8;
         }
 
-        /* --- Organic Background Blobs (No Boxes) --- */
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.5;
-            animation: float 12s infinite ease-in-out alternate;
-        }
-        .blob-1 { top: -10%; left: -5%; width: 50vw; height: 50vw; background: var(--soft-accent); }
-        .blob-2 { bottom: -10%; right: -5%; width: 45vw; height: 45vw; background: rgba(255, 155, 81, 0.15); animation-delay: -6s; }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 60px) scale(1.05); }
-        }
-
-        /* --- Desktop vs Mobile Architecture --- */
-        .app-wrapper {
+        /* --- Desktop First: Split Screen Layout --- */
+        .app-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            width: 90%;
-            max-width: 1200px;
-            margin: 40px auto;
-            align-items: start;
+            min-height: 100vh;
         }
 
+        /* Mobile View (Stacking) */
         @media (max-width: 900px) {
-            .app-wrapper {
-                grid-template-columns: 1fr; /* Stacks seamlessly on mobile */
-                gap: 20px;
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .left-panel, .right-panel {
+                padding: 30px !important;
             }
         }
 
-        /* --- Glassmorphism Panels --- */
-        .glass-panel {
-            background: rgba(191, 201, 209, 0.3); /* Transparent Soft Accent */
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 30px;
-            padding: 40px;
-            box-shadow: 0 20px 50px rgba(37, 52, 63, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .glass-panel:hover {
-            box-shadow: 0 25px 60px rgba(37, 52, 63, 0.08);
-            transform: translateY(-2px);
-        }
-
-        h1 { font-weight: 300; font-size: 2.8rem; margin-top: 0; margin-bottom: 10px; line-height: 1.1; }
-        p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; line-height: 1.5; }
-
-        /* --- Interactive UI Elements --- */
-        .file-upload-wrapper {
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .file-upload-wrapper input[type="file"] {
-            font-size: 100px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            cursor: none;
-            height: 100%;
-        }
-        .btn-main {
-            background-color: var(--dark-text);
-            color: var(--bg-color);
-            border: none;
-            padding: 16px 30px;
-            font-size: 1.1rem;
-            border-radius: 20px;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            width: 100%;
-            font-weight: 600;
-            display: inline-block;
-            text-align: center;
-            box-sizing: border-box;
-            cursor: none;
-        }
-        .btn-main:hover {
-            background-color: var(--vibrant-orange);
-            color: var(--dark-text);
-            transform: scale(1.02);
-            box-shadow: 0 10px 20px rgba(255, 155, 81, 0.2);
-        }
-
-        .orange-num {
-            color: var(--vibrant-orange);
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-
-        /* --- The Live Cloud Console (Interactive Waiting Area) --- */
-        .console-window {
-            background: rgba(37, 52, 63, 0.05);
-            border-radius: 20px;
-            padding: 20px;
-            height: 300px;
-            overflow-y: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.95rem;
+        /* --- Left Panel: Input & Actions --- */
+        .left-panel {
+            padding: 60px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            scroll-behavior: smooth;
+            justify-content: center;
         }
-        .console-line {
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        /* Interactive Drag & Drop Zone */
+        .drop-zone {
+            border: 2px dashed var(--panel-soft);
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background-color: rgba(191, 201, 209, 0.2);
+            position: relative;
+        }
+        .drop-zone.dragover {
+            background-color: rgba(255, 155, 81, 0.1);
+            border-color: var(--accent-orange);
+            transform: scale(1.02);
+        }
+        .drop-zone input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             opacity: 0;
-            animation: slideIn 0.3s ease forwards;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(191, 201, 209, 0.3);
+            cursor: none;
         }
-        .console-line:last-child {
-            color: var(--vibrant-orange);
+
+        .btn-primary {
+            background-color: var(--text-dark);
+            color: var(--bg-light);
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
             font-weight: bold;
-            border-bottom: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(37, 52, 63, 0.15);
+            display: none; /* Hidden until files are selected */
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
+        .btn-primary:hover {
+            background-color: var(--accent-orange);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* Number Highlighting */
+        .orange-num {
+            color: var(--accent-orange);
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
-        /* --- Results Area --- */
-        #resultContainer { display: none; text-align: center; animation: fadeIn 0.8s ease; }
-        #resultImage { max-width: 100%; border-radius: 15px; box-shadow: 0 15px 40px rgba(37, 52, 63, 0.15); margin-bottom: 20px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* --- Right Panel: Live Status & Results --- */
+        .right-panel {
+            background-color: var(--panel-soft);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 40px 0 0 40px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+        }
+        @media (max-width: 900px) {
+            .right-panel { border-radius: 40px 40px 0 0; }
+        }
 
-        /* Scrollbar Styling for Console */
+        /* Image Preview Grid */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .preview-grid img {
+            width: 100%;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        /* Live Activity Log */
+        .status-log {
+            background-color: var(--bg-light);
+            border-radius: 12px;
+            padding: 20px;
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.95rem;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .log-entry {
+            border-left: 3px solid var(--panel-soft);
+            padding-left: 10px;
+            animation: slideIn 0.3s ease;
+        }
+        .log-entry.active { border-left-color: var(--accent-orange); font-weight: bold; }
+        .log-entry.error { border-left-color: red; color: red; }
+        
+        .timestamp { color: var(--accent-orange); font-size: 0.8rem; margin-right: 8px; }
+
+        /* Results Area */
+        #resultContainer { display: none; margin-top: 20px; }
+        #resultImage {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        /* Custom Scrollbar for the log */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--soft-accent); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--vibrant-orange); }
-
+        ::-webkit-scrollbar-thumb { background: var(--panel-soft); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dark); }
     </style>
 </head>
 <body>
 
     <div class="custom-cursor" id="cursor"></div>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
 
-    <div class="app-wrapper">
-        
-        <div class="glass-panel" style="display: flex; flex-direction: column; justify-content: center;">
-            <h1>Big Picture<br><span style="color: var(--vibrant-orange);">Stitcher</span></h1>
-            <p>Upload your sequence. Our cloud engine calculates the exact geometry to blend them flawlessly.</p>
+    <div class="app-container">
+        <div class="left-panel">
+            <h1>Big Picture<br>Stitcher.</h1>
+            <p class="subtitle">Drag, drop, and process your high-resolution sequences on the cloud.</p>
             
-            <div id="uploadUI">
-                <div class="file-upload-wrapper">
-                    <button class="btn-main" style="background-color: var(--soft-accent); color: var(--dark-text);">Select Image Sequence</button>
-                    <input type="file" id="imageInput" multiple accept="image/*" onchange="updateFileCount()">
-                </div>
-                
-                <div id="fileCountDisplay" style="margin-bottom: 20px; display: none; font-size: 1.1rem;">
-                    Ready to process <span class="orange-num" id="fileCountNum">0</span> high-res files.
-                </div>
-                
-                <button class="btn-main" id="startBtn" onclick="startProcess()">Initialize Engine</button>
+            <div class="drop-zone" id="dropZone">
+                <p>Drag & drop images here<br>or click to browse.</p>
+                <input type="file" id="imageInput" multiple accept="image/*" onchange="handleFiles(this.files)">
             </div>
+
+            <div id="fileCountDisplay" style="margin-top: 20px; display: none; font-size: 1.1rem;">
+                Ready to stitch <span class="orange-num" id="fileCountNum">0</span> images.
+            </div>
+
+            <button class="btn-primary" id="startBtn" onclick="startProcess()">Initialize Processing</button>
         </div>
 
-        <div class="glass-panel" id="actionPanel" style="min-height: 350px; display: flex; flex-direction: column; justify-content: center;">
-            
-            <div id="emptyState" style="text-align: center; opacity: 0.6;">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--dark-text)" stroke-width="1.5" style="margin-bottom: 15px;">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-                </svg>
-                <p style="margin: 0;">Awaiting sequence initialization...</p>
+        <div class="right-panel">
+            <h3 style="margin-top:0;">Sequence Preview</h3>
+            <div class="preview-grid" id="previewGrid">
+                <p style="opacity: 0.5; grid-column: 1 / -1;">No images selected yet.</p>
             </div>
 
-            <div id="processingUI" style="display: none; height: 100%;">
-                <h3 style="margin-top: 0; color: var(--dark-text);">Cloud Engine Live Feed</h3>
-                <div class="console-window" id="consoleWindow">
-                    </div>
+            <h3>Live Server Log</h3>
+            <div class="status-log" id="statusLog">
+                <div class="log-entry"><span class="timestamp">System</span> Waiting for input...</div>
             </div>
 
             <div id="resultContainer">
-                <img id="resultImage" alt="Stitched Masterpiece">
-                <a id="downloadLink" class="btn-main" style="text-decoration: none;">Download Masterpiece</a>
-                <button class="btn-main" style="background-color: transparent; border: 2px solid var(--soft-accent); color: var(--dark-text); margin-top: 10px;" onclick="resetApp()">Start New Sequence</button>
+                <img id="resultImage" alt="Masterpiece">
+                <a id="downloadLink" class="btn-primary" style="display: block; text-align: center; text-decoration: none; box-sizing: border-box;">Download Masterpiece</a>
             </div>
-
         </div>
     </div>
 
     <script>
         const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
         let pollingInterval;
-        let lastLoggedStatus = "";
+        let lastLoggedStatus = ""; // To prevent spamming the exact same log entry
 
-        // --- Persistent Session ---
-        window.onload = () => {
-            const savedJobId = localStorage.getItem('activeStitchJob');
-            if (savedJobId) {
-                switchToProcessingUI();
-                logToConsole("Session restored. Reconnecting to cloud engine...");
-                checkStatus(savedJobId);
-            }
-        };
-
-        // --- Custom Cursor ---
+        // --- Custom Cursor Logic ---
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX - 4 + 'px';
+            cursor.style.left = e.clientX - 4 + 'px'; // Adjusted for smaller 8px cursor
             cursor.style.top = e.clientY - 4 + 'px';
         });
-        document.querySelectorAll('button, input, a, .glass-panel').forEach(el => {
+        document.querySelectorAll('button, input, a, .drop-zone').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('active'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         });
 
-        // --- UI Flow ---
-        function updateFileCount() {
-            const fileInput = document.getElementById('imageInput');
-            if (fileInput.files.length > 0) {
-                document.getElementById('fileCountNum').innerText = fileInput.files.length;
-                document.getElementById('fileCountDisplay').style.display = "block";
+        // --- Drag & Drop UI Logic ---
+        const dropZone = document.getElementById('dropZone');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('imageInput').files = files; // Sync with actual input
+            handleFiles(files);
+        }, false);
+
+        // --- File Handling & Preview ---
+        function handleFiles(files) {
+            const display = document.getElementById('fileCountDisplay');
+            const num = document.getElementById('fileCountNum');
+            const startBtn = document.getElementById('startBtn');
+            const previewGrid = document.getElementById('previewGrid');
+
+            if (files.length > 0) {
+                num.innerText = files.length;
+                display.style.display = "block";
+                
+                if (files.length >= 2) {
+                    startBtn.style.display = "block";
+                } else {
+                    startBtn.style.display = "none";
+                }
+
+                // Generate Thumbnails
+                previewGrid.innerHTML = ''; // Clear old
+                // Limit preview to first 20 to prevent browser lag if they upload 1000
+                const loopLimit = Math.min(files.length, 20); 
+                for(let i = 0; i < loopLimit; i++) {
+                    const img = document.createElement("img");
+                    img.src = URL.createObjectURL(files[i]);
+                    previewGrid.appendChild(img);
+                }
+                if (files.length > 20) {
+                    const extra = document.createElement("div");
+                    extra.style.display = "flex";
+                    extra.style.alignItems = "center";
+                    extra.style.justifyContent = "center";
+                    extra.style.fontSize = "0.8rem";
+                    extra.style.fontWeight = "bold";
+                    extra.innerHTML = `+${files.length - 20}<br>more`;
+                    previewGrid.appendChild(extra);
+                }
             }
         }
 
-        function switchToProcessingUI() {
-            document.getElementById('emptyState').style.display = 'none';
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('processingUI').style.display = 'block';
-            document.getElementById('startBtn').innerText = "Processing...";
-            document.getElementById('startBtn').style.opacity = "0.5";
-            document.getElementById('startBtn').style.pointerEvents = "none";
+        // --- Live Logging System ---
+        function addLog(message, type = "normal") {
+            if (message === lastLoggedStatus) return; // Don't repeat identical consecutive messages
+            lastLoggedStatus = message;
+
+            const logContainer = document.getElementById('statusLog');
+            
+            // Remove 'active' class from previous entries
+            document.querySelectorAll('.log-entry.active').forEach(el => el.classList.remove('active'));
+
+            const entry = document.createElement('div');
+            entry.className = `log-entry active ${type === 'error' ? 'error' : ''}`;
+            
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            entry.innerHTML = `<span class="timestamp">[${timeString}]</span> ${message}`;
+            logContainer.appendChild(entry);
+            
+            // Auto-scroll to bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
         }
 
-        function logToConsole(message) {
-            // Only add a new line if the message actually changed
-            if (message !== lastLoggedStatus) {
-                const consoleWindow = document.getElementById('consoleWindow');
-                const newLine = document.createElement('div');
-                newLine.className = 'console-line';
-                
-                // Add timestamp
-                const time = new Date().toLocaleTimeString([], {hour12: false});
-                newLine.innerHTML = `<span style="color: var(--soft-accent);">[${time}]</span> ${message}`;
-                
-                consoleWindow.appendChild(newLine);
-                consoleWindow.scrollTop = consoleWindow.scrollHeight; // Auto-scroll to bottom
-                lastLoggedStatus = message;
+        // --- Core Process & Persistent Session ---
+        window.onload = () => {
+            const savedJobId = localStorage.getItem('activeStitchJob');
+            if (savedJobId) {
+                addLog(`Recovered active session from localStorage. Resuming tracking...`);
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('dropZone').style.opacity = '0.5';
+                document.getElementById('dropZone').style.pointerEvents = 'none';
+                checkStatus(savedJobId);
             }
-        }
+        };
 
         async function startProcess() {
-            const fileInput = document.getElementById('imageInput');
-            if (fileInput.files.length < 2) {
-                alert("Please select at least 2 images.");
-                return;
-            }
+            const files = document.getElementById('imageInput').files;
+            if (files.length < 2) return;
 
-            switchToProcessingUI();
-            logToConsole("Initializing sequence upload...");
+            // Lock the UI
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('dropZone').style.opacity = '0.5';
+            document.getElementById('dropZone').style.pointerEvents = 'none';
+            document.getElementById('statusLog').innerHTML = ''; // Clear log
+
+            addLog(`Initializing payload upload (${files.length} items)...`);
 
             const formData = new FormData();
-            for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append("files", fileInput.files[i]);
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files", files[i]);
             }
 
             try {
@@ -317,69 +379,58 @@
                 const data = await response.json();
 
                 if (data.job_id) {
-                    logToConsole(`Job ID [${data.job_id.substring(0,8)}] assigned. Upload complete.`);
+                    addLog(`Upload successful. Handshake confirmed with Cloud. Job ID: ${data.job_id.substring(0, 8)}...`);
                     localStorage.setItem('activeStitchJob', data.job_id);
                     checkStatus(data.job_id);
                 }
             } catch (error) {
-                logToConsole("<span style='color: red;'>CRITICAL ERROR: Connection to cloud failed.</span>");
+                addLog("CRITICAL: Failed to connect to Hugging Face backend. Check CORS or server status.", "error");
             }
         }
 
         async function checkStatus(jobId) {
+            const resultContainer = document.getElementById('resultContainer');
+
             pollingInterval = setInterval(async () => {
                 try {
                     const response = await fetch(`${HF_BACKEND_URL}/status/${jobId}`);
                     const contentType = response.headers.get("content-type");
                     
                     if (contentType && contentType.includes("image")) {
-                        // Finished!
                         clearInterval(pollingInterval);
                         localStorage.removeItem('activeStitchJob');
                         
-                        logToConsole("Render complete. Fetching payload...");
+                        addLog("Processing Complete! Compiling final image data for download...");
                         
                         const blob = await response.blob();
                         const imageUrl = URL.createObjectURL(blob);
                         
                         document.getElementById('resultImage').src = imageUrl;
                         document.getElementById('downloadLink').href = imageUrl;
-                        document.getElementById('downloadLink').download = "bigpicture_master.jpg";
+                        document.getElementById('downloadLink').download = "seamless_masterpiece.jpg";
                         
-                        setTimeout(() => {
-                            document.getElementById('processingUI').style.display = 'none';
-                            document.getElementById('resultContainer').style.display = 'block';
-                            
-                            // Reset button
-                            const btn = document.getElementById('startBtn');
-                            btn.innerText = "Initialize Engine";
-                            btn.style.opacity = "1";
-                            btn.style.pointerEvents = "auto";
-                        }, 1000); // Slight delay so they can read the final log
-
+                        resultContainer.style.display = 'block';
+                        addLog("Masterpiece ready.");
                     } else {
                         const data = await response.json();
+                        
                         if (data.status.startsWith("failed")) {
                             clearInterval(pollingInterval);
                             localStorage.removeItem('activeStitchJob');
-                            logToConsole(`<span style='color: red;'>ERROR: ${data.status}</span>`);
+                            addLog(`Process Terminated: ${data.status}`, "error");
+                            
+                            // Unlock UI so they can try again
+                            document.getElementById('startBtn').style.display = 'block';
+                            document.getElementById('dropZone').style.opacity = '1';
+                            document.getElementById('dropZone').style.pointerEvents = 'auto';
                         } else {
-                            logToConsole(data.status); // Push the real status from Python to the console
+                            addLog(data.status);
                         }
                     }
                 } catch (error) {
-                    console.error("Polling error:", error);
+                    addLog("Warning: Polling request timed out. Retrying in 5 seconds...", "error");
                 }
-            }, 4000);
-        }
-
-        function resetApp() {
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'block';
-            document.getElementById('consoleWindow').innerHTML = ''; // Clear logs
-            document.getElementById('imageInput').value = ''; // Clear files
-            document.getElementById('fileCountDisplay').style.display = 'none';
-            lastLoggedStatus = "";
+            }, 5000); 
         }
     </script>
 </body>
