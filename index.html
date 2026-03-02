@@ -11,7 +11,6 @@
             --panel-soft: #BFC9D1;
             --text-dark: #25343F;
             --accent-orange: #FF9B51;
-            --success-green: #2ecc71;
         }
 
         body, html {
@@ -21,100 +20,191 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             min-height: 100vh;
-            cursor: none; 
+            cursor: none; /* Custom cursor */
             overflow-x: hidden;
         }
 
-        /* Custom Cursor */
+        /* --- Refined, Smaller Custom Cursor --- */
         .custom-cursor {
-            width: 8px; height: 8px;
+            width: 8px;
+            height: 8px;
             background-color: var(--accent-orange);
             border-radius: 50%;
-            position: fixed; pointer-events: none;
-            z-index: 9999; transition: transform 0.1s ease-out;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out;
         }
         .custom-cursor.active {
-            transform: scale(1.5); background-color: var(--text-dark); opacity: 0.8;
+            transform: scale(1.5); /* Less wild expansion */
+            background-color: var(--text-dark);
+            opacity: 0.8;
         }
 
-        /* Layout */
-        .app-container { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+        /* --- Desktop First: Split Screen Layout --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* Mobile View (Stacking) */
         @media (max-width: 900px) {
-            .app-container { grid-template-columns: 1fr; }
-            .left-panel, .right-panel { padding: 30px !important; }
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .left-panel, .right-panel {
+                padding: 30px !important;
+            }
         }
 
-        /* Left Panel */
-        .left-panel { padding: 60px; display: flex; flex-direction: column; justify-content: center; }
-        h1 { font-size: 3rem; margin-bottom: 10px; font-weight: 800; line-height: 1.1; }
-        p.subtitle { font-size: 1.2rem; opacity: 0.8; margin-bottom: 40px; }
+        /* --- Left Panel: Input & Actions --- */
+        .left-panel {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        /* Interactive Drag & Drop Zone */
         .drop-zone {
-            border: 2px dashed var(--panel-soft); border-radius: 20px;
-            padding: 40px 20px; text-align: center; transition: all 0.3s ease;
-            background-color: rgba(191, 201, 209, 0.2); position: relative;
+            border: 2px dashed var(--panel-soft);
+            border-radius: 20px;
+            padding: 50px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background-color: rgba(191, 201, 209, 0.2);
+            position: relative;
         }
-        .drop-zone.dragover { background-color: rgba(255, 155, 81, 0.1); border-color: var(--accent-orange); transform: scale(1.02); }
-        .drop-zone input[type="file"] { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: none; }
+        .drop-zone.dragover {
+            background-color: rgba(255, 155, 81, 0.1);
+            border-color: var(--accent-orange);
+            transform: scale(1.02);
+        }
+        .drop-zone input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: none;
+        }
 
         .btn-primary {
-            background-color: var(--text-dark); color: var(--bg-light);
-            border: none; padding: 15px 30px; font-size: 1.1rem; font-weight: bold;
-            border-radius: 12px; transition: all 0.3s ease; width: 100%;
-            margin-top: 15px; box-shadow: 0 10px 20px rgba(37, 52, 63, 0.15); cursor: none;
+            background-color: var(--text-dark);
+            color: var(--bg-light);
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(37, 52, 63, 0.15);
+            display: none; /* Hidden until files are selected */
         }
-        .btn-primary:hover { background-color: var(--accent-orange); color: var(--text-dark); transform: translateY(-2px); }
+        .btn-primary:hover {
+            background-color: var(--accent-orange);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+        }
         
-        .orange-num { color: var(--accent-orange); font-weight: bold; font-size: 1.2em; }
+        /* Number Highlighting */
+        .orange-num {
+            color: var(--accent-orange);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
 
-        /* Task Management Section */
-        .task-manager {
-            margin-top: 30px; padding-top: 30px; border-top: 1px solid var(--panel-soft);
-        }
-        .input-group { display: flex; gap: 10px; margin-top: 10px; }
-        .input-group input {
-            flex-grow: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--panel-soft);
-            background-color: var(--bg-light); color: var(--text-dark); font-size: 1rem; outline: none;
-        }
-        .input-group button { width: auto; margin-top: 0; }
-
-        /* Job ID Display Box */
-        .job-id-box {
-            background: rgba(191, 201, 209, 0.3); padding: 15px; border-radius: 8px;
-            display: flex; justify-content: space-between; align-items: center; margin-top: 15px; display: none;
-        }
-        .job-id-text { font-family: monospace; font-size: 0.9rem; word-break: break-all; margin-right: 10px;}
-        .copy-btn {
-            background: var(--text-dark); color: white; border: none; padding: 8px 15px;
-            border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: none; transition: 0.2s; white-space: nowrap;
-        }
-        .copy-btn:hover { background: var(--accent-orange); color: var(--text-dark); }
-
-        /* Right Panel */
+        /* --- Right Panel: Live Status & Results --- */
         .right-panel {
-            background-color: var(--panel-soft); padding: 60px; display: flex; flex-direction: column;
-            border-radius: 40px 0 0 40px; box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            background-color: var(--panel-soft);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 40px 0 0 40px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.05);
         }
-        @media (max-width: 900px) { .right-panel { border-radius: 40px 40px 0 0; } }
+        @media (max-width: 900px) {
+            .right-panel { border-radius: 40px 40px 0 0; }
+        }
 
-        .status-log {
-            background-color: var(--bg-light); border-radius: 12px; padding: 20px; flex-grow: 1;
-            max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.95rem;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 8px;
+        /* Image Preview Grid */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            max-height: 200px;
+            overflow-y: auto;
         }
-        .log-entry { border-left: 3px solid var(--panel-soft); padding-left: 10px; animation: slideIn 0.3s ease; }
+        .preview-grid img {
+            width: 100%;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        /* Live Activity Log */
+        .status-log {
+            background-color: var(--bg-light);
+            border-radius: 12px;
+            padding: 20px;
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.95rem;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .log-entry {
+            border-left: 3px solid var(--panel-soft);
+            padding-left: 10px;
+            animation: slideIn 0.3s ease;
+        }
         .log-entry.active { border-left-color: var(--accent-orange); font-weight: bold; }
         .log-entry.error { border-left-color: red; color: red; }
-        .log-entry.success { border-left-color: var(--success-green); color: var(--success-green); font-weight: bold;}
+        
         .timestamp { color: var(--accent-orange); font-size: 0.8rem; margin-right: 8px; }
 
+        /* Results Area */
         #resultContainer { display: none; margin-top: 20px; }
-        #resultImage { width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
-        
+        #resultImage {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { to { opacity: 1; } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        /* Custom Scrollbar for the log */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--panel-soft); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dark); }
     </style>
 </head>
 <body>
@@ -124,48 +214,27 @@
     <div class="app-container">
         <div class="left-panel">
             <h1>Big Picture<br>Stitcher.</h1>
-            <p class="subtitle">Cloud-powered sequence processing.</p>
+            <p class="subtitle">Drag, drop, and process your high-resolution sequences on the cloud.</p>
             
             <div class="drop-zone" id="dropZone">
                 <p>Drag & drop images here<br>or click to browse.</p>
                 <input type="file" id="imageInput" multiple accept="image/*" onchange="handleFiles(this.files)">
             </div>
 
-            <div id="fileCountDisplay" style="margin-top: 20px; display: none;">
+            <div id="fileCountDisplay" style="margin-top: 20px; display: none; font-size: 1.1rem;">
                 Ready to stitch <span class="orange-num" id="fileCountNum">0</span> images.
-                
-                <div style="margin-top: 15px; text-align: left;">
-                    <label for="stitchMode" style="font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; display: block; opacity: 0.8;">Stitching Engine:</label>
-                    <select id="stitchMode" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--panel-soft); background-color: var(--bg-light); color: var(--text-dark); font-size: 1rem; font-family: inherit; outline: none;">
-                        <option value="auto">Auto-Detect (Recommended)</option>
-                        <option value="panorama">Landscape / Tripod (3D Sphere)</option>
-                        <option value="scans">Flat Surface / Sliding (2D Scan)</option>
-                    </select>
-                </div>
             </div>
 
-            <button class="btn-primary" id="startBtn" style="display: none;" onclick="startProcess()">Initialize Processing</button>
-            
-            <div class="job-id-box" id="jobIdBox">
-                <div>
-                    <div style="font-size: 0.8rem; font-weight: bold; opacity: 0.7; margin-bottom: 3px;">Active Job ID:</div>
-                    <div class="job-id-text" id="displayJobId">...</div>
-                </div>
-                <button class="copy-btn" onclick="copyJobId()">Copy</button>
-            </div>
-
-            <div class="task-manager">
-                <label style="font-size: 0.9rem; font-weight: bold; opacity: 0.8;">Track Existing Process:</label>
-                <div class="input-group">
-                    <input type="text" id="manualJobId" placeholder="Paste Job ID here...">
-                    <button class="btn-primary" onclick="trackManualJob()">Track</button>
-                </div>
-                <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 8px;">Completed data is automatically securely deleted after 1 hour.</p>
-            </div>
+            <button class="btn-primary" id="startBtn" onclick="startProcess()">Initialize Processing</button>
         </div>
 
         <div class="right-panel">
-            <h3 style="margin-top:0;">Live Server Log</h3>
+            <h3 style="margin-top:0;">Sequence Preview</h3>
+            <div class="preview-grid" id="previewGrid">
+                <p style="opacity: 0.5; grid-column: 1 / -1;">No images selected yet.</p>
+            </div>
+
+            <h3>Live Server Log</h3>
             <div class="status-log" id="statusLog">
                 <div class="log-entry"><span class="timestamp">System</span> Waiting for input...</div>
             </div>
@@ -180,114 +249,142 @@
     <script>
         const HF_BACKEND_URL = "https://singh56-bigpicture.hf.space";
         let pollingInterval;
-        let lastLoggedStatus = "";
-        let currentJobId = "";
+        let lastLoggedStatus = ""; // To prevent spamming the exact same log entry
 
-        // Cursor Logic
+        // --- Custom Cursor Logic ---
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX - 4 + 'px';
+            cursor.style.left = e.clientX - 4 + 'px'; // Adjusted for smaller 8px cursor
             cursor.style.top = e.clientY - 4 + 'px';
         });
-        document.querySelectorAll('button, input, select, a, .drop-zone').forEach(el => {
+        document.querySelectorAll('button, input, a, .drop-zone').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('active'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         });
 
-        // Drag and drop logic
+        // --- Drag & Drop UI Logic ---
         const dropZone = document.getElementById('dropZone');
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => { dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false); });
-        ['dragenter', 'dragover'].forEach(eventName => { dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false); });
-        ['dragleave', 'drop'].forEach(eventName => { dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false); });
-        dropZone.addEventListener('drop', e => {
-            document.getElementById('imageInput').files = e.dataTransfer.files;
-            handleFiles(e.dataTransfer.files);
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('imageInput').files = files; // Sync with actual input
+            handleFiles(files);
         }, false);
 
+        // --- File Handling & Preview ---
         function handleFiles(files) {
             const display = document.getElementById('fileCountDisplay');
             const num = document.getElementById('fileCountNum');
             const startBtn = document.getElementById('startBtn');
+            const previewGrid = document.getElementById('previewGrid');
 
-            if (files.length >= 2) {
+            if (files.length > 0) {
                 num.innerText = files.length;
                 display.style.display = "block";
-                startBtn.style.display = "block";
-            } else {
-                alert("Please select at least 2 images.");
+                
+                if (files.length >= 2) {
+                    startBtn.style.display = "block";
+                } else {
+                    startBtn.style.display = "none";
+                }
+
+                // Generate Thumbnails
+                previewGrid.innerHTML = ''; // Clear old
+                // Limit preview to first 20 to prevent browser lag if they upload 1000
+                const loopLimit = Math.min(files.length, 20); 
+                for(let i = 0; i < loopLimit; i++) {
+                    const img = document.createElement("img");
+                    img.src = URL.createObjectURL(files[i]);
+                    previewGrid.appendChild(img);
+                }
+                if (files.length > 20) {
+                    const extra = document.createElement("div");
+                    extra.style.display = "flex";
+                    extra.style.alignItems = "center";
+                    extra.style.justifyContent = "center";
+                    extra.style.fontSize = "0.8rem";
+                    extra.style.fontWeight = "bold";
+                    extra.innerHTML = `+${files.length - 20}<br>more`;
+                    previewGrid.appendChild(extra);
+                }
             }
         }
 
+        // --- Live Logging System ---
         function addLog(message, type = "normal") {
-            if (message === lastLoggedStatus) return;
+            if (message === lastLoggedStatus) return; // Don't repeat identical consecutive messages
             lastLoggedStatus = message;
+
             const logContainer = document.getElementById('statusLog');
+            
+            // Remove 'active' class from previous entries
             document.querySelectorAll('.log-entry.active').forEach(el => el.classList.remove('active'));
-            
+
             const entry = document.createElement('div');
-            entry.className = `log-entry active ${type === 'error' ? 'error' : ''} ${type === 'success' ? 'success' : ''}`;
-            const timeString = new Date().toLocaleTimeString('en-US', { hour12: false });
-            entry.innerHTML = `<span class="timestamp">[${timeString}]</span> ${message}`;
+            entry.className = `log-entry active ${type === 'error' ? 'error' : ''}`;
             
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            entry.innerHTML = `<span class="timestamp">[${timeString}]</span> ${message}`;
             logContainer.appendChild(entry);
+            
+            // Auto-scroll to bottom
             logContainer.scrollTop = logContainer.scrollHeight;
         }
 
-        function setJobIdDisplay(id) {
-            currentJobId = id;
-            document.getElementById('displayJobId').innerText = id;
-            document.getElementById('jobIdBox').style.display = 'flex';
-        }
-
-        async function copyJobId() {
-            if(currentJobId) {
-                await navigator.clipboard.writeText(currentJobId);
-                const btn = document.querySelector('.copy-btn');
-                btn.innerText = "Copied!";
-                setTimeout(() => btn.innerText = "Copy", 2000);
+        // --- Core Process & Persistent Session ---
+        window.onload = () => {
+            const savedJobId = localStorage.getItem('activeStitchJob');
+            if (savedJobId) {
+                addLog(`Recovered active session from localStorage. Resuming tracking...`);
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('dropZone').style.opacity = '0.5';
+                document.getElementById('dropZone').style.pointerEvents = 'none';
+                checkStatus(savedJobId);
             }
-        }
-
-        // Trigger manual tracking
-        function trackManualJob() {
-            const manualId = document.getElementById('manualJobId').value.trim();
-            if(!manualId) return;
-            
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('statusLog').innerHTML = '';
-            setJobIdDisplay(manualId);
-            addLog(`Connecting to server to find Job ID: ${manualId.substring(0,8)}...`);
-            
-            if (pollingInterval) clearInterval(pollingInterval);
-            checkStatus(manualId);
-        }
+        };
 
         async function startProcess() {
             const files = document.getElementById('imageInput').files;
             if (files.length < 2) return;
 
+            // Lock the UI
             document.getElementById('startBtn').style.display = 'none';
-            document.getElementById('resultContainer').style.display = 'none';
-            document.getElementById('statusLog').innerHTML = '';
-            
+            document.getElementById('dropZone').style.opacity = '0.5';
+            document.getElementById('dropZone').style.pointerEvents = 'none';
+            document.getElementById('statusLog').innerHTML = ''; // Clear log
+
             addLog(`Initializing payload upload (${files.length} items)...`);
 
             const formData = new FormData();
-            for (let i = 0; i < files.length; i++) formData.append("files", files[i]);
-            formData.append("mode", document.getElementById('stitchMode').value);
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files", files[i]);
+            }
 
             try {
                 const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
                 const data = await response.json();
 
                 if (data.job_id) {
-                    addLog(`Upload successful. Handshake confirmed. Your process is in the queue.`);
-                    setJobIdDisplay(data.job_id);
+                    addLog(`Upload successful. Handshake confirmed with Cloud. Job ID: ${data.job_id.substring(0, 8)}...`);
+                    localStorage.setItem('activeStitchJob', data.job_id);
                     checkStatus(data.job_id);
                 }
             } catch (error) {
-                addLog("CRITICAL: Failed to connect to Hugging Face backend.", "error");
-                document.getElementById('startBtn').style.display = 'block';
+                addLog("CRITICAL: Failed to connect to Hugging Face backend. Check CORS or server status.", "error");
             }
         }
 
@@ -301,7 +398,9 @@
                     
                     if (contentType && contentType.includes("image")) {
                         clearInterval(pollingInterval);
-                        addLog("Processing Complete! Compiling final image data for download...", "success");
+                        localStorage.removeItem('activeStitchJob');
+                        
+                        addLog("Processing Complete! Compiling final image data for download...");
                         
                         const blob = await response.blob();
                         const imageUrl = URL.createObjectURL(blob);
@@ -311,25 +410,25 @@
                         document.getElementById('downloadLink').download = "seamless_masterpiece.jpg";
                         
                         resultContainer.style.display = 'block';
-                        document.getElementById('startBtn').style.display = 'block'; // Reset for next job
+                        addLog("Masterpiece ready.");
                     } else {
                         const data = await response.json();
                         
-                        if (data.status === "not_found") {
+                        if (data.status.startsWith("failed")) {
                             clearInterval(pollingInterval);
-                            addLog(`Error: Job ID not found. It may have expired (1 hour limit) or never existed.`, "error");
-                            document.getElementById('startBtn').style.display = 'block';
-                        }
-                        else if (data.status.startsWith("failed")) {
-                            clearInterval(pollingInterval);
+                            localStorage.removeItem('activeStitchJob');
                             addLog(`Process Terminated: ${data.status}`, "error");
+                            
+                            // Unlock UI so they can try again
                             document.getElementById('startBtn').style.display = 'block';
+                            document.getElementById('dropZone').style.opacity = '1';
+                            document.getElementById('dropZone').style.pointerEvents = 'auto';
                         } else {
                             addLog(data.status);
                         }
                     }
                 } catch (error) {
-                    addLog("Warning: Server polling timeout. Retrying...", "error");
+                    addLog("Warning: Polling request timed out. Retrying in 5 seconds...", "error");
                 }
             }, 5000); 
         }
