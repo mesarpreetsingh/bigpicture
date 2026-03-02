@@ -378,11 +378,12 @@
 
             addLog(`Initializing payload upload (${files.length} items)...`);
 
-            const formData = new FormData();
+          const formData = new FormData();
             for (let i = 0; i < files.length; i++) {
                 formData.append("files", files[i]);
             }
-
+            // NEW: Send the engine choice to the backend
+            formData.append("mode", document.getElementById('stitchMode').value);
             try {
                 const response = await fetch(`${HF_BACKEND_URL}/upload`, { method: 'POST', body: formData });
                 const data = await response.json();
